@@ -1,0 +1,24 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+#
+ pre-push:
+   parallel: true
+   commands:
+     backend-test:
+       root: backend/
+       tags: backend test
+       run: cargo run test
+
+ pre-commit:
+   parallel: true
+   commands:
+     cdk-lint:
+       root: /cdk
+       tags: cdk style
+       run: bunx @biomejs/biome check . --apply
+     frontend:
+       root: /frontend
+       tags: frontend style
+       run: bun run lint
