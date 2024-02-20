@@ -1,18 +1,26 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
 import "source-map-support/register";
-import { CdkStack } from "../lib/cdk-stack";
+import { FunctionStack } from "../lib/function-stack";
+import { InterfaceStack } from "../lib/interface-stack";
+import { StaticStack } from "../lib/static-stack";
+import { stageName } from "../util/utils";
+
+const stage = stageName();
 
 const app = new cdk.App();
-new CdkStack(app, "CdkStack", {
-	/* If you don't specify 'env', this stack will be environment-agnostic.
-	 * Account/Region-dependent features and context lookups will not work,
-	 * but a single synthesized template can be deployed anywhere. */
-	/* Uncomment the next line to specialize this stack for the AWS Account
-	 * and Region that are implied by the current CLI configuration. */
-	// env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-	/* Uncomment the next line if you know exactly what Account and Region you
-	 * want to deploy the stack to. */
-	// env: { account: '123456789012', region: 'us-east-1' },
-	/* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+const staticAssets = new StaticStack(app, `www-static-assets-${stage}-stack`, {
+	stage,
+});
+const functionAssets = new FunctionStack(
+	app,
+	`www-function-assets-${stage}-stack`,
+	{
+		stage,
+	},
+);
+new InterfaceStack(app, `www-interface-assets-${stage}-stack`, {
+	stage,
+	userPool: staticAssets.userPool,
+	lambdaFunction: functionAssets.dummyFunction,
 });

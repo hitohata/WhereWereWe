@@ -3,6 +3,10 @@
 	"organizeImports": {
 		"enabled": true
 	},
+	"files": {
+		"include": ["./**/*.ts"],
+		"ignore": ["./**/*.d.ts", "./**/*.js", "./node_modules/"]
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
