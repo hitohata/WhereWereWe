@@ -1,44 +1,41 @@
 import * as cdk from "aws-cdk-lib";
-import { UserPool } from "aws-cdk-lib/aws-cognito";
-import { Bucket } from "aws-cdk-lib/aws-s3";
-import { Construct } from "constructs";
-import { Stage } from "../util/utils";
+import {UserPool} from "aws-cdk-lib/aws-cognito";
+import {Bucket, BucketEncryption} from "aws-cdk-lib/aws-s3";
+import {Construct} from "constructs";
+import {Stage} from "../util/utils";
 
 interface IProps extends cdk.StackProps {
 	stage: Stage;
 }
 
 export class StaticStack extends cdk.Stack {
-	pictureBucket: Bucket;
+	private readonly stage: Stage;
+	readonly pictureBucket: Bucket;
 	readonly userPool: UserPool;
 
 	constructor(scope: Construct, id: string, props: IProps) {
 		super(scope, id, props);
 		const { stage } = props;
 
-		this.pictureBucket = pictureBucket(this, stage);
-		this.userPool = userPool(this, stage);
+		this.stage = stage;
+
+		this.pictureBucket = this.pictureBucketConstruct();
+		this.userPool = this.userPoolDefinition();
+	}
+
+	pictureBucketConstruct(): Bucket {
+		return new Bucket(this, "WWWBucket", {
+			bucketName: `www-bucket-${this.stage}`,
+			encryption: BucketEncryption.S3_MANAGED,
+			publicReadAccess: false,
+			removalPolicy: cdk.RemovalPolicy.DESTROY,
+			autoDeleteObjects: true,
+		});
+	}
+
+	userPoolDefinition() {
+		return new UserPool(this, "user-pool", {
+			userPoolName: `www-user-pool-${this.stage}`,
+		});
 	}
 }
-
-/**
- * S3 Bucket
- * @param stack
- * @param stage
- */
-const pictureBucket = (stack: cdk.Stack, stage: Stage): Bucket => {
-	return new Bucket(stack, "picture-bucket", {
-		bucketName: `www-picture-${stage}-bucket`,
-	});
-};
-
-/**
- * user pool
- * @param stack
- * @param stage
- */
-const userPool = (stack: cdk.Stack, stage: Stage): UserPool => {
-	return new UserPool(stack, "user-pool", {
-		userPoolName: `user-pool-${stage}`,
-	});
-};
