@@ -1,0 +1,21 @@
+name: Test deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    working-directory: ./docs
+
+jobs:
+  test-deploy:
+    name: Test deployment to make sure it can be built
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build documents
+        run: docker compose up project-doc --exit-code-from project-doc
