@@ -24,6 +24,8 @@ jobs:
         run: docker compose up project-doc --exit-code-from project-doc
       - name: place
         run: echo ${PWD}
+      - name: files
+        run: ls
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
