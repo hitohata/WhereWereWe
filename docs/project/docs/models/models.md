@@ -4,12 +4,12 @@
 
 ```mermaid
 classDiagram
-    class UserId {
+    class UserId~ID~ {
         String: id 
         generate() UserId
     }
     
-    class User { 
+    class User~Entity~ { 
         UserId: id
         String: name
         String: email
@@ -23,11 +23,11 @@ classDiagram
 
 ```mermaid
 classDiagram
-    class TravelId {
+    class TravelId~ID~ {
         String: id
     }
     
-    class Travel {
+    class Travel~AggrigateRoot~ {
         TravelId: id
         String: name    
         List~TravelerId~: travelers
@@ -35,37 +35,44 @@ classDiagram
         List~TodoGropId~: todos
     }
     
-    class UserId {
+    class TravelerGroup {
+        UserId~UserId~: travelers
+    }
+    
+    class UserId~ID~ {
         String: id
+        geenerate() UserId
     }
     
-    class TravelerId {
+    class TravelerId~ID~ {
     }
     
-    class InvolvedUserId {
+    class InvolvedUserId~ID~ {
     }    
     
-    class TodoGroupId {
+    class TodoListGroupId~ID~ {
         String: id
     }
     
-    class TodoGroup {
+    class TodoListGroup~AggrigateRoot~ {
         TodoGroupId: id
-        List~Todo~: todoList
         List~UserId~: shareWith
+        List~Todo~: todoList
+        share(InvolvedUserId) Todo
     }
     
-    class TodoId {
+    class TodoId~ID~ {
         String: id
         generate() TodoId
     }
     
-    class Todo {
+    class Todo~Entity~ {
         TodoId: id
         String: summary
         String: descrition - nullable
         String: dueDate
         Boolean: done
+        new(): Todo
         update(): Todo
         toggleTodo(): Todo
     }
@@ -75,9 +82,9 @@ classDiagram
     TravelId --* Travel
     TravelerId --* Travel
     InvolvedUserId --* Travel
-    Todo --* TodoGroup
-    TodoGroupId --* TodoGroup
-    UserId --* TodoGroup
-    TodoGroupId --* Travel
+    Todo --* TodoListGroup
+    TodoListGroupId --* TodoListGroup
+    UserId --* TodoListGroup
+    TodoListGroupId --* Travel
     TodoId --* Todo
 ```
