@@ -7,4 +7,9 @@ edition = "2021"
 
 [dependencies]
 
-workspace = { members = ["crates/user", "crates/utils"] }
+[workspace]
+
+members = [
+    "crates/user",
+    "crates/utils"
+]
