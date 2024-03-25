@@ -7,9 +7,9 @@
    parallel: true
    commands:
      backend-test:
-       root: backend/
-       tags: backend test
-       run: cargo run test
+       root: backend/core-where-were-we
+       tags: core where were we test
+       run: cargo test --workspace
 
  pre-commit:
    parallel: true

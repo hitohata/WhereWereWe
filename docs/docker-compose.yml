@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   project-doc:
     image: node:20
@@ -6,4 +6,12 @@ services:
     volumes:
       - "./project:/code"
       - "./build/project:/build"
+    working_dir: "/code"
+
+  core-where-were-we-doc:
+    image: rust:1.77
+    command: cargo doc --workspace
+    volumes:
+      - "../backend/core-where-were-we:/code"
+      - "./build/core-where-were-we:/code/target/doc"
     working_dir: "/code"
