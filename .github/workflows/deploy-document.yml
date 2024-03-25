@@ -21,7 +21,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       - name: Build Documents
-        run: docker compose up core-where-were-we-doc
+        run: docker compose up project
       - run: ls
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
