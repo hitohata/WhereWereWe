@@ -23,6 +23,7 @@ jobs:
       - name: Build Documents
         run: docker compose up project
       - run: ls
+        working-directory: ./docs/build
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
