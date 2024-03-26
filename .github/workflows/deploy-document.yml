@@ -3,13 +3,9 @@ on:
   push:
     branches:
       - develop
-  pull_request:
-    branches:
-      - develop
 
 permissions:
   contents: write
-  actions: write
 
 defaults:
   run:
@@ -21,15 +17,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-#      - run: chmod +x ./build
-#        working-directory: ./docs
       - name: Build Documents
         run: docker compose up
-#        working-directory: ./docs
-      - run: pwd
-      - run: ls
-      - run: pwd
-      - run: sudo chmod -R 777 ./build
+      - name: update permissions
+        run: sudo chmod -R 777 ./build
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

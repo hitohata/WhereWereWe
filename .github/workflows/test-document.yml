@@ -17,5 +17,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-#      - name: Build documents
-#        run: docker compose up project-doc --exit-code-from project-doc
+      - name: Build documents
+        run: docker compose up project-doc --exit-code-from project-doc
