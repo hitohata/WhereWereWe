@@ -3,7 +3,7 @@ use ulid::Ulid;
 
 /// User ID consists of an ID only that is UUID
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
-pub struct UserId {
+pub (crate) struct UserId {
     id: String
 }
 

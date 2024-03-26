@@ -13,6 +13,7 @@ classDiagram
         UserId: id
         String: name
         String: email
+        List~UserId~: pertners
         changeName(String) User
     }
     
