@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["user_id"]};
+window.SIDEBAR_ITEMS = {"mod":["user","user_id"]};
