@@ -10,8 +10,8 @@ services:
 
   core-where-were-we-doc:
     image: rust:1.77
-    command: bash -c "cargo doc --workspace && cp -a ./target/doc/. /build/"
+    command: cargo doc --workspace --target-dir /build
     volumes:
       - "../backend/core-where-were-we:/code"
-      - "./build/core-where-were-we:/build"
+      - "./build/core-where-were-we:/build/doc"
     working_dir: "/code"
