@@ -55,6 +55,18 @@ impl Username {
 }
 
 #[cfg(test)]
+mod user_test {
+    use super::*;
+
+    #[test]
+    fn test_change_name() {
+        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "");
+        user.update_name(&Username::new("name2").unwrap());
+        assert_eq!(user.name.name(), "name2");
+    }
+}
+
+#[cfg(test)]
 mod username_test {
     use super::*;
 
