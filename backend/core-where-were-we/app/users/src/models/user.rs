@@ -3,7 +3,7 @@ use crate::errors::errors::UsersError;
 use crate::models::user_id::UserId;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-struct User {
+pub (crate) struct User {
     /// User ID
     pub (crate) id: UserId,
     /// Username
@@ -48,7 +48,7 @@ impl User {
 
 /// Username must be grater than 0 and less than equal 255.
 #[derive(Debug, Clone, Eq, PartialEq)]
-struct Username {
+pub (crate) struct Username {
     // must be 0 < name <= 255
     name: String
 }
