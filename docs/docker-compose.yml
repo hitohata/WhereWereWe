@@ -13,5 +13,5 @@ services:
     command: cargo doc --workspace --target-dir /build
     volumes:
       - "../backend/core-where-were-we:/code"
-      - "./build/core-where-were-we:/build"
+      - "./build/core-where-were-we:/build/doc"
     working_dir: "/code"
