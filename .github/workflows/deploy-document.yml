@@ -26,7 +26,7 @@ jobs:
       - run: pwd
       - run: ls
       - run: pwd
-      - run: chmod 666 ./docs/build
+      - run: chmod 666 ./build
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
