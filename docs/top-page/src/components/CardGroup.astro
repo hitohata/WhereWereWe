@@ -1,0 +1,26 @@
+---
+import type { DocumentLink } from "../data/document-links"
+import Card from "./Card.astro";
+
+interface Props {
+    categoryName: string,
+    documentLinks: DocumentLink[]
+}
+
+const { categoryName, documentLinks } = Astro.props;
+console.log(categoryName)
+---
+
+<div>
+    <h2>{ categoryName }</h2>
+    <ul>
+        {
+            documentLinks.map((doc) => <Card {...doc} />)
+        }
+    </ul>
+</div>
+<style>
+    h2 {
+        text-align: center;
+    }
+</style>

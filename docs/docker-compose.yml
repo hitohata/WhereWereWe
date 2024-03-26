@@ -15,3 +15,11 @@ services:
       - "../backend/core-where-were-we:/code"
       - "./build/core-where-were-we:/build/doc"
     working_dir: "/code"
+
+  top-page-doc:
+    image: node:20
+    command: bash -c "npm ci && npm run build && cp -a /code/dist/. /build/"
+    volumes:
+      - "./top-page:/code"
+      - "./build/top-page:/build"
+    working_dir: "/code"
