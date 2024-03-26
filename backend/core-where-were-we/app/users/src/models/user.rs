@@ -5,23 +5,44 @@ use crate::models::user_id::UserId;
 #[derive(Debug, Clone, Eq, PartialEq)]
 struct User {
     /// User ID
-    id: UserId,
-    // Username
-    name: Username,
-    email: String
+    pub (crate) id: UserId,
+    /// Username
+    pub (crate) name: Username,
+    pub (crate) email: String,
+    /// the partners
+    /// if there is no partners, this value will be an empty vector.
+    pub (crate) partners: Vec<UserId>
 }
 
 impl User {
-    pub fn new(id: &UserId, name: &Username, email: &str) -> Self {
+    pub fn new(id: &UserId, name: &Username, email: &str, partners: Option<&Vec<UserId>>) -> Self {
         Self {
             id: id.to_owned(),
             name: name.to_owned(),
-            email: email.to_string()
+            email: email.to_string(),
+            partners: match partners {
+                Some(val) => val.to_owned(),
+                None => Vec::new()
+            }
         }
     }
 
+    // change the username
     pub fn update_name(&mut self, name: &Username) {
         self.name = name.to_owned()
+    }
+
+    // add a new partner
+    pub fn add_partner(&mut self, partner_id: &UserId) {
+        // if the required partner is not existing in the partner, append it.
+        if self.partners.iter().find(|id| id.eq(&partner_id)).is_none() {
+            self.partners.push(partner_id.to_owned())
+        }
+    }
+
+    // remove a partner
+    pub fn remove_partner(&mut self, partner_id: &UserId) {
+        self.partners = self.partners.iter().filter(|id| !id.eq(&partner_id)).cloned().collect::<Vec<UserId>>();
     }
 }
 
@@ -60,9 +81,39 @@ mod user_test {
 
     #[test]
     fn test_change_name() {
-        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "");
+        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "", None);
         user.update_name(&Username::new("name2").unwrap());
         assert_eq!(user.name.name(), "name2");
+    }
+
+    #[test]
+    fn test_add_a_new_partner() {
+        // Arrange
+        let user_id = UserId::generate();
+        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "", None);
+
+        // Act
+        user.add_partner(&user_id);
+
+        // Assert
+        assert_eq!(user.partners.len(), 1); // user_id2 is removed
+        assert_eq!(user.partners, vec![user_id]);
+    }
+
+    #[test]
+    fn test_remove_partner() {
+        // Arrange
+        let user_id = UserId::generate();
+        let user_id2 = UserId::generate();
+        let partners = vec![user_id.clone(), user_id2.clone()];
+        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "", Some(&partners));
+
+        // Act
+        user.remove_partner(&user_id2);
+
+        // Assert
+        assert_eq!(user.partners.len(), 1); // user_id2 is removed
+        assert_eq!(user.partners, vec![user_id]);
     }
 }
 
