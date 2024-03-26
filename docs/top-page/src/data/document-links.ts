@@ -28,7 +28,7 @@ export const backendDocs: DocumentCategory = {
             description: 'Where Were We Top'
         },
         {
-            url: '/core-where-were-we/core_where_were_we/users/index.html',
+            url: '/core-where-were-we/users/index.html',
             title: 'Core Where Were We Users',
             description: 'Users Application'
         },
