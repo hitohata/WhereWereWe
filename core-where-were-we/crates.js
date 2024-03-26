@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["cfg_if","core_where_were_we","getrandom","libc","ppv_lite86","rand","rand_chacha","rand_core","ulid","users","utils"];
+window.ALL_CRATES = ["cfg_if","core_where_were_we","getrandom","libc","ppv_lite86","proc_macro2","quote","rand","rand_chacha","rand_core","syn","thiserror","thiserror_impl","ulid","unicode_ident","users","utils"];
