@@ -21,15 +21,15 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - run: chmod +x ./build
-        working-directory: ./docs
+#      - run: chmod +x ./build
+#        working-directory: ./docs
       - name: Build Documents
         run: docker compose up
         working-directory: ./docs
       - run: pwd
       - run: ls
       - run: pwd
-      - run: chmod +x ./build
+#      - run: chmod +x ./build
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
