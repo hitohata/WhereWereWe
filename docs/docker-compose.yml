@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   project-doc:
-    image: node:20
+    build: ./dockerfiles/project-document
     command: bash -c "npm ci && npm run build && cp -a /code/build/. /build/"
     volumes:
       - "./project:/code"
@@ -9,7 +9,7 @@ services:
     working_dir: "/code"
 
   core-where-were-we-doc:
-    image: rust:1.77
+    build: ./dockerfiles/rust-base
     command: cargo doc --workspace --target-dir /build
     volumes:
       - "../backend/core-where-were-we:/code"
