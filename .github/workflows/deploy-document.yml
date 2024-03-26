@@ -11,9 +11,9 @@ permissions:
   contents: write
   actions: write
 
-defaults:
-  run:
-    working-directory: ./docs
+#defaults:
+#  run:
+#    working-directory: ./docs
 
 jobs:
   deploy-document:
@@ -21,8 +21,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - run: chmod +x ./build
+        working-directory: ./docs
       - name: Build Documents
         run: docker compose up
+        working-directory: ./docs
       - run: pwd
       - run: ls
       - run: pwd
