@@ -92,36 +92,108 @@
 <a href="#90" id="90">90</a>
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! user's model
 </span><span class="kw">use </span><span class="kw">crate</span>::errors::errors::UsersError;
 <span class="kw">use </span><span class="kw">crate</span>::models::user_id::UserId;
 
 <span class="attr">#[derive(Debug, Clone, Eq, PartialEq)]
-</span><span class="kw">struct </span>User {
+</span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">struct </span>User {
     <span class="doccomment">/// User ID
-    </span>id: UserId,
-    <span class="comment">// Username
-    </span>name: Username,
-    email: String
+    </span><span class="kw">pub </span>(<span class="kw">crate</span>) id: UserId,
+    <span class="doccomment">/// Username
+    </span><span class="kw">pub </span>(<span class="kw">crate</span>) name: Username,
+    <span class="kw">pub </span>(<span class="kw">crate</span>) email: String,
+    <span class="doccomment">/// the partners
+    /// if there is no partners, this value will be an empty vector.
+    </span><span class="kw">pub </span>(<span class="kw">crate</span>) partners: Vec&lt;UserId&gt;
 }
 
 <span class="kw">impl </span>User {
-    <span class="kw">pub fn </span>new(id: <span class="kw-2">&amp;</span>UserId, name: <span class="kw-2">&amp;</span>Username, email: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>new(id: <span class="kw-2">&amp;</span>UserId, name: <span class="kw-2">&amp;</span>Username, email: <span class="kw-2">&amp;</span>str, partners: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;UserId&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             id: id.to_owned(),
             name: name.to_owned(),
-            email: email.to_string()
+            email: email.to_string(),
+            partners: <span class="kw">match </span>partners {
+                <span class="prelude-val">Some</span>(val) =&gt; val.to_owned(),
+                <span class="prelude-val">None </span>=&gt; Vec::new()
+            }
         }
     }
 
-    <span class="kw">pub fn </span>update_name(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>Username) {
+    <span class="comment">// change the username
+    </span><span class="kw">pub fn </span>update_name(<span class="kw-2">&amp;mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>Username) {
         <span class="self">self</span>.name = name.to_owned()
+    }
+
+    <span class="comment">// add a new partner
+    </span><span class="kw">pub fn </span>add_partner(<span class="kw-2">&amp;mut </span><span class="self">self</span>, partner_id: <span class="kw-2">&amp;</span>UserId) {
+        <span class="comment">// if the required partner is not existing in the partner, append it.
+        </span><span class="kw">if </span><span class="self">self</span>.partners.iter().find(|id| id.eq(<span class="kw-2">&amp;</span>partner_id)).is_none() {
+            <span class="self">self</span>.partners.push(partner_id.to_owned())
+        }
+    }
+
+    <span class="comment">// remove a partner
+    </span><span class="kw">pub fn </span>remove_partner(<span class="kw-2">&amp;mut </span><span class="self">self</span>, partner_id: <span class="kw-2">&amp;</span>UserId) {
+        <span class="self">self</span>.partners = <span class="self">self</span>.partners.iter().filter(|id| !id.eq(<span class="kw-2">&amp;</span>partner_id)).cloned().collect::&lt;Vec&lt;UserId&gt;&gt;();
     }
 }
 
 <span class="doccomment">/// Username must be grater than 0 and less than equal 255.
 </span><span class="attr">#[derive(Debug, Clone, Eq, PartialEq)]
-</span><span class="kw">struct </span>Username {
+</span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">struct </span>Username {
     <span class="comment">// must be 0 &lt; name &lt;= 255
     </span>name: String
 }
@@ -154,9 +226,39 @@
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_change_name() {
-        <span class="kw">let </span><span class="kw-2">mut </span>user = User::new(<span class="kw-2">&amp;</span>UserId::generate(), <span class="kw-2">&amp;</span>Username::new(<span class="string">"name"</span>).unwrap(), <span class="string">""</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>user = User::new(<span class="kw-2">&amp;</span>UserId::generate(), <span class="kw-2">&amp;</span>Username::new(<span class="string">"name"</span>).unwrap(), <span class="string">""</span>, <span class="prelude-val">None</span>);
         user.update_name(<span class="kw-2">&amp;</span>Username::new(<span class="string">"name2"</span>).unwrap());
         <span class="macro">assert_eq!</span>(user.name.name(), <span class="string">"name2"</span>);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_add_a_new_partner() {
+        <span class="comment">// Arrange
+        </span><span class="kw">let </span>user_id = UserId::generate();
+        <span class="kw">let </span><span class="kw-2">mut </span>user = User::new(<span class="kw-2">&amp;</span>UserId::generate(), <span class="kw-2">&amp;</span>Username::new(<span class="string">"name"</span>).unwrap(), <span class="string">""</span>, <span class="prelude-val">None</span>);
+
+        <span class="comment">// Act
+        </span>user.add_partner(<span class="kw-2">&amp;</span>user_id);
+
+        <span class="comment">// Assert
+        </span><span class="macro">assert_eq!</span>(user.partners.len(), <span class="number">1</span>); <span class="comment">// user_id2 is removed
+        </span><span class="macro">assert_eq!</span>(user.partners, <span class="macro">vec!</span>[user_id]);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_remove_partner() {
+        <span class="comment">// Arrange
+        </span><span class="kw">let </span>user_id = UserId::generate();
+        <span class="kw">let </span>user_id2 = UserId::generate();
+        <span class="kw">let </span>partners = <span class="macro">vec!</span>[user_id.clone(), user_id2.clone()];
+        <span class="kw">let </span><span class="kw-2">mut </span>user = User::new(<span class="kw-2">&amp;</span>UserId::generate(), <span class="kw-2">&amp;</span>Username::new(<span class="string">"name"</span>).unwrap(), <span class="string">""</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>partners));
+
+        <span class="comment">// Act
+        </span>user.remove_partner(<span class="kw-2">&amp;</span>user_id2);
+
+        <span class="comment">// Assert
+        </span><span class="macro">assert_eq!</span>(user.partners.len(), <span class="number">1</span>); <span class="comment">// user_id2 is removed
+        </span><span class="macro">assert_eq!</span>(user.partners, <span class="macro">vec!</span>[user_id]);
     }
 }
 
