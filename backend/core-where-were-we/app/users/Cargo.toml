@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 thiserror = "1.0.58"
-ulid = "1.1.2"
+uuid =  { version = "1.8.0", features = ["v4"] }
 
 [lib]
 name = "users"
