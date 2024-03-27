@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["core_where_were_we","users","utils"];
+window.ALL_CRATES = ["core_where_were_we","utils"];
