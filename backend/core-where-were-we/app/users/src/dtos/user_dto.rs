@@ -9,11 +9,12 @@ struct UserDto {
     pub email: String,
 }
 
-/// convert the user struct into the plane object
-pub (crate) fn to_dto(user: User) -> UserDto {
-    UserDto {
-        id: user.id.id,
-        name: user.name.name,
-        email: user.email,
+impl From<User> for UserDto {
+    fn from(user: User) -> Self {
+        Self {
+            id: user.id.id,
+            name: user.name.name,
+            email: user.email,
+        }
     }
 }
