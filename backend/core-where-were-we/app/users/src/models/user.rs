@@ -53,9 +53,10 @@ pub (crate) struct Username {
     pub (crate) name: String
 }
 
-impl Username {
-    // the username must be 0 < name <= 255.
-    pub fn new(name: &str) -> Result<Self, UsersError> {
+impl TryFrom<&str> for Username {
+    type Error = UsersError;
+
+    fn try_from(name: &str) -> Result<Self, UsersError> {
         let name_len = name.len();
 
         if 255 < name_len {
@@ -76,8 +77,8 @@ mod user_test {
 
     #[test]
     fn test_change_name() {
-        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "", None);
-        user.update_name(&Username::new("name2").unwrap());
+        let mut user = User::new(&UserId::generate(), &Username::try_from("name").unwrap(), "", None);
+        user.update_name(&Username::try_from("name2").unwrap());
         assert_eq!(user.name.name, "name2");
     }
 
@@ -85,7 +86,7 @@ mod user_test {
     fn test_add_a_new_partner() {
         // Arrange
         let user_id = UserId::generate();
-        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "", None);
+        let mut user = User::new(&UserId::generate(), &Username::try_from("name").unwrap(), "", None);
 
         // Act
         user.add_partner(&user_id);
@@ -101,7 +102,7 @@ mod user_test {
         let user_id = UserId::generate();
         let user_id2 = UserId::generate();
         let partners = vec![user_id.clone(), user_id2.clone()];
-        let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "", Some(&partners));
+        let mut user = User::new(&UserId::generate(), &Username::try_from("name").unwrap(), "", Some(&partners));
 
         // Act
         user.remove_partner(&user_id2);
@@ -118,20 +119,20 @@ mod username_test {
 
     #[test]
     fn test_new_name() {
-        let name = Username::new("name").unwrap().name;
+        let name = Username::try_from("name").unwrap().name;
         assert_eq!(name, "name");
     }
 
     #[test]
     fn test_name_too_short() {
-        let name = Username::new("");
+        let name = Username::try_from("");
         assert!(name.is_err());
         assert_eq!(name.unwrap_err().to_string(), "[UsernameError]: The name length must be grater than 0.".to_string());
     }
 
     #[test]
     fn test_name_too_long() {
-        let name = Username::new(&vec!["a"; 256].join(""));
+        let name = Username::try_from(vec!["a"; 256].join("").as_str());
         assert!(name.is_err());
         assert_eq!(name.unwrap_err().to_string(), "[UsernameError]: The name length must be less than 255 characters.".to_string());
     }
