@@ -138,11 +138,6 @@
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
-<a href="#140" id="140">140</a>
-<a href="#141" id="141">141</a>
-<a href="#142" id="142">142</a>
-<a href="#143" id="143">143</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! user's model
 </span><span class="kw">use </span><span class="kw">crate</span>::errors::errors::UsersError;
 <span class="kw">use </span><span class="kw">crate</span>::models::user_id::UserId;
@@ -195,15 +190,10 @@
 </span><span class="attr">#[derive(Debug, Clone, Eq, PartialEq)]
 </span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">struct </span>Username {
     <span class="comment">// must be 0 &lt; name &lt;= 255
-    </span>name: String
+    </span><span class="kw">pub </span>(<span class="kw">crate</span>) name: String
 }
 
 <span class="kw">impl </span>Username {
-
-    <span class="kw">pub fn </span>name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
-        (<span class="kw-2">&amp;</span><span class="self">self</span>.name).to_string()
-    }
-
     <span class="comment">// the username must be 0 &lt; name &lt;= 255.
     </span><span class="kw">pub fn </span>new(name: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, UsersError&gt; {
         <span class="kw">let </span>name_len = name.len();
@@ -228,7 +218,7 @@
     </span><span class="kw">fn </span>test_change_name() {
         <span class="kw">let </span><span class="kw-2">mut </span>user = User::new(<span class="kw-2">&amp;</span>UserId::generate(), <span class="kw-2">&amp;</span>Username::new(<span class="string">"name"</span>).unwrap(), <span class="string">""</span>, <span class="prelude-val">None</span>);
         user.update_name(<span class="kw-2">&amp;</span>Username::new(<span class="string">"name2"</span>).unwrap());
-        <span class="macro">assert_eq!</span>(user.name.name(), <span class="string">"name2"</span>);
+        <span class="macro">assert_eq!</span>(user.name.name, <span class="string">"name2"</span>);
     }
 
     <span class="attr">#[test]
