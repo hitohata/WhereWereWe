@@ -1,4 +1,4 @@
 // the model of the users application
-pub (crate) mod user_id;
-pub (crate) mod user;
-mod repository;
+pub mod user_id;
+pub mod user;
+pub mod repository;

@@ -3,7 +3,7 @@ use crate::models::user::User;
 
 /// User DTO
 #[derive(Serialize, Deserialize)]
-struct UserDto {
+pub struct UserDto {
     pub id: String,
     pub name: String,
     pub email: String,
