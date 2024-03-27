@@ -5,14 +5,10 @@ use crate::errors::errors::UsersError;
 /// User ID consists of an ID only that is UUID
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub (crate) struct UserId {
-    id: String
+    pub (crate) id: String
 }
 
 impl UserId {
-    pub fn id(&self) -> String {
-        (&self.id).into()
-    }
-
     /// The argument is user ID that must be UUID.
     /// If you don't provide a valid ID, this function returns error.
     pub fn create(id: &str) -> Result<Self, UsersError> {

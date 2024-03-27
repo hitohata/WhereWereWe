@@ -50,15 +50,10 @@ impl User {
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub (crate) struct Username {
     // must be 0 < name <= 255
-    name: String
+    pub (crate) name: String
 }
 
 impl Username {
-
-    pub fn name(&self) -> String {
-        (&self.name).to_string()
-    }
-
     // the username must be 0 < name <= 255.
     pub fn new(name: &str) -> Result<Self, UsersError> {
         let name_len = name.len();
@@ -83,7 +78,7 @@ mod user_test {
     fn test_change_name() {
         let mut user = User::new(&UserId::generate(), &Username::new("name").unwrap(), "", None);
         user.update_name(&Username::new("name2").unwrap());
-        assert_eq!(user.name.name(), "name2");
+        assert_eq!(user.name.name, "name2");
     }
 
     #[test]
