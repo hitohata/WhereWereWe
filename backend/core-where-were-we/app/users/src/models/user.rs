@@ -50,15 +50,10 @@ impl User {
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub (crate) struct Username {
     // must be 0 < name <= 255
-    name: String
+    pub (crate) name: String
 }
 
 impl Username {
-
-    pub fn name(&self) -> String {
-        (&self.name).to_string()
-    }
-
     // the username must be 0 < name <= 255.
     pub fn new(name: &str) -> Result<Self, UsersError> {
         let name_len = name.len();

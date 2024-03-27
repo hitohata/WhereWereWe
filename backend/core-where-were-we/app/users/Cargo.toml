@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 thiserror = "1.0.58"
 uuid =  { version = "1.8.0", features = ["v4"] }
+serde = { version = "1.0.197", features = ["derive"] }
 
 [lib]
 name = "users"
