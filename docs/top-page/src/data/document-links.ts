@@ -32,5 +32,10 @@ export const backendDocs: DocumentCategory = {
             title: 'Core Where Were We Users',
             description: 'Users Application'
         },
+        {
+            url: '/core-where-were-we/utils/index.html',
+            title: 'Core Where Were We Utils',
+            description: 'Utilities of this Application'
+        },
     ]
 }
