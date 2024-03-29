@@ -17,6 +17,3 @@ jobs:
       - name: Run test
         run: docker compose up app --exit-code-from app
         working-directory: ./backend/core-where-were-we
-      - name: Run test
-        run: cargo test --workspace
-        working-directory: ./backend/core-where-were-we
