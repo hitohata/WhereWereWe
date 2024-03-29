@@ -23,6 +23,7 @@ The user's definition is the following.
 |:---------|:-------------------|:-------|
 | PK       | User id            | String |
 | SK       | "USER"[^1]         | String | 
+| Name     | username           | String |
 | EMail    | e-mail address     | String |
 | Partners | a list of User IDs | List   |
 
