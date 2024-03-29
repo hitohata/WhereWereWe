@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["dynamodb_test_client"],"struct":["TestDynamoTable"]};

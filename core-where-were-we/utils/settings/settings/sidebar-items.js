@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["table_name"]};
+window.SIDEBAR_ITEMS = {"fn":["dynamo_endpoint","table_name"]};
