@@ -24,7 +24,7 @@ impl UserRepository for UserRepositoyConcrete {
 
         let result = self.client.get_item()
             .table_name(table_name())
-            .key("ID", AttributeValue::S(user_id.id.to_string()))
+            .key("PK", AttributeValue::S(user_id.id.to_string()))
             .key("SK", AttributeValue::S("User".to_string()))
             .send()
             .await?;
@@ -44,7 +44,7 @@ impl UserRepository for UserRepositoyConcrete {
            None => return Err(anyhow!(""))
         };
 
-        let email = match item.get("Email") {
+        let email = match item.get("EMail") {
             Some(val) => {
                 match val.as_s() {
                     Ok(s) => s,
@@ -56,7 +56,7 @@ impl UserRepository for UserRepositoyConcrete {
 
         let mut partners = vec![];
 
-        match item.get("partners") {
+        match item.get("Partners") {
             Some(partner_val) => {
                 match partner_val.as_l(){
                     Ok(partner_list) => {
@@ -81,6 +81,23 @@ impl UserRepository for UserRepositoyConcrete {
         Ok(Some(user))
     }
     async fn save(&self, user: &User) -> Result<()> {
-        todo!()
+        let user_id_av = AttributeValue::S(user.id.id.to_string());
+        let sk_av = AttributeValue::S("USER".to_string());
+        let name_av = AttributeValue::S(user.name.name.to_string());
+        let email_av = AttributeValue::S(user.email.to_string());
+        let partners_av = AttributeValue::L(user.partners.iter().map(|p| AttributeValue::S(p.id.to_string())).collect::<Vec<AttributeValue>>());
+        
+        self.client
+            .put_item()
+            .table_name(table_name())
+            .item("PK", user_id_av)
+            .item("SK", sk_av)
+            .item("Name", name_av)
+            .item("EMail", email_av)
+            .item("Partners", partners_av)
+            .send()
+            .await?;
+        
+        Ok(())
     }
 }
