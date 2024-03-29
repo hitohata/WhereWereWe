@@ -7,14 +7,16 @@ use crate::models::user_id::UserId;
 use utils::settings::settings::table_name;
 
 struct UserRepositoyConcrete {
-    client: aws_sdk_dynamodb::Client
+    client: aws_sdk_dynamodb::Client,
+    table_name: String
 }
 
 impl UserRepositoyConcrete {
     pub async fn new(client: Option<aws_sdk_dynamodb::Client>) -> Self {
+        let table_name = table_name().to_string();
         match client {
-            Some(c) => Self { client: c },
-            None => Self { client: dynamodb_client().await }
+            Some(c) => Self { client: c, table_name },
+            None => Self { client: dynamodb_client().await, table_name }
         }
     }
 }
@@ -23,7 +25,7 @@ impl UserRepository for UserRepositoyConcrete {
     async fn find_by_id(&self, user_id: &UserId) -> Result<Option<User>> {
 
         let result = self.client.get_item()
-            .table_name(table_name())
+            .table_name(&self.table_name)
             .key("PK", AttributeValue::S(user_id.id.to_string()))
             .key("SK", AttributeValue::S("User".to_string()))
             .send()
@@ -63,7 +65,7 @@ impl UserRepository for UserRepositoyConcrete {
                         for part in partner_list {
                             match part.as_s() {
                                 Ok(s) => {
-                                    let id = UserId::create(s)?;
+                                    let id = UserId::try_from(s.as_str())?;
                                     partners.push(id);
                                 }
                                 Err(e) => return Err(anyhow!(""))
@@ -89,7 +91,7 @@ impl UserRepository for UserRepositoyConcrete {
         
         self.client
             .put_item()
-            .table_name(table_name())
+            .table_name(&self.table_name)
             .item("PK", user_id_av)
             .item("SK", sk_av)
             .item("Name", name_av)
@@ -99,5 +101,19 @@ impl UserRepository for UserRepositoyConcrete {
             .await?;
         
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::models::user::User;
+    use crate::models::user_id::UserId;
+    
+    // create username
+    fn test_user() -> User {
+        let user_id: UserId = UserId::try_from("62cba1c3-1d87-444e-8784-4ed43de4e79a").unwrap();
+        let username: Username = Username::try_from("name").unwrap();
+        User::new(&user_id, &username,  &"e@a", None)
     }
 }

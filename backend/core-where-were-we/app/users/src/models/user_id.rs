@@ -9,9 +9,20 @@ pub (crate) struct UserId {
 }
 
 impl UserId {
+    // Generate a new User ID.
+    pub fn generate() -> Self {
+        Self {
+            // id: Ulid::new().to_string()
+            id: Uuid::new_v4().to_string()
+        }
+    }
+}
+
+impl TryFrom<&str> for UserId {
+    type Error = UsersError;
     /// The argument is user ID that must be UUID.
     /// If you don't provide a valid ID, this function returns error.
-    pub fn create(id: &str) -> Result<Self, UsersError> {
+    fn try_from(id: &str) -> Result<Self, UsersError> {
         match Uuid::try_parse(id) {
             Ok(id_from_string) => {
                 Ok(Self {
@@ -19,15 +30,7 @@ impl UserId {
                 })
             }
             Err(_) => Err(UsersError::InvalidUUID)
-        }
-    }
-
-    // Generate a new User ID.
-    pub fn generate() -> Self {
-        Self {
-            // id: Ulid::new().to_string()
-            id: Uuid::new_v4().to_string()
-        }
+        }   
     }
 }
 
