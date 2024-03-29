@@ -15,6 +15,9 @@ tokio = { version = "1", features = ["full"] }
 utils = { path = "../../utils" }
 anyhow = "1.0.81"
 
+[dev-dependencies]
+test-utils = { path = "../../test-utils" }
+
 [lib]
 name = "users"
 path = "src/lib.rs"

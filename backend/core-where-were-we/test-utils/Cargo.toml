@@ -1,5 +1,5 @@
 [package]
-name = "utils"
+name = "test-utils"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 aws-config = { version = "1.1.7", features = ["behavior-version-latest"] }
 aws-sdk-dynamodb = "1.20.0"
+tokio = { version = "1", features = ["full"] }
+utils = { path="../utils" }

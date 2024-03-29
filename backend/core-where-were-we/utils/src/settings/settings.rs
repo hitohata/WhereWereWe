@@ -10,3 +10,12 @@ pub fn table_name() -> &'static str {
         var("TABLE_NAME").unwrap()
     })
 }
+
+/// read a table name from the environment value
+/// This is used for test only.
+pub fn dynamo_endpoint() -> &'static str {
+    static DYNAMO_ENDPOINT: OnceLock<String> = OnceLock::new();
+    DYNAMO_ENDPOINT.get_or_init(|| {
+        var("DYNAMO_ENDPOINT").unwrap()
+    })
+}
