@@ -1,7 +1,7 @@
 //! create a new user
 use crate::dtos::user_dto::UserDto;
 use crate::errors::errors::UsersError;
-use crate::use_case::user_use_cases::CreateUserUseCase;
+use crate::use_case::user_use_cases::UserUseCases;
 use crate::models::repository::user_repository::UserRepository;
 use crate::models::user::{User, Username};
 use crate::models::user_id::UserId;
@@ -14,7 +14,7 @@ impl <R> CreateUserUseCaseInteractor<R> {
     pub fn new(user_repository: R) -> Self { Self { user_repository } }
 }
 
-impl <R> CreateUserUseCase for CreateUserUseCaseInteractor<R>
+impl <R> UserUseCases for CreateUserUseCaseInteractor<R>
     where R: UserRepository,
 {
     async fn create(&self, name: &str, email: &str) -> Result<UserDto, UsersError> {
@@ -27,7 +27,7 @@ impl <R> CreateUserUseCase for CreateUserUseCaseInteractor<R>
         let user = User::new(&user_id, &username, email, None);
         
         let _ = self.user_repository.save(&user).await;
-        
+       
         Ok(UserDto::from(user))
     } 
 }
