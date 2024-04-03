@@ -6,5 +6,6 @@ pub (crate) enum UsersError {
     UsernameError(String),
     #[error("[UserIdError]: Invalid UUID")]
     InvalidUUID,
-    
+    #[error("[Use Case Error]: User is not find")]
+    UserNotFind
 }
