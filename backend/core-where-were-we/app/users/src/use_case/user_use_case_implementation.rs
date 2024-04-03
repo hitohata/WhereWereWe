@@ -1,4 +1,5 @@
 //! create a new user
+use aws_sdk_dynamodb::types::BackupType::User;
 use crate::dtos::user_dto::UserDto;
 use crate::errors::errors::UsersError;
 use crate::use_case::user_use_cases::UserUseCases;
@@ -29,22 +30,25 @@ impl <R> UserUseCases for CreateUserUseCaseInteractor<R>
         let _ = self.user_repository.save(&user).await;
        
         Ok(UserDto::from(user))
-    } 
-    
+    }
+
     /// add a new partner
     async fn add_partner(&self, user_id: &UserId, partner_id: &UserId) -> Result<UserDto, UsersError> {
-        
-        let find_result = self.user_repository.find_by_id(user_id).await?;
-        
+
+        let find_result = match self.user_repository.find_by_id(user_id).await {
+            Ok(res) => res,
+            Err(e) => return Err(UsersError::UserNotFind) // TODO: fix
+        };
+
         let mut user = match find_result {
             Some(user) => user,
             None => return Err(UsersError::UserNotFind)
         };
-        
+
         user.add_partner(partner_id);
-        
+
         let _ = self.user_repository.save(&user);
-        
+
         return Ok(UserDto::from(user))
     }
 }
