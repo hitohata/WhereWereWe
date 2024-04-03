@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["create_user_use_case","user_use_cases"]};
+window.SIDEBAR_ITEMS = {"mod":["user_use_case_implementation","user_use_cases"]};

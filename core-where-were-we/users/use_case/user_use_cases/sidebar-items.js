@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":["CreateUserUseCase"]};
+window.SIDEBAR_ITEMS = {"trait":["UserUseCases"]};
