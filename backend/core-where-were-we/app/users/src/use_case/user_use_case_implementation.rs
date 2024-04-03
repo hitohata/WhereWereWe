@@ -1,5 +1,4 @@
 //! create a new user
-use aws_sdk_dynamodb::types::BackupType::User;
 use crate::dtos::user_dto::UserDto;
 use crate::errors::errors::UsersError;
 use crate::use_case::user_use_cases::UserUseCases;
