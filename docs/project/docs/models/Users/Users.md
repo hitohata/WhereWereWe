@@ -18,3 +18,4 @@ The email address of the user. This is retrieved from when the user registers.
 
 The partners are other users that related to the user.
 To be a partner requires agreement with each other.
+Once, one user agree to be a partner, each of the users can see each other as a partner.
