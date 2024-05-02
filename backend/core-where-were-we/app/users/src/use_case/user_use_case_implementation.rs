@@ -42,11 +42,6 @@ where
         user_id: &UserId,
         partner_id: &UserId,
     ) -> Result<UserDto, UsersError> {
-        // let find_result = match self.user_repository.find_by_id(user_id).await {
-        //     Ok(res) => res,
-        //     Err(e) => return Err(e)
-        // };
-
         let (user_data, partner_data) = match try_join!(
             self.user_repository.find_by_id(user_id),
             self.user_repository.find_by_id(partner_id)
@@ -83,24 +78,41 @@ where
 
 #[cfg(test)]
 mod add_partner_test {
+    use mockall::mock;
     use crate::models::repository::user_repository::MockUserRepository;
 
     use super::*;
 
-    #[test]
-    fn add_new_partner() {
+    #[tokio::test]
+    async fn add_new_partner() {
         // Arrange
         let mut mock_repo = MockUserRepository::new();
         let user_id = UserId::generate();
         let user_name = Username::try_from("target user").unwrap();
         let user = User::new(&user_id, &user_name, "em@il", None);
 
+        let partner_id = UserId::generate();
+        let partner_name = Username::try_from("target name").unwrap();
+        let partner = User::new(&partner_id, &partner_name, "email@il", None);
+
         mock_repo
             .expect_find_by_id()
+            .times(1)
             .returning(move |_| Ok(Some((&user).clone())));
+        mock_repo
+            .expect_find_by_id()
+            .times(1)
+            .returning(move |_| Ok(Some((&partner).clone())));
+        mock_repo
+            .expect_save()
+            .returning(move |_| Ok(()));
+
+        let use_case = CreateUserUseCaseInteractor::new(mock_repo);
 
         // Action
+        let res_user = use_case.add_partner(&user_id, &partner_id).await.unwrap();
 
         // Assert
+        assert_eq!(res_user.partners.len(), 1);
     }
 }

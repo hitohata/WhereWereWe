@@ -7,6 +7,7 @@ pub struct UserDto {
     pub id: String,
     pub name: String,
     pub email: String,
+    pub partners: Vec<String>
 }
 
 impl From<User> for UserDto {
@@ -15,6 +16,7 @@ impl From<User> for UserDto {
             id: user.id.id,
             name: user.name.name,
             email: user.email,
+            partners: user.partners.into_iter().map(|id| id.id.to_owned()).collect::<Vec<String>>()
         }
     }
 }
