@@ -22,6 +22,7 @@ impl<R> UserUseCases for CreateUserUseCaseInteractor<R>
 where
     R: UserRepository,
 {
+    /// create a new user
     async fn create(&self, name: &str, email: &str) -> Result<UserDto, UsersError> {
         let user_id = UserId::generate();
         let username = match Username::try_from(name) {
@@ -36,7 +37,9 @@ where
         Ok(UserDto::from(user))
     }
 
-    /// add a new partner
+    /// Add a new partner
+    /// The partner is added to the user.
+    /// The user is also added to the partner's partner.
     async fn add_partner(
         &self,
         user_id: &UserId,
