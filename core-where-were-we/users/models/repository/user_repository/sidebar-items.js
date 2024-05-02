@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":["UserRepository"]};
+window.SIDEBAR_ITEMS = {"mod":["__mock_MockUserRepository","__mock_MockUserRepository_UserRepository"],"struct":["MockUserRepository","MockUserRepository_UserRepository"],"trait":["UserRepository"]};
