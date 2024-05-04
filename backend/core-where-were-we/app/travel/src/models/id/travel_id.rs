@@ -1,8 +1,9 @@
 //! Travel ID
-
+use uuid::Uuid;
 use crate::errors::errors::TravelError;
 
 /// travel ID
+#[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub (crate) struct TravelId {
     pub (crate) id: String
 }
@@ -27,7 +28,7 @@ impl TryFrom<&str> for TravelId {
                     id: id_from_string.to_string()
                 })
             }
-            Err(_) => Err(TravelError::DomainError("Invalid ID is provided."))
+            Err(_) => Err(TravelError::DomainError("Invalid ID is provided.".to_string()))
         }
     }
 }
@@ -38,7 +39,7 @@ mod test {
 
     #[test]
     fn test_eq() {
-        let travel_id = TravelError::generate();
+        let travel_id = TravelId::generate();
         let clone_id = travel_id.clone();
         assert_eq!(travel_id, clone_id);
     }
