@@ -1,0 +1,10 @@
+[package]
+name = "travel"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[lib]
+name = "travel"
+path = "src/lib.rs"
