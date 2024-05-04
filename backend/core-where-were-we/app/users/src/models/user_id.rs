@@ -21,7 +21,7 @@ impl UserId {
 impl TryFrom<&str> for UserId {
     type Error = UsersError;
     /// The argument is user ID that must be UUID.
-    /// If you don't provide a valid ID, this function returns error.
+    /// If you don't provide a valid ID, this function returns errors.
     fn try_from(id: &str) -> Result<Self, UsersError> {
         match Uuid::try_parse(id) {
             Ok(id_from_string) => {
