@@ -6,6 +6,10 @@ edition = "2021"
 [dependencies]
 thiserror = "1.0.59"
 uuid = "1.8.0"
+users = { path = "../users" }
+
+[dev-dependencies]
+test-utils = { path = "../../test-utils" }
 
 [lib]
 name = "travel"

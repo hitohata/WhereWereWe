@@ -1,7 +1,7 @@
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub(crate) enum UsersError {
+pub enum UsersError {
     #[error("{0}")]
     UsernameError(String),
     #[error("Invalid UUID")]

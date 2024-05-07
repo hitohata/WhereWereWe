@@ -5,7 +5,7 @@ use crate::errors::errors::TravelError;
 /// travel ID
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub (crate) struct TravelId {
-    pub (crate) id: String
+    id: String
 }
 
 impl TravelId {
@@ -14,6 +14,10 @@ impl TravelId {
         Self {
             id: Uuid::new_v4().to_string()
         }
+    }
+
+    pub fn id(&self) -> &str {
+        &self.id
     }
 }
 

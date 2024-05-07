@@ -1402,7 +1402,9 @@ dependencies = [
 name = "travel"
 version = "0.1.0"
 dependencies = [
+ "test-utils",
  "thiserror",
+ "users",
  "uuid",
 ]
 
