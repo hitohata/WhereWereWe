@@ -1,6 +1,5 @@
+//! travel struct
 use std::collections::{HashMap, HashSet};
-use std::f32::consts::E;
-use std::str::EscapeDebug;
 use crate::models::id::travel_id::TravelId;
 use users::models::user_id::UserId;
 use crate::errors::errors::TravelError;
