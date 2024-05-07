@@ -20,7 +20,7 @@
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="attr">#[derive(Error, Debug)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>UsersError {
+</span><span class="kw">pub enum </span>UsersError {
     <span class="attr">#[error(<span class="string">"{0}"</span>)]
     </span>UsernameError(String),
     <span class="attr">#[error(<span class="string">"Invalid UUID"</span>)]

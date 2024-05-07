@@ -8,10 +8,8 @@
 <a href="#6" id="6">6</a>
 <a href="#7" id="7">7</a>
 <a href="#8" id="8">8</a>
-<a href="#9" id="9">9</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::dtos::user_dto::UserDto;
 <span class="kw">use </span><span class="kw">crate</span>::errors::errors::UsersError;
-<span class="kw">use </span><span class="kw">crate</span>::models::user_id::UserId;
 
 <span class="kw">pub trait </span>UserUseCases: Send + Sync + <span class="lifetime">'static </span>{
     <span class="kw">async fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, email: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;UserDto, UsersError&gt;;
