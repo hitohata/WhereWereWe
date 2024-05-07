@@ -3,7 +3,7 @@ use crate::errors::errors::UsersError;
 use crate::models::user_id::UserId;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub (crate) struct User {
+pub struct User {
     /// User ID
     pub (crate) id: UserId,
     /// Username

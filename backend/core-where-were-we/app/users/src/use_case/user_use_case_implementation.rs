@@ -81,7 +81,7 @@ where
             return Err(res.unwrap_err())
         }
 
-        return Ok(UserDto::from(user));
+        Ok(UserDto::from(user))
     }
 
     /// Remove a new partner
@@ -124,7 +124,7 @@ where
             return Err(res.unwrap_err())
         }
 
-        return Ok(UserDto::from(user));
+        Ok(UserDto::from(user))
     }
 }
 
