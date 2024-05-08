@@ -77,11 +77,10 @@ where
             self.user_repository.save(&partner)
         );
 
-        if res.is_err() {
-            return Err(res.unwrap_err())
+        match res {
+            Ok(_) => Ok(UserDto::from(user)),
+            Err(e) => Err(e)
         }
-
-        Ok(UserDto::from(user))
     }
 
     /// Remove a new partner
@@ -120,11 +119,10 @@ where
             self.user_repository.save(&partner)
         );
 
-        if res.is_err() {
-            return Err(res.unwrap_err())
+        match res {
+            Ok(_) => Ok(UserDto::from(user)),
+            Err(e) => Err(e)
         }
-
-        Ok(UserDto::from(user))
     }
 
     /// update a user's name
@@ -199,7 +197,7 @@ mod add_partner_test {
         let use_case = CreateUserUseCaseInteractor::new(mock_repo);
 
         // Action
-        let res_user = use_case.add_partner(user_id.id.as_str(), partner_id.id.as_str()).await.unwrap();
+        let res_user = use_case.add_partner(user_id.id(), partner_id.id()).await.unwrap();
 
         // Assert
         assert_eq!(res_user.partners.len(), 1);
@@ -233,7 +231,7 @@ mod add_partner_test {
         let use_case = CreateUserUseCaseInteractor::new(mock_repo);
 
         // Action
-        let res_user = use_case.remove_partner(user_id.id.as_str(), partner_id.id.as_str()).await.unwrap();
+        let res_user = use_case.remove_partner(user_id.id(), partner_id.id()).await.unwrap();
 
         // Assert
         assert_eq!(res_user.partners.len(), 0);
