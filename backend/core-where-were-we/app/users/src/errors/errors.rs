@@ -3,6 +3,8 @@ use thiserror::Error;
 #[derive(Error, Debug)]
 pub enum UsersError {
     #[error("{0}")]
+    DomainError(String),
+    #[error("{0}")]
     UsernameError(String),
     #[error("Invalid UUID")]
     InvalidUUID,
