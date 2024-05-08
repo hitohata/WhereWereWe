@@ -239,8 +239,6 @@
 <a href="#237" id="237">237</a>
 <a href="#238" id="238">238</a>
 <a href="#239" id="239">239</a>
-<a href="#240" id="240">240</a>
-<a href="#241" id="241">241</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! create a new user
 </span><span class="kw">use </span>tokio::try_join;
 
@@ -320,11 +318,10 @@
             <span class="self">self</span>.user_repository.save(<span class="kw-2">&amp;</span>partner)
         );
 
-        <span class="kw">if </span>res.is_err() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(res.unwrap_err())
+        <span class="kw">match </span>res {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(UserDto::from(user)),
+            <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(e)
         }
-
-        <span class="prelude-val">Ok</span>(UserDto::from(user))
     }
 
     <span class="doccomment">/// Remove a new partner
@@ -363,11 +360,10 @@
             <span class="self">self</span>.user_repository.save(<span class="kw-2">&amp;</span>partner)
         );
 
-        <span class="kw">if </span>res.is_err() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(res.unwrap_err())
+        <span class="kw">match </span>res {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(UserDto::from(user)),
+            <span class="prelude-val">Err</span>(e) =&gt; <span class="prelude-val">Err</span>(e)
         }
-
-        <span class="prelude-val">Ok</span>(UserDto::from(user))
     }
 
     <span class="doccomment">/// update a user's name
@@ -442,7 +438,7 @@
         <span class="kw">let </span>use_case = CreateUserUseCaseInteractor::new(mock_repo);
 
         <span class="comment">// Action
-        </span><span class="kw">let </span>res_user = use_case.add_partner(user_id.id.as_str(), partner_id.id.as_str()).<span class="kw">await</span>.unwrap();
+        </span><span class="kw">let </span>res_user = use_case.add_partner(user_id.id(), partner_id.id()).<span class="kw">await</span>.unwrap();
 
         <span class="comment">// Assert
         </span><span class="macro">assert_eq!</span>(res_user.partners.len(), <span class="number">1</span>);
@@ -476,7 +472,7 @@
         <span class="kw">let </span>use_case = CreateUserUseCaseInteractor::new(mock_repo);
 
         <span class="comment">// Action
-        </span><span class="kw">let </span>res_user = use_case.remove_partner(user_id.id.as_str(), partner_id.id.as_str()).<span class="kw">await</span>.unwrap();
+        </span><span class="kw">let </span>res_user = use_case.remove_partner(user_id.id(), partner_id.id()).<span class="kw">await</span>.unwrap();
 
         <span class="comment">// Assert
         </span><span class="macro">assert_eq!</span>(res_user.partners.len(), <span class="number">0</span>);

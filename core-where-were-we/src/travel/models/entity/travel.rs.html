@@ -153,11 +153,9 @@
 <a href="#151" id="151">151</a>
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! travel struct
-</span><span class="kw">use </span>std::collections::{HashMap, HashSet};
-<span class="kw">use </span><span class="kw">crate</span>::models::id::travel_id::TravelId;
-<span class="kw">use </span>users::models::user_id::UserId;
+</span><span class="kw">use </span>std::collections::HashSet;
+<span class="kw">use </span><span class="kw">crate</span>::models::id::{travel_id::TravelId, user_id::UserId};
 <span class="kw">use </span><span class="kw">crate</span>::errors::errors::TravelError;
 
 <span class="attr">#[derive(Debug, Clone)]
@@ -173,9 +171,9 @@
 
 <span class="kw">impl </span>Travel {
     <span class="doccomment">/// the travelers and the involved users can be None.
-    </span><span class="kw">pub fn </span>new(travel_id: <span class="kw-2">&amp;</span>TravelId, name: <span class="kw-2">&amp;</span>str, travelers: <span class="kw-2">&amp;</span>Vec&lt;UserId&gt;, involved_users: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;UserId&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
+    </span><span class="kw">pub fn </span>new(travel_id: <span class="kw-2">&amp;</span>TravelId, name: <span class="kw-2">&amp;</span>str, travelers: <span class="kw-2">&amp;</span>[UserId], involved_users: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[UserId]&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
 
-        <span class="kw">if </span>name.len() &lt; <span class="number">1 </span>{
+        <span class="kw">if </span>name.is_empty() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"Travel name cannot be empty"</span>.to_owned()))
         }
 
@@ -183,7 +181,7 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"Travel name length must be less than or equal 255"</span>.to_owned()))
         }
 
-        <span class="kw">if </span>travelers.len() &lt; <span class="number">1 </span>{
+        <span class="kw">if </span>travelers.is_empty() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"Traveler must be set"</span>.into()));
         }
 
@@ -207,11 +205,11 @@
     }
 
     <span class="kw">pub fn </span>travelers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;UserId&gt; {
-        (<span class="kw-2">&amp;</span><span class="self">self</span>.travelers).clone().into_iter().collect::&lt;Vec&lt;UserId&gt;&gt;()
+        <span class="self">self</span>.travelers.clone().into_iter().collect::&lt;Vec&lt;UserId&gt;&gt;()
     }
 
     <span class="kw">pub fn </span>involved_users(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;UserId&gt; {
-        (<span class="kw-2">&amp;</span><span class="self">self</span>.involved_users).clone().into_iter().collect::&lt;Vec&lt;UserId&gt;&gt;()
+        <span class="self">self</span>.involved_users.clone().into_iter().collect::&lt;Vec&lt;UserId&gt;&gt;()
     }
 
     <span class="doccomment">/// add a traveler into this travel

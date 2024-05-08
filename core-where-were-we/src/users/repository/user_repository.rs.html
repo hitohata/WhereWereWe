@@ -221,7 +221,7 @@
             </span>.client
             .get_item()
             .table_name(<span class="kw-2">&amp;</span><span class="self">self</span>.table_name)
-            .key(<span class="string">"PK"</span>, AttributeValue::S(user_id.id.to_string()))
+            .key(<span class="string">"PK"</span>, AttributeValue::S(user_id.id().to_string()))
             .key(<span class="string">"SK"</span>, AttributeValue::S(<span class="string">"USER"</span>.to_string()))
             .send()
             .<span class="kw">await </span>{
@@ -277,14 +277,14 @@
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(user))
     }
     <span class="kw">async fn </span>save(<span class="kw-2">&amp;</span><span class="self">self</span>, user: <span class="kw-2">&amp;</span>User) -&gt; <span class="prelude-ty">Result</span>&lt;(), UsersError&gt; {
-        <span class="kw">let </span>user_id_av = AttributeValue::S(user.id.id.to_string());
+        <span class="kw">let </span>user_id_av = AttributeValue::S(user.id.id().to_string());
         <span class="kw">let </span>sk_av = AttributeValue::S(<span class="string">"USER"</span>.to_string());
         <span class="kw">let </span>name_av = AttributeValue::S(user.name.name.to_string());
         <span class="kw">let </span>email_av = AttributeValue::S(user.email.to_string());
         <span class="kw">let </span>partners_av = AttributeValue::L(
             user.partners
                 .iter()
-                .map(|p| AttributeValue::S(p.id.to_string()))
+                .map(|p| AttributeValue::S(p.id().to_string()))
                 .collect::&lt;Vec&lt;AttributeValue&gt;&gt;(),
         );
 

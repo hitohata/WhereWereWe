@@ -10,7 +10,7 @@
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="attr">#[derive(Error, Debug)]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum </span>TravelError {
+</span><span class="kw">pub enum </span>TravelError {
     <span class="attr">#[error(<span class="string">"{0}"</span>)]
     </span>DomainError(String)
 }

@@ -180,7 +180,7 @@
             .provisioned_throughput(throughput)
             .send()
             .<span class="kw">await
-            </span>.expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Creating a table failed: {}"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.table_name));
+            </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">"Creating a table failed: {}"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.table_name));
     }
     
     <span class="doccomment">/// remove a table
@@ -190,7 +190,7 @@
             .table_name(<span class="kw-2">&amp;</span><span class="self">self</span>.table_name)
             .send()
             .<span class="kw">await
-            </span>.expect(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Deleting a table failed: {}"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.table_name));
+            </span>.unwrap_or_else(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">"Deleting a table failed: {}"</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.table_name));
     }
 }
 

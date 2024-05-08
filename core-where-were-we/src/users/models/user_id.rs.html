@@ -52,7 +52,6 @@
 <a href="#50" id="50">50</a>
 <a href="#51" id="51">51</a>
 <a href="#52" id="52">52</a>
-<a href="#53" id="53">53</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! The User ID
 </span><span class="kw">use </span>uuid::Uuid;
 <span class="kw">use </span><span class="kw">crate</span>::errors::errors::UsersError;
@@ -60,7 +59,7 @@
 <span class="doccomment">/// User ID consists of an ID only that is UUID
 </span><span class="attr">#[derive(Debug, Clone, Hash, Eq, PartialEq)]
 </span><span class="kw">pub struct </span>UserId {
-    <span class="kw">pub </span>(<span class="kw">crate</span>) id: String
+    id: String
 }
 
 <span class="kw">impl </span>UserId {
@@ -72,8 +71,7 @@
     <span class="comment">// Generate a new User ID.
     </span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">fn </span>generate() -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            <span class="comment">// id: Ulid::new().to_string()
-            </span>id: Uuid::new_v4().to_string()
+            id: Uuid::new_v4().to_string()
         }
     }
 }

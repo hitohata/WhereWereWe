@@ -156,7 +156,7 @@
 }
 
 <span class="kw">impl </span>User {
-    <span class="kw">pub fn </span>new(id: <span class="kw-2">&amp;</span>UserId, name: <span class="kw-2">&amp;</span>Username, email: <span class="kw-2">&amp;</span>str, partners: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;UserId&gt;&gt;) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(id: <span class="kw-2">&amp;</span>UserId, name: <span class="kw-2">&amp;</span>Username, email: <span class="kw-2">&amp;</span>str, partners: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;UserId&gt;&gt;) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             id: id.to_owned(),
             name: name.to_owned(),
@@ -176,7 +176,7 @@
     <span class="comment">// add a new partner
     </span><span class="kw">pub fn </span>add_partner(<span class="kw-2">&amp;mut </span><span class="self">self</span>, partner_id: <span class="kw-2">&amp;</span>UserId) {
         <span class="comment">// if the required partner is not existing in the partner, append it.
-        </span><span class="kw">if </span><span class="self">self</span>.partners.iter().find(|id| id.eq(<span class="kw-2">&amp;</span>partner_id)).is_none() {
+        </span><span class="kw">if </span>!<span class="self">self</span>.partners.iter().any(|id| id.eq(<span class="kw-2">&amp;</span>partner_id)) {
             <span class="self">self</span>.partners.push(partner_id.to_owned())
         }
     }
@@ -189,9 +189,9 @@
 
 <span class="doccomment">/// Username must be grater than 0 and less than equal 255.
 </span><span class="attr">#[derive(Debug, Clone, Eq, PartialEq)]
-</span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">struct </span>Username {
+</span><span class="kw">pub struct </span>Username {
     <span class="comment">// must be 0 &lt; name &lt;= 255
-    </span><span class="kw">pub </span>(<span class="kw">crate</span>) name: String
+    </span><span class="kw">pub </span>name: String
 }
 
 <span class="kw">impl </span>TryFrom&lt;<span class="kw-2">&amp;</span>str&gt; <span class="kw">for </span>Username {
