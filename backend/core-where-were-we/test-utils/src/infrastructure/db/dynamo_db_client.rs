@@ -1,6 +1,5 @@
-use aws_config::imds::Client;
 use aws_sdk_dynamodb as dynamodb;
-use aws_sdk_dynamodb::types::{AttributeDefinition, AttributeValue, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType};
+use aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType};
 use utils::settings::settings::dynamo_endpoint;
 
 /// The DynamoDB user client for the testl.

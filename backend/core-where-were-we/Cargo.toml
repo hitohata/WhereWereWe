@@ -12,6 +12,7 @@ aws-sdk-dynamodb = "1.20.0"
 
 members = [
     "app/users",
+    "app/travel",
     "utils",
-    "test-utils"
+    "test-utils",
 ]

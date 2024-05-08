@@ -3,7 +3,7 @@ use crate::errors::errors::UsersError;
 use crate::models::user_id::UserId;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub (crate) struct User {
+pub struct User {
     /// User ID
     pub (crate) id: UserId,
     /// Username
@@ -127,13 +127,13 @@ mod username_test {
     fn test_name_too_short() {
         let name = Username::try_from("");
         assert!(name.is_err());
-        assert_eq!(name.unwrap_err().to_string(), "[UsernameError]: The name length must be grater than 0.".to_string());
+        assert_eq!(name.unwrap_err().to_string(), "The name length must be grater than 0.".to_string());
     }
 
     #[test]
     fn test_name_too_long() {
         let name = Username::try_from(vec!["a"; 256].join("").as_str());
         assert!(name.is_err());
-        assert_eq!(name.unwrap_err().to_string(), "[UsernameError]: The name length must be less than 255 characters.".to_string());
+        assert_eq!(name.unwrap_err().to_string(), "The name length must be less than 255 characters.".to_string());
     }
 }
