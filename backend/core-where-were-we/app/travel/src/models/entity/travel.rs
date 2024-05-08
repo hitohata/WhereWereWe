@@ -1,7 +1,6 @@
 //! travel struct
-use std::collections::{HashMap, HashSet};
-use crate::models::id::travel_id::TravelId;
-use users::models::user_id::UserId;
+use std::collections::HashSet;
+use crate::models::id::{travel_id::TravelId, user_id::UserId};
 use crate::errors::errors::TravelError;
 
 #[derive(Debug, Clone)]
@@ -17,9 +16,9 @@ pub struct Travel {
 
 impl Travel {
     /// the travelers and the involved users can be None.
-    pub fn new(travel_id: &TravelId, name: &str, travelers: &Vec<UserId>, involved_users: Option<&Vec<UserId>>) -> Result<Self, TravelError> {
+    pub fn new(travel_id: &TravelId, name: &str, travelers: &[UserId], involved_users: Option<&[UserId]>) -> Result<Self, TravelError> {
 
-        if name.len() < 1 {
+        if name.is_empty() {
             return Err(TravelError::DomainError("Travel name cannot be empty".to_owned()))
         }
 
@@ -27,7 +26,7 @@ impl Travel {
             return Err(TravelError::DomainError("Travel name length must be less than or equal 255".to_owned()))
         }
 
-        if travelers.len() < 1 {
+        if travelers.is_empty() {
             return Err(TravelError::DomainError("Traveler must be set".into()));
         }
 
@@ -51,11 +50,11 @@ impl Travel {
     }
 
     pub fn travelers(&self) -> Vec<UserId> {
-        (&self.travelers).clone().into_iter().collect::<Vec<UserId>>()
+        self.travelers.clone().into_iter().collect::<Vec<UserId>>()
     }
 
     pub fn involved_users(&self) -> Vec<UserId> {
-        (&self.involved_users).clone().into_iter().collect::<Vec<UserId>>()
+        self.involved_users.clone().into_iter().collect::<Vec<UserId>>()
     }
 
     /// add a traveler into this travel

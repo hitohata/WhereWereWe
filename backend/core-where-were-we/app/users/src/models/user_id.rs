@@ -5,7 +5,7 @@ use crate::errors::errors::UsersError;
 /// User ID consists of an ID only that is UUID
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub struct UserId {
-    pub (crate) id: String
+    id: String
 }
 
 impl UserId {
@@ -17,7 +17,6 @@ impl UserId {
     // Generate a new User ID.
     pub (crate) fn generate() -> Self {
         Self {
-            // id: Ulid::new().to_string()
             id: Uuid::new_v4().to_string()
         }
     }

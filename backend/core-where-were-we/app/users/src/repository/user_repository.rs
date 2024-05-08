@@ -30,7 +30,7 @@ impl UserRepository for UserRepositoryConcrete {
             .client
             .get_item()
             .table_name(&self.table_name)
-            .key("PK", AttributeValue::S(user_id.id.to_string()))
+            .key("PK", AttributeValue::S(user_id.id().to_string()))
             .key("SK", AttributeValue::S("USER".to_string()))
             .send()
             .await {
@@ -86,14 +86,14 @@ impl UserRepository for UserRepositoryConcrete {
         Ok(Some(user))
     }
     async fn save(&self, user: &User) -> Result<(), UsersError> {
-        let user_id_av = AttributeValue::S(user.id.id.to_string());
+        let user_id_av = AttributeValue::S(user.id.id().to_string());
         let sk_av = AttributeValue::S("USER".to_string());
         let name_av = AttributeValue::S(user.name.name.to_string());
         let email_av = AttributeValue::S(user.email.to_string());
         let partners_av = AttributeValue::L(
             user.partners
                 .iter()
-                .map(|p| AttributeValue::S(p.id.to_string()))
+                .map(|p| AttributeValue::S(p.id().to_string()))
                 .collect::<Vec<AttributeValue>>(),
         );
 

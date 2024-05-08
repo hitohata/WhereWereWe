@@ -13,10 +13,10 @@ pub struct UserDto {
 impl From<User> for UserDto {
     fn from(user: User) -> Self {
         Self {
-            id: user.id.id,
+            id: user.id.id().to_owned(),
             name: user.name.name,
             email: user.email,
-            partners: user.partners.into_iter().map(|id| id.id.to_owned()).collect::<Vec<String>>()
+            partners: user.partners.into_iter().map(|id| id.id().to_owned()).collect::<Vec<String>>()
         }
     }
 }

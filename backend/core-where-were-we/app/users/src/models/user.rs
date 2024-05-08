@@ -15,7 +15,7 @@ pub struct User {
 }
 
 impl User {
-    pub fn new(id: &UserId, name: &Username, email: &str, partners: Option<&Vec<UserId>>) -> Self {
+    pub (crate) fn new(id: &UserId, name: &Username, email: &str, partners: Option<&Vec<UserId>>) -> Self {
         Self {
             id: id.to_owned(),
             name: name.to_owned(),
@@ -35,7 +35,7 @@ impl User {
     // add a new partner
     pub fn add_partner(&mut self, partner_id: &UserId) {
         // if the required partner is not existing in the partner, append it.
-        if self.partners.iter().find(|id| id.eq(&partner_id)).is_none() {
+        if !self.partners.iter().any(|id| id.eq(&partner_id)) {
             self.partners.push(partner_id.to_owned())
         }
     }
@@ -48,9 +48,9 @@ impl User {
 
 /// Username must be grater than 0 and less than equal 255.
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub (crate) struct Username {
+pub struct Username {
     // must be 0 < name <= 255
-    pub (crate) name: String
+    pub name: String
 }
 
 impl TryFrom<&str> for Username {

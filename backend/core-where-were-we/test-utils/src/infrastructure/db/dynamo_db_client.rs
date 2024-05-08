@@ -74,7 +74,7 @@ impl TestDynamoTable {
             .provisioned_throughput(throughput)
             .send()
             .await
-            .expect(&format!("Creating a table failed: {}", &self.table_name));
+            .unwrap_or_else(|_| panic!("Creating a table failed: {}", &self.table_name));
     }
     
     /// remove a table
@@ -84,7 +84,7 @@ impl TestDynamoTable {
             .table_name(&self.table_name)
             .send()
             .await
-            .expect(&format!("Deleting a table failed: {}", &self.table_name));
+            .unwrap_or_else(|_| panic!("Deleting a table failed: {}", &self.table_name));
     }
 }
 
