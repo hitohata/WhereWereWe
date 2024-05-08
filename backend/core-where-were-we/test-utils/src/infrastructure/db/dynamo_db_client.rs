@@ -2,7 +2,7 @@ use aws_sdk_dynamodb as dynamodb;
 use aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType};
 use utils::settings::settings::dynamo_endpoint;
 
-/// The DynamoDB user client for the testl.
+/// The DynamoDB user client for the test.
 pub async fn dynamodb_test_client() -> dynamodb::Client {
     let dynamo_endpoint = dynamo_endpoint();
     let config = aws_config::load_from_env().await;
