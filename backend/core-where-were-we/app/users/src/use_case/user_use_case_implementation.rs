@@ -126,6 +126,31 @@ where
 
         Ok(UserDto::from(user))
     }
+
+    /// update a user's name
+    async fn change_name(&self, user_id: &str, new_name: &str) -> Result<UserDto, UsersError> {
+
+        let user_name = Username::try_from(new_name)?;
+
+        let user_id_struct = match UserId::try_from(user_id) {
+            Ok(u) => u,
+            Err(_) => {
+                return Err(UsersError::UsersUseCaseError(format!("Invalid ID is provided {}", user_id)))
+            }
+        };
+
+        let user_or_option = self.user_repository.find_by_id(&user_id_struct).await?;
+        let mut user = match user_or_option {
+            Some(user) => {user},
+            None => return Err(UsersError::UserNotFind(user_id.to_string()))
+        };
+
+        user.update_name(&user_name);
+
+        self.user_repository.save(&user).await?;
+
+        Ok(UserDto::from(user))
+    }
 }
 
 fn to_user_id_struct(user_id: &str, partner_id: &str) -> Result<(UserId, UserId), UsersError> {
