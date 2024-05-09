@@ -1,11 +1,12 @@
 //! todo ID
 //! This is auto increment number
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct TodoId {
     id: u32
 }
 
-impl TodoId {
-    pub fn new(id: &u32) -> Self {
-        Self { id: id.into() }
+impl From<&u32> for TodoId {
+    fn from(value: &u32) -> Self {
+        Self { id: value.into() }
     }
 }
