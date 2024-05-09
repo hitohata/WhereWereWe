@@ -7,6 +7,6 @@ pub struct TodoListGroupId {
 
 impl From<&u32> for TodoListGroupId {
     fn from(value: &u32) -> Self {
-        Self { id: value.into() }
+        Self { id: value.to_owned() }
     }
 }
