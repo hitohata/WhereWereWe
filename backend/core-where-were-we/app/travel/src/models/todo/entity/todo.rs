@@ -2,6 +2,7 @@
 use crate::errors::errors::TravelError;
 use crate::models::todo::id::todo_id::TodoId;
 
+#[derive(Debug, Clone)]
 pub struct Todo {
     id: TodoId,
     summary: String,
@@ -32,6 +33,10 @@ impl Todo {
                 done: false
             }
         )
+    }
+
+    pub fn todo_id(&self) -> &TodoId {
+        &self.id
     }
 
     /// update the summary and the description
