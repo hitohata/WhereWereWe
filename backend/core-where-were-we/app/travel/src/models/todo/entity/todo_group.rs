@@ -23,7 +23,7 @@ impl TodoListGroup {
 
     /// remove a todo from this collection
     pub fn remove_todo(&mut self, todo_id: &TodoId) {
-        if let Some(index) = self.todo.iter().position(|x| x.todo_id().todo_id() == todo_id.todo_id()) {
+        if let Some(index) = self.todo.iter().position(|x| x.todo_id().eq(todo_id)) {
             self.todo.remove(index);
         }
     }
