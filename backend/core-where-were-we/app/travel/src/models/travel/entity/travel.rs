@@ -1,6 +1,6 @@
 //! travel struct
 use std::collections::HashSet;
-use crate::models::id::{travel_id::TravelId, user_id::UserId};
+use crate::models::travel::id::{travel_id::TravelId, user_id::UserId};
 use crate::errors::errors::TravelError;
 
 #[derive(Debug, Clone)]
