@@ -108,7 +108,7 @@
 <span class="kw">use </span>aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType};
 <span class="kw">use </span>utils::settings::settings::dynamo_endpoint;
 
-<span class="doccomment">/// The DynamoDB user client for the testl.
+<span class="doccomment">/// The DynamoDB user client for the test.
 </span><span class="kw">pub async fn </span>dynamodb_test_client() -&gt; dynamodb::Client {
     <span class="kw">let </span>dynamo_endpoint = dynamo_endpoint();
     <span class="kw">let </span>config = aws_config::load_from_env().<span class="kw">await</span>;

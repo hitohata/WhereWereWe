@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["entity","id"]};
+window.SIDEBAR_ITEMS = {"mod":["todo","travel"]};

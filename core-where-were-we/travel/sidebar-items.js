@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["errors","models"]};
+window.SIDEBAR_ITEMS = {"mod":["errors","models","service"]};

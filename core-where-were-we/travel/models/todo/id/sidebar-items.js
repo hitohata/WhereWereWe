@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["todo_id","todo_list_group_id"]};
