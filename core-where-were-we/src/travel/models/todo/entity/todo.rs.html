@@ -175,6 +175,9 @@
 <a href="#173" id="173">173</a>
 <a href="#174" id="174">174</a>
 <a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! todo struct
 </span><span class="kw">use </span><span class="kw">crate</span>::errors::errors::TravelError;
 <span class="kw">use </span><span class="kw">crate</span>::models::todo::id::todo_id::TodoId;
@@ -182,14 +185,17 @@
 <span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>Todo {
     id: TodoId,
-    summary: String,
-    description: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    done: bool
+    <span class="doccomment">/// This value must be grater than 0 and less than equal 200.
+    </span>summary: String,
+    <span class="doccomment">/// This value must be grater than 0 and less than equal 500.
+    </span>description: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="doccomment">/// This is false by default.
+    </span>done: bool
 }
 
 <span class="kw">impl </span>Todo {
     <span class="doccomment">/// The done is false by default.
-    </span><span class="kw">pub fn </span>new(id: <span class="kw-2">&amp;</span>TodoId, summary: <span class="kw-2">&amp;</span>str, description: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
+    </span><span class="kw">pub fn </span>new(id: <span class="kw-2">&amp;</span>TodoId, summary: <span class="kw-2">&amp;</span>str, description: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, done: <span class="prelude-ty">Option</span>&lt;bool&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
 
         <span class="kw">if let </span><span class="prelude-val">Err</span>(summary_error) = validate_summary(summary) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(summary_error);
@@ -207,8 +213,8 @@
                     <span class="prelude-val">Some</span>(d) =&gt; <span class="prelude-val">Some</span>(d.to_owned()),
                     <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None
                 </span>},
-                done: <span class="bool-val">false
-            </span>}
+                done: done.unwrap_or_else(|| <span class="bool-val">false</span>)
+            }
         )
     }
 
@@ -277,7 +283,7 @@
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1u32</span>);
 
         <span class="comment">// Act
-        </span><span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>);
+        </span><span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>);
 
         <span class="comment">// Assert
         </span><span class="macro">assert!</span>(todo.is_ok());
@@ -287,7 +293,7 @@
     </span><span class="kw">fn </span>test_update() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">"updated"</span>, <span class="prelude-val">Some</span>(<span class="string">"updated description"</span>));
@@ -302,7 +308,7 @@
     </span><span class="kw">fn </span>test_update_summary_cannot_be_zero() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">""</span>, <span class="prelude-val">None</span>);
@@ -315,7 +321,7 @@
     </span><span class="kw">fn </span>test_update_summary_cannot_be_grater_than_200() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="kw-2">&amp;</span>String::from_utf8(<span class="macro">vec!</span>[<span class="string">b'X'</span>; <span class="number">201</span>]).unwrap(), <span class="prelude-val">None</span>);
@@ -328,7 +334,7 @@
     </span><span class="kw">fn </span>test_update_description_cannot_be_zero() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">"summary"</span>, <span class="prelude-val">Some</span>(<span class="string">""</span>));
@@ -341,7 +347,7 @@
     </span><span class="kw">fn </span>test_update_description_cannot_be_grater_than_500() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">"summary"</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>String::from_utf8(<span class="macro">vec!</span>[<span class="string">b'X'</span>; <span class="number">501</span>]).unwrap()));
