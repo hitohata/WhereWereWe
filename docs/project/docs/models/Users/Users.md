@@ -2,7 +2,7 @@
 
 ## Attributes
 
-### Id Identifier
+### Identifier
 
 An unique identifier. This is UUID v4.
 
