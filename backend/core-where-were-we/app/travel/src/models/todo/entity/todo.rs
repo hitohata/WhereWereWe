@@ -128,7 +128,7 @@ mod test {
     fn test_update_summary_cannot_be_zero() {
         // Arrange
         let todo_id = TodoId::from(&1);
-        let mut todo = Todo::new(&todo_id, "summary", None).unwrap();
+        let mut todo = Todo::new(&todo_id, "summary", None, None).unwrap();
 
         // Act
         let updated = todo.update("", None);
