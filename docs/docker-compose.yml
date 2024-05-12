@@ -4,7 +4,7 @@ services:
     build:
       context: ./project
       dockerfile: Dockerfile
-    command: bash -c "npm ci && npm run build && cp -a /code/build/. /build/"
+    command: bash -c "cp -r /node-modules /code && npm run build && cp -a /code/build/. /build/"
     volumes:
       - "./project:/code"
       - "./build/project:/build"
