@@ -1,7 +1,8 @@
-version: "3.8"
 services:
   project-doc:
-    image: node:20
+#    image: node:20
+    build:
+      dockerfile: ./project
     command: bash -c "npm ci && npm run build && cp -a /code/build/. /build/"
     volumes:
       - "./project:/code"
