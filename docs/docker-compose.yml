@@ -2,6 +2,7 @@ services:
   project-doc:
 #    image: node:20
     build:
+      context: .
       dockerfile: ./project
     command: bash -c "npm ci && npm run build && cp -a /code/build/. /build/"
     volumes:
