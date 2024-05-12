@@ -20,6 +20,6 @@ jobs:
       - name: Build Docker
         uses: docker/bake-action@v3
         with:
-          load: ture
+          load: true
       - name: Build documents
         run: docker compose up project-doc --exit-code-from project-doc
