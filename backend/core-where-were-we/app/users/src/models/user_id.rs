@@ -1,5 +1,6 @@
 //! The User ID
-use ulid::Ulid;
+use uuid::Uuid;
+use crate::errors::errors::UsersError;
 
 /// User ID consists of an ID only that is UUID
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
@@ -8,28 +9,32 @@ pub struct UserId {
 }
 
 impl UserId {
-    pub fn id(&self) -> String {
-        (&self.id).into()
+
+    pub fn id(&self) -> &str {
+        &self.id
     }
 
+    // Generate a new User ID.
+    pub (crate) fn generate() -> Self {
+        Self {
+            id: Uuid::new_v4().to_string()
+        }
+    }
+}
+
+impl TryFrom<&str> for UserId {
+    type Error = UsersError;
     /// The argument is user ID that must be UUID.
-    /// If you don't provide a valid ID, this function returns error.
-    pub fn create(id: &str) -> Result<Self, ulid::DecodeError> {
-        match Ulid::from_string(id) {
+    /// If you don't provide a valid ID, this function returns errors.
+    fn try_from(id: &str) -> Result<Self, UsersError> {
+        match Uuid::try_parse(id) {
             Ok(id_from_string) => {
                 Ok(Self {
                     id: id_from_string.to_string()
                 })
             }
-            Err(e) => Err(e)
-        }
-    }
-
-    // Generate a new User ID.
-    pub fn generate() -> Self {
-        Self {
-            id: Ulid::new().to_string()
-        }
+            Err(_) => Err(UsersError::InvalidUUID)
+        }   
     }
 }
 

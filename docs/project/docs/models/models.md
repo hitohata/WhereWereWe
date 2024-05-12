@@ -13,6 +13,7 @@ classDiagram
         UserId: id
         String: name
         String: email
+        List~UserId~: pertners
         changeName(String) User
     }
     
@@ -44,12 +45,6 @@ classDiagram
         geenerate() UserId
     }
     
-    class TravelerId~ID~ {
-    }
-    
-    class InvolvedUserId~ID~ {
-    }    
-    
     class TodoListGroupId~ID~ {
         String: id
     }
@@ -61,13 +56,8 @@ classDiagram
         share(InvolvedUserId) Todo
     }
     
-    class TodoId~ID~ {
-        String: id
-        generate() TodoId
-    }
-    
     class Todo~Entity~ {
-        TodoId: id
+        Integer: id
         String: summary
         String: descrition - nullable
         String: dueDate
@@ -77,14 +67,12 @@ classDiagram
         toggleTodo(): Todo
     }
 
-    UserId --|> TravelerId
-    UserId --|> InvolvedUserId
     TravelId --* Travel
-    TravelerId --* Travel
-    InvolvedUserId --* Travel
+    UserId --* Travel
+    
+    UserId --* Travel
     Todo --* TodoListGroup
     TodoListGroupId --* TodoListGroup
     UserId --* TodoListGroup
     TodoListGroupId --* Travel
-    TodoId --* Todo
 ```

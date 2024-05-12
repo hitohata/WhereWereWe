@@ -7,7 +7,17 @@ edition = "2021"
 
 [dependencies]
 thiserror = "1.0.58"
-ulid = "1.1.2"
+uuid =  { version = "1.8.0", features = ["v4"] }
+serde = { version = "1.0.197", features = ["derive"] }
+aws-config = { version = "1.1.7", features = ["behavior-version-latest"] }
+aws-sdk-dynamodb = "1.20.0"
+tokio = { version = "1", features = ["full"] }
+utils = { path = "../../utils" }
+anyhow = "1.0.81"
+mockall = "0.12.1"
+
+[dev-dependencies]
+test-utils = { path = "../../test-utils" }
 
 [lib]
 name = "users"
