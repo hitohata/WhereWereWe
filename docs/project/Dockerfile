@@ -1,5 +1,5 @@
 FROM node:20
-RUN mkdir /node-modules
-WORKDIR /node-modules
-COPY package* /node-modules
+RUN mkdir /code
+WORKDIR /code
+COPY package* /code
 RUN npm ci

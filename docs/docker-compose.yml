@@ -11,7 +11,7 @@ services:
     working_dir: "/code"
 
   core-where-were-we-doc:
-    image: rust:1.77
+    image: rust:1
     command: cargo doc --workspace --no-deps --document-private-items --target-dir /build
     volumes:
       - "../backend/core-where-were-we:/code"
