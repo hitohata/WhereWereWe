@@ -1,6 +1,5 @@
 services:
   project-doc:
-#    image: node:20
     build:
       context: ./project
       dockerfile: Dockerfile
