@@ -1,4 +1,5 @@
 target "project-doc" {
+  context = "./project",
   cache-to = [
     "type=gha,ignore-error=true,mode=max,scope=project-doc"
   ]
