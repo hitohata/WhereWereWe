@@ -23,6 +23,6 @@ jobs:
       - name: Build images
         run: |
           docker buildx create --use --driver=docker-container
-          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl
+          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl --load
       - name: Run test
         run: docker compose up www-core-app --exit-code-from www-core-app
