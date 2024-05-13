@@ -37,7 +37,7 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v1
       - name: mkdir
-        run: mkdir /build
+        run: sudo mkdir /build
       - name: parmission
         run: sudo chmod -R 777 /build
       - name: Install packages
