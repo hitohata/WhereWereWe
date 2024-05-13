@@ -17,6 +17,15 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+      - name: Build Docker
+        uses: docker/bake-action@v3
+        with:
+          files: |-
+            ./docker-compose.yml
+            ./docker-bake.hcl
+          load: true
+          push: false
+          workdir: ./docs
       - name: Build Documents
         run: docker compose up
       - name: update permissions
