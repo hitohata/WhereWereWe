@@ -8,14 +8,14 @@ services:
       - .:/code
     working_dir: /code
     environment:
-      DYNAMO_ENDPOINT: "http://dynamo-db:8000"
+      DYNAMO_ENDPOINT: "http://www-core-dynamo-db:8000"
       AWS_REGION: "us-west-2"
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
       TABLE_NAME: ""
     command: cargo test --workspace
     depends_on:
-      - dynamo-db
+      - www-core-dynamo-db
   www-core-dynamo-db:
     build:
       context: .
