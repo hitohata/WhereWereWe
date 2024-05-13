@@ -1,4 +1,4 @@
-name: Test deployment
+name: Test Document
 
 on:
   pull_request:
@@ -22,13 +22,6 @@ jobs:
       - name: Build images
         run: |
           docker buildx create --use --driver=docker-container
-          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl
-#      - name: Build Docker
-#        uses: docker/bake-action@v3
-#        with:
-#          files: |-
-#            ./docker-compose.yml
-#            ./docker-bake.hcl
-#          workdir: ./docs
+          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl --load
       - name: Build documents
         run: docker compose up project-doc --exit-code-from project-doc
