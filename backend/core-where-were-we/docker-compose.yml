@@ -15,7 +15,10 @@ services:
     depends_on:
       - dynamo-db
   dynamo-db:
-    image: amazon/dynamodb-local
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM amazon/dynamodb-local
     command: "-jar DynamoDBLocal.jar"
     ports:
       - "8000:8000"
