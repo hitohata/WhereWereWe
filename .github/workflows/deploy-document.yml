@@ -59,7 +59,7 @@ jobs:
           overwrite: true
           retention-days: 1
 
-  buld-top-page-document:
+  build-top-page-document:
     defaults:
       run:
         working-directory: ./docs/top-page
@@ -89,6 +89,9 @@ jobs:
     timeout-minutes: 3
     name: Build top page document to make sure it can be built
     runs-on: ubuntu-latest
+    needs:
+      - build-project-document
+      - build-top-page-document
     steps:
       - name: mkdir
         run: sudo mkdir /build && sudo chmod -R 777 /build
