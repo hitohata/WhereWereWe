@@ -34,10 +34,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - run: bash $(pwd)
-#      - name: Set up Bun
-#        uses: oven-sh/setup-bun@v1
-#      - name: Install packages
-#        run: bun install
-#      - name: Build the top page Doc
-#        run: bun run build
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+      - name: parmission
+        uses: sudo chmod -R 777 /build
+      - name: Install packages
+        run: bun install
+      - name: Build the top page Doc
+        run: bun run build --outDir /build/top-page
+      - name: ls
+        run: echo $(ls)
+        working-directory: /build/top-page
