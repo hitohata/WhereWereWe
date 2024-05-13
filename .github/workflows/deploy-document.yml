@@ -1,18 +1,11 @@
 name: Deploy documents
-#on:
-#  push:
-#    branches:
-#      - develop
-
 on:
-  push
+  push:
+    branches:
+      - develop
 
 permissions:
   contents: write
-
-#defaults:
-#  run:
-#    working-directory: ./docs
 
 jobs:
   build-project-document:
@@ -113,9 +106,8 @@ jobs:
       - name: copy top index.html
         run: cp ./build/index.html /build
         working-directory: ./docs
-      - run: ls -R /build
-#      - name: Deploy to GitHub Pages
-#        uses: JamesIves/github-pages-deploy-action@v4
-#        with:
-#          folder: /build
-#          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: /build
+          token: ${{ secrets.GITHUB_TOKEN }}

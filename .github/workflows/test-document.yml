@@ -1,29 +1,27 @@
 name: Test Document
-#
-#on:
-#  pull_request:
-#    branches:
-#      - develop
 
-on: push
+on:
+  pull_request:
+    branches:
+      - develop
 
 jobs:
-#  test-project-document:
-#    defaults:
-#      run:
-#        working-directory: ./docs/project
-#    timeout-minutes: 3
-#    name: Build project document to make sure it can be built
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#      - name: Set up Bun
-#        uses: oven-sh/setup-bun@v1
-#      - name: Install packages
-#        run: bun install
-#      - name: Build Project Doc
-#        run: bun run build
+  test-project-document:
+    defaults:
+      run:
+        working-directory: ./docs/project
+    timeout-minutes: 3
+    name: Build project document to make sure it can be built
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install packages
+        run: bun install
+      - name: Build Project Doc
+        run: bun run build
   test-top-page-document:
     defaults:
       run:
@@ -38,7 +36,7 @@ jobs:
         uses: oven-sh/setup-bun@v1
       - name: mkdir
         run: sudo mkdir /build
-      - name: parmission
+      - name: permission
         run: sudo chmod -R 777 /build
       - name: Install packages
         run: bun install
