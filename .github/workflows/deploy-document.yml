@@ -97,6 +97,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up rust
         uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
       - name: mkdir
         run: sudo mkdir /build && sudo chmod -R 777 /build
       - name: build doc
