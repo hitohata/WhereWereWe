@@ -28,5 +28,34 @@ The user's definition is the following.
 | Partners | a list of User IDs | List   |
 
 
+## Travel
+
+### ToDo
+
+
+* PK: Travel ID
+
+* SK: Composite ID
+
+
+#### ToDo (Each)
+
+
+| Key      | Value                                  | Type   |
+
+|:---------|:---------------------------------------|:-------|
+
+| PK       | Travel ID                              | String |
+
+[//]: # (| SK       | ToDoList#{todo list ID}#ToDo#{todo ID} | String | )
+
+| Name     | username                               | String |
+
+| EMail    | e-mail address                         | String |
+
+| Partners | a list of User IDs                     | List   |
+
+
 [^1]: Just a Placeholder
+
 
