@@ -41,21 +41,26 @@ The user's definition is the following.
 #### ToDo (Each)
 
 
-| Key      | Value                                  | Type   |
+| Key         | Value                                          | Type    |
+|:------------|:-----------------------------------------------|:--------|
+| PK          | Travel ID                                      | String  |
+| SK          | ToDoList#(todo list ID[^2])#ToDo#(todo ID[^2]) | String  | 
+| Summary     | summary                                        | String  |
+| Description | description. Can be null                       | String  |
+| Due Date    | can be null                                    | String  | 
+| Done        | done or not                                    | boolean | 
 
-|:---------|:---------------------------------------|:-------|
+#### TODO List Group
 
-| PK       | Travel ID                              | String |
-
-[//]: # (| SK       | ToDoList#{todo list ID}#ToDo#{todo ID} | String | )
-
-| Name     | username                               | String |
-
-| EMail    | e-mail address                         | String |
-
-| Partners | a list of User IDs                     | List   |
+| Key       | Value                            | Type   |
+|:----------|:---------------------------------|:-------|
+| PK        | Travel ID                        | String |
+| SK        | ToDoList#(todo list ID[^2])      | String | 
+| Name      | todo list name                   | String |
+| ShareWith | users this todo list shares with | String |
 
 
 [^1]: Just a Placeholder
+[^2]: Variable. Actual ID
 
 
