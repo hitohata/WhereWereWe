@@ -11,7 +11,7 @@ jobs:
   test-project-document:
     defaults:
       run:
-        working-directory: /docs/project
+        working-directory: ./docs/project
     timeout-minutes: 3
     name: Build project document to make sure it can be built
     runs-on: ubuntu-latest
