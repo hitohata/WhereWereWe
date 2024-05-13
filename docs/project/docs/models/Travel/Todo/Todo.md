@@ -26,7 +26,7 @@ The ID of this Todo List Group is the *Travel ID*, the *Todo List ID* is an auto
 
 #### Summary
 
-The 
+The Summary of Todo
 
 #### Description
 
@@ -36,6 +36,6 @@ The description
 
 This is date.
 
-#### Dome
+#### Done
 
 This is boolean value, true means Done, false means don't.
