@@ -1,14 +1,14 @@
 services:
-  project-doc:
-    image: project-doc
-    build:
-      context: ./project
-      dockerfile: Dockerfile
-    command: bash -c "cp -r /node-modules/node_modules /code && npm run build && cp -a /code/build/. /build/"
-    volumes:
-      - "./project:/code"
-      - "./build/project:/build"
-    working_dir: "/code"
+#  project-doc:
+#    image: project-doc
+#    build:
+#      context: ./project
+#      dockerfile: Dockerfile
+#    command: bash -c "cp -r /node-modules/node_modules /code && npm run build && cp -a /code/build/. /build/"
+#    volumes:
+#      - "./project:/code"
+#      - "./build/project:/build"
+#    working_dir: "/code"
 
   core-where-were-we-doc:
     image: rust:1
