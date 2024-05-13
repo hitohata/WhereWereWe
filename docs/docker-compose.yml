@@ -1,5 +1,6 @@
 services:
   project-doc:
+    image: project-doc
     build:
       context: ./project
       dockerfile: Dockerfile
