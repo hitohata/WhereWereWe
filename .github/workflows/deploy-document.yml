@@ -85,4 +85,14 @@ jobs:
           overwrite: true
           retention-days: 1
 
-#  deploy-document:
+  deploy-document:
+    timeout-minutes: 3
+    name: Build top page document to make sure it can be built
+    runs-on: ubuntu-latest
+    steps:
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - uses: actions/download-artifact@v4
+        with:
+          path: /build
+      - run: ls -R /build
