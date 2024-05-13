@@ -20,13 +20,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
-      - name: Build Docker
-        uses: docker/bake-action@v3
-        with:
-          files: |-
-            ./docker-compose.yml
-            ./docker-bake.hcl
-          workdir: ./docs
+      - name: Build images
+        run: |
+          docker buildx create --use --driver=docker-container
+          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl --load
       - name: Build Documents
         run: docker compose up
       - name: update permissions
