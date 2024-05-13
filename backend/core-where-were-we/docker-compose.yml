@@ -1,6 +1,9 @@
 services:
-  app:
-    image: rust:1.77
+  www-core-app:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM rust:1.77
     volumes:
       - .:/code
     working_dir: /code
@@ -13,7 +16,7 @@ services:
     command: cargo test --workspace
     depends_on:
       - dynamo-db
-  dynamo-db:
+  www-core-dynamo-db:
     build:
       context: .
       dockerfile_inline: |
