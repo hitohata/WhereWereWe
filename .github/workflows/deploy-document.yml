@@ -1,8 +1,11 @@
 name: Deploy documents
+#on:
+#  push:
+#    branches:
+#      - develop
+
 on:
-  push:
-    branches:
-      - develop
+  push
 
 permissions:
   contents: write
@@ -12,20 +15,44 @@ defaults:
     working-directory: ./docs
 
 jobs:
-  deploy-document:
-    timeout-minutes: 5
+#  deploy-document:
+#    timeout-minutes: 5
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v4
+#      - name: Set up Docker
+#        uses: docker/setup-buildx-action@v3
+#      - name: Build Documents
+#        run: docker compose up
+#      - name: update permissions
+#        run: sudo chmod -R 777 ./build
+#      - name: Deploy to GitHub Pages
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          folder: ./docs/build
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#
+  test-top-page-document:
+    defaults:
+      run:
+        working-directory: ./docs/top-page
+    timeout-minutes: 3
+    name: Build top page document to make sure it can be built
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v3
-      - name: Build Documents
-        run: docker compose up
-      - name: update permissions
-        run: sudo chmod -R 777 ./build
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install packages
+        run: bun install
+      - name: Build the top page Doc
+        run: bun run build
+      - name: out
+        uses: actions/upload-artifact@v4
         with:
-          folder: ./docs/build
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: top-page
+          path: ./dist/
+
+#  deploy-document:
