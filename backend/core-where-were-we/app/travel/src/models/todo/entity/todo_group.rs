@@ -40,31 +40,31 @@ mod test {
 
     #[test]
     fn test_add_todo() {
-        /// Arrange
+        // Arrange
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
-        let todo = Todo::new(&TodoId::from(&1u32), "summary", None).unwrap();
+        let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None).unwrap();
         let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![]);
 
-        /// Act
+        // Act
         todo_list_group.add_todo(&todo);
 
-        /// Assert
+        // Assert
         assert_eq!(todo_list_group.todo.len(), 1);
     }
 
     #[test]
     fn test_remove_todo() {
-        /// Arrange
+        // Arrange
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
-        let todo = Todo::new(&TodoId::from(&1u32), "summary", None).unwrap();
+        let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None).unwrap();
         let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo]);
 
-        /// Act
+        // Act
         todo_list_group.remove_todo(&TodoId::from(&1u32));
 
-        /// Assert
+        // Assert
         assert_eq!(todo_list_group.todo.len(), 0);
     }
 }

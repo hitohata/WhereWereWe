@@ -1,21 +1,26 @@
-version: "3.8"
 services:
-  app:
-    image: rust:1.77
+  www-core-app:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM rust:1.77
     volumes:
       - .:/code
     working_dir: /code
     environment:
-      DYNAMO_ENDPOINT: "http://dynamo-db:8000"
+      DYNAMO_ENDPOINT: "http://www-core-dynamo-db:8000"
       AWS_REGION: "us-west-2"
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
       TABLE_NAME: ""
     command: cargo test --workspace
     depends_on:
-      - dynamo-db
-  dynamo-db:
-    image: amazon/dynamodb-local
+      - www-core-dynamo-db
+  www-core-dynamo-db:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM amazon/dynamodb-local
     command: "-jar DynamoDBLocal.jar"
     ports:
       - "8000:8000"
