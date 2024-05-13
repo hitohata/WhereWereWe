@@ -24,7 +24,17 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'models/models',
         },
-        items: ['models/Users/Users'],
+        items: [
+            'models/Users/Users',
+            {
+                type: 'category',
+                label: 'Travel',
+                items: [
+                    'models/Travel/Travel',
+                    'models/Travel/Todo/Todo'
+                ]
+            }
+        ],
       },
       {
         type: 'category',
@@ -33,7 +43,7 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: 'data-structure/data-structure',
         },
-        items: ['data-structure/data-structure'],
+        items: ['data-structure/schema', 'data-structure/data-structure'],
       }
   ],
 };

@@ -30,25 +30,37 @@ The user's definition is the following.
 
 ## Travel
 
-### TODO Group
+### ToDo
 
-| Key      | Value                  | Type   |
-|:---------|:-----------------------|:-------|
-| PK       | Travel ID              | String |
-| SK       | TODOGroup#{number[^2]} | String | 
-| Name     | username               | String |
-| EMail    | e-mail address         | String |
-| Partners | a list of User IDs     | List   |
 
-### TODO
+* PK: Travel ID
 
-| Key      | Value                                     | Type   |
-|:---------|:------------------------------------------|:-------|
-| PK       | Travel ID                                 | String |
-| SK       | TodoGroup#{number[^2]}#Todo#${number[^2]} | String | 
-| Name     | username                                  | String |
-| EMail    | e-mail address                            | String |
-| Partners | a list of User IDs                        | List   |
+* SK: Composite ID
+
+
+#### ToDo (Each)
+
+
+| Key         | Value                                          | Type    |
+|:------------|:-----------------------------------------------|:--------|
+| PK          | Travel ID                                      | String  |
+| SK          | ToDoList#(todo list ID[^2])#ToDo#(todo ID[^2]) | String  | 
+| Summary     | summary                                        | String  |
+| Description | description. Can be null                       | String  |
+| Due Date    | can be null                                    | String  | 
+| Done        | done or not                                    | boolean | 
+
+#### TODO List Group
+
+| Key       | Value                            | Type   |
+|:----------|:---------------------------------|:-------|
+| PK        | Travel ID                        | String |
+| SK        | ToDoList#(todo list ID[^2])      | String | 
+| Name      | todo list name                   | String |
+| ShareWith | users this todo list shares with | String |
+
 
 [^1]: Just a Placeholder
-[^2]: This is a variable
+[^2]: Variable. Actual ID
+
+
