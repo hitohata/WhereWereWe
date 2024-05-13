@@ -50,7 +50,7 @@ jobs:
       - name: Build the top page Doc
         run: bun run build
       - name: ls
-        run: echo $(ls ./dist)
+        run: echo $(ls ${pwd}/dist/)
       - name: out
         uses: actions/upload-artifact@v4
         with:
