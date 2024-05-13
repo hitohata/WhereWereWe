@@ -1,6 +1,6 @@
 target "project-doc" {
   cache-to = [
-    "type=gha,ignore-error=true,mode=min,scope=project-doc"
+    "type=gha,ignore-error=true,mode=min,scope=project-doc,output=type=docker"
   ]
   cache-from = [
     "type=gha,scope=project-doc"
