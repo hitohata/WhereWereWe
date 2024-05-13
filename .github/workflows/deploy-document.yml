@@ -32,8 +32,33 @@ jobs:
 #        with:
 #          folder: ./docs/build
 #          token: ${{ secrets.GITHUB_TOKEN }}
-#
-  test-top-page-document:
+
+  build-project-document:
+    defaults:
+      run:
+        working-directory: ./docs/project
+    timeout-minutes: 3
+    name: Build project document to make sure it can be built
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+      - name: mkdir
+        run: sudo mkdir /build && sudo chmod -R 777 /build
+      - name: Install packages
+        run: bun install
+      - name: Build Project Doc
+        run: bun run build --out-dir /build
+      - name: out
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-page
+          path: /build
+          retention-days: 1
+
+  buld-top-page-document:
     defaults:
       run:
         working-directory: ./docs/top-page
@@ -48,15 +73,9 @@ jobs:
       - name: Install packages
         run: bun install
       - name: mkdir
-        run: sudo mkdir /build
-      - name: permission
-        run: sudo chmod -R 777 /build
-#      - name: Build the top page Doc
-#        run: bun run build
+        run: sudo mkdir /build && sudo chmod -R 777 /build
       - name: Build the top page Doc
         run: bun run build --outDir /build/top-page
-#      - name: ls
-#        run: echo $(ls ${pwd}/dist/)
       - name: out
         uses: actions/upload-artifact@v4
         with:
