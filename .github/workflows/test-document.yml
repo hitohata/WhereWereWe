@@ -22,6 +22,6 @@ jobs:
       - name: Build images
         run: |
           docker buildx create --use --driver=docker-container
-          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl --load
+          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl
       - name: Build documents
         run: docker compose up project-doc --exit-code-from project-doc
