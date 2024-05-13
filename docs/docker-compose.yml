@@ -19,8 +19,10 @@ services:
     working_dir: "/code"
 
   top-page-doc:
-    image: node:20
-    command: bash -c "npm ci && npm run build && cp -a /code/dist/. /build/"
+    build:
+      context: ./top-page
+      dockerfile: Dockerfile
+    command: bash -c "cp -r /node-modules/node_modules /code && npm run build && cp -a /code/dist/. /build/"
     volumes:
       - "./top-page:/code"
       - "./build/top-page:/build"
