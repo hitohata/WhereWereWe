@@ -1,27 +1,26 @@
 name: Test Document
+#
+#on:
+#  pull_request:
+#    branches:
+#      - develop
 
-on:
-  pull_request:
-    branches:
-      - develop
-
-defaults:
-  run:
-    working-directory: ./docs
+on: push
 
 jobs:
-  test-deploy:
-    timeout-minutes: 5
-    name: Test deployment to make sure it can be built
+  test-project-document:
+    defaults:
+      run:
+        working-directory: /docs/project
+    timeout-minutes: 3
+    name: Build project document to make sure it can be built
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v3
-      - name: Build images
-        run: |
-          docker buildx create --use --driver=docker-container
-          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl
-      - name: Build documents
-        run: docker compose up project-doc --exit-code-from project-doc
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        run: bun install
+      - name: Build Project Doc
+        run: bun build
