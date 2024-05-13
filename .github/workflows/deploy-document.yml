@@ -47,14 +47,21 @@ jobs:
         uses: oven-sh/setup-bun@v1
       - name: Install packages
         run: bun install
+      - name: mkdir
+        run: sudo mkdir /build
+      - name: permission
+        run: sudo chmod -R 777 /build
+#      - name: Build the top page Doc
+#        run: bun run build
       - name: Build the top page Doc
-        run: bun run build
-      - name: ls
-        run: echo $(ls ${pwd}/dist/)
+        run: bun run build --outDir /build/top-page
+#      - name: ls
+#        run: echo $(ls ${pwd}/dist/)
       - name: out
         uses: actions/upload-artifact@v4
         with:
           name: top-page
-          path: ${pwd}/dist/
+          path: /build/top-page
+          retention-days: 1
 
 #  deploy-document:
