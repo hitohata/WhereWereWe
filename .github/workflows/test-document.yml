@@ -37,7 +37,7 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@v1
       - name: parmission
-        uses: sudo chmod -R 777 /build
+        run: sudo chmod -R 777 /build
       - name: Install packages
         run: bun install
       - name: Build the top page Doc
