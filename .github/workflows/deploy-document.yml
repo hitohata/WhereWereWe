@@ -32,7 +32,7 @@ jobs:
             ./docker-compose.yml
             ./docker-bake.hcl
           load: true
-          push: true
+          push: false
           workdir: ./docs
       - name: Build Documents
         run: docker compose up
