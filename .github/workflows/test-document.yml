@@ -25,7 +25,7 @@ jobs:
       - name: Build Docker
         uses: docker/bake-action@v3
         with:
-          files: .docker-bake.chl
+          files: docker-bake.chl
           push: true
       - name: Build documents
         run: docker compose up project-doc --exit-code-from project-doc
