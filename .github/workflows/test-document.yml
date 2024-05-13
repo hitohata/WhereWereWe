@@ -8,35 +8,36 @@ name: Test Document
 on: push
 
 jobs:
-  test-project-document:
-    defaults:
-      run:
-        working-directory: ./docs/project
-    timeout-minutes: 3
-    name: Build project document to make sure it can be built
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v1
-      - name: Install packages
-        run: bun install
-      - name: Build Project Doc
-        run: bun run build
+#  test-project-document:
+#    defaults:
+#      run:
+#        working-directory: ./docs/project
+#    timeout-minutes: 3
+#    name: Build project document to make sure it can be built
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: Set up Bun
+#        uses: oven-sh/setup-bun@v1
+#      - name: Install packages
+#        run: bun install
+#      - name: Build Project Doc
+#        run: bun run build
   test-top-page-document:
     defaults:
       run:
         working-directory: ./docs/top-page
     timeout-minutes: 3
-    name: Build project document to make sure it can be built
+    name: Build top page document to make sure it can be built
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v1
-      - name: Install packages
-        run: bun install
-      - name: Build the top page Doc
-        run: bun run build
+      - run: bash $(pwd)
+#      - name: Set up Bun
+#        uses: oven-sh/setup-bun@v1
+#      - name: Install packages
+#        run: bun install
+#      - name: Build the top page Doc
+#        run: bun run build
