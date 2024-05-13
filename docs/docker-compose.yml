@@ -19,6 +19,7 @@ services:
     working_dir: "/code"
 
   top-page-doc:
+    image: top-page-doc
     build:
       context: ./top-page
       dockerfile: Dockerfile
