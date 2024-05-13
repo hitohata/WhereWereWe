@@ -32,4 +32,4 @@ jobs:
 #            ./docker-bake.hcl
 #          workdir: ./backend/core-where-were-we
       - name: Run test
-        run: docker compose up app --exit-code-from app
+        run: docker compose up www-core-app --exit-code-from www-core-app
