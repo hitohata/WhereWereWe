@@ -7,6 +7,7 @@ on:
 
 jobs:
   test-core-where-were-we:
+    timeout-minutes: 5
     name: test core www
     runs-on: ubuntu-latest
     defaults:

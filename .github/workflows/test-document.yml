@@ -11,9 +11,9 @@ defaults:
 
 jobs:
   test-deploy:
+    timeout-minutes: 5
     name: Test deployment to make sure it can be built
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
