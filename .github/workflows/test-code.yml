@@ -31,8 +31,6 @@ jobs:
           files: |-
             ./docker-compose.yml
             ./docker-bake.hcl
-          load: true
-          push: false
           workdir: ./backend/core-where-were-we
       - name: Run test
         run: docker compose up app --exit-code-from app
