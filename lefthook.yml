@@ -9,7 +9,7 @@
      backend-test:
        root: backend/core-where-were-we
        tags: core where were we test
-       run: docker compose up app --exit-code-from app
+       run: docker compose up www-core-app --exit-code-from app
 
  pre-commit:
    parallel: true
