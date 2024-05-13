@@ -7,6 +7,7 @@ on:
 
 jobs:
   test-core-where-were-we:
+    timeout-minutes: 5
     name: test core www
     runs-on: ubuntu-latest
     defaults:
@@ -19,14 +20,9 @@ jobs:
         run: sudo chmod 777 -R ./
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
-      - name: Build Docker
-        uses: docker/bake-action@v3
-        with:
-          files: |-
-            ./docker-compose.yml
-            ./docker-bake.hcl
-          load: true
-          push: false
-          workdir: ./backend/core-where-were-we
+      - name: Build images
+        run: |
+          docker buildx create --use --driver=docker-container
+          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl
       - name: Run test
-        run: docker compose up app --exit-code-from app
+        run: docker compose up www-core-app --exit-code-from www-core-app

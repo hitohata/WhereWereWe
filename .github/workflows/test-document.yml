@@ -1,4 +1,4 @@
-name: Test deployment
+name: Test Document
 
 on:
   pull_request:
@@ -11,22 +11,17 @@ defaults:
 
 jobs:
   test-deploy:
+    timeout-minutes: 5
     name: Test deployment to make sure it can be built
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
-      - name: Build Docker
-        uses: docker/bake-action@v3
-        with:
-          files: |-
-            ./docker-compose.yml
-            ./docker-bake.hcl
-          load: true
-          push: false
-          workdir: ./docs
+      - name: Build images
+        run: |
+          docker buildx create --use --driver=docker-container
+          docker buildx bake -f ./docker-compose.yml -f ./docker-bake.hcl
       - name: Build documents
         run: docker compose up project-doc --exit-code-from project-doc
