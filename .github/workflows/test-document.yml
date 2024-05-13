@@ -29,5 +29,6 @@ jobs:
             ./docs/docker-compose.yml
             ./docs/docker-bake.hcl
           load: true
+          push: false
       - name: Build documents
         run: docker compose up project-doc --exit-code-from project-doc
