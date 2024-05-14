@@ -223,8 +223,6 @@
 <a href="#221" id="221">221</a>
 <a href="#222" id="222">222</a>
 <a href="#223" id="223">223</a>
-<a href="#224" id="224">224</a>
-<a href="#225" id="225">225</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Getting id service
 //! Return a number that latest ID + 1
 </span><span class="kw">use </span>aws_sdk_dynamodb::types::AttributeValue;
@@ -248,8 +246,7 @@
 <span class="kw">const </span>TODO_LIST_GROUP_KEY: <span class="kw-2">&amp;</span>str = <span class="string">"ToDoListCounter"</span>;
 <span class="kw">const </span>TODO_KEY: <span class="kw-2">&amp;</span>str = <span class="string">"ToDoCounter"</span>;
 
-<span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>TodoIdServiceConcrete {
+<span class="kw">pub struct </span>TodoIdServiceConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String
 }
@@ -350,7 +347,6 @@
 
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>test {
-    <span class="kw">use </span>aws_sdk_dynamodb::Client;
     <span class="kw">use </span>tokio;
     <span class="kw">use </span>test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -358,8 +354,8 @@
     <span class="kw">impl </span>TodoIdServiceConcrete {
         <span class="kw">async fn </span>test_setting(client: <span class="kw-2">&amp;</span>TestDynamoTable) -&gt; <span class="self">Self </span>{
             <span class="self">Self </span>{
-                client: client.client.clone(),
-                table_name: client.table_name.to_string()
+                client: client.client(),
+                table_name: client.table_name()
             }
         }
     }
