@@ -8,11 +8,11 @@ use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
 
 pub trait TodoIdService {
-    /// Get the latest + 1 todo list ID
+    /// Get the latest + 1 to do list ID
     /// if there is no data in the DB, return 1.
     /// When this function is called, this function counts up the ID.
     async fn get_todo_list_group_id(&self, travel_id: &TravelId) -> Result<u32, TravelError>;
-    /// Get the latest + 1 todo list ID
+    /// Get the latest + 1 to do list ID
     /// if there is no data in the DB, return 1.
     /// When this function is called, this function counts up the ID.
     async fn get_todo_id(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId) -> Result<u32, TravelError>;
@@ -160,6 +160,65 @@ mod test {
         // in the second call, this will return 2.
         assert!(second_call.is_ok());
         assert_eq!(second_call.expect("second call failed"), 2);
+
+        test_table.delete_table().await;
+    }
+
+    #[tokio::test]
+    async fn test_get_todo_id() {
+        // Arrange
+        let travel_id = TravelId::generate();
+        let todo_list_group_id = TodoListGroupId::from(&1);
+        let table_name = "get_todo_id";
+        let test_table = TestDynamoTable::default(&table_name).await;
+        let service = TodoIdServiceConcrete::test_setting(&test_table).await;
+
+        test_table.generate_test_table().await;
+
+        // Act
+        let first_call = service.get_todo_id(&travel_id, &todo_list_group_id).await;
+        let second_call = service.get_todo_id(&travel_id, &todo_list_group_id).await;
+
+        // Assert
+
+        // in the first call, this will return 1.
+        assert!(first_call.is_ok());
+        assert_eq!(first_call.expect("first call failed"), 1);
+
+        // in the second call, this will return 2.
+        assert!(second_call.is_ok());
+        assert_eq!(second_call.expect("second call failed"), 2);
+
+        test_table.delete_table().await;
+    }
+
+
+    #[tokio::test]
+    /// the to do list group id is different, the id is also separated.
+    async fn test_get_todo_id_diff_todo_list_id() {
+        // Arrange
+        let travel_id = TravelId::generate();
+        let todo_list_group_id = TodoListGroupId::from(&1);
+        let todo_list_group_id_2 = TodoListGroupId::from(&2);
+        let table_name = "get_todo_id_diff_todo_list_id";
+        let test_table = TestDynamoTable::default(&table_name).await;
+        let service = TodoIdServiceConcrete::test_setting(&test_table).await;
+
+        test_table.generate_test_table().await;
+
+        // Act
+        let first_call = service.get_todo_id(&travel_id, &todo_list_group_id).await;
+        let second_call = service.get_todo_id(&travel_id, &todo_list_group_id_2).await;
+
+        // Assert
+
+        // in the first call, this will return 1.
+        assert!(first_call.is_ok());
+        assert_eq!(first_call.expect("first call failed"), 1);
+
+        // in the second call, this will return 2.
+        assert!(second_call.is_ok());
+        assert_eq!(second_call.expect("second call failed"), 1);
 
         test_table.delete_table().await;
     }
