@@ -21,7 +21,6 @@ pub trait TodoIdService {
 const TODO_LIST_GROUP_KEY: &str = "ToDoListCounter";
 const TODO_KEY: &str = "ToDoCounter";
 
-#[derive(Debug)]
 pub struct TodoIdServiceConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String
