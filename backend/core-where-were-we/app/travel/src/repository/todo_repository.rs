@@ -82,21 +82,23 @@ impl TodoRepository for TodoRepositoryConcrete {
                     None => return Ok(None)
                 }
             },
-            Err(_) => return Err(TravelError::DBError("Dynamo sdk error".to_string()))
+            Err(e) => return Err(TravelError::DBError(e.to_string()))
         };
         
-        convert_into_todo(item)
+        let todo = convert_into_todo(item)?;
+        
+        Ok(Some(todo))
     }
 
 
 
     async fn save_todo(&self, todo: &Todo) -> Result<(), TravelError> {
-        todo!()
+        let pk_av = AttributeValue::S(todo.);
     }
 }
 
 /// Convert the item (HashMap) into the To do struct
-fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Option<Todo>, TravelError> {
+fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Todo, TravelError> {
     // to do ID is not found
     if item.get("TodoId").is_none() {
         return Err(TravelError::DBError("The item exists, but the Todo ID doesn't exist.".to_string()))
@@ -117,8 +119,8 @@ fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Option<Tod
         None => return Err(TravelError::DBError("The item exists but the summary is not found".to_string()))
     };
 
-    let description: Option<String> = match convert_hashmap_into_option_string(&item, "Description")? {
-        Some(d) => Some(d),
+    let description: Option<&str> = match convert_hashmap_into_option_string(&item, "Description")? {
+        Some(d) => Some(d.as_str()),
         None => None
     };
 
@@ -136,11 +138,20 @@ fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Option<Tod
         },
         None => None
     };
+    
+    let done: bool = match item.get("Done") {
+        Some(d) => {
+            match d.as_bool() {
+                Ok(b) => b.clone(),
+                Err(_) => return Err(TravelError::DBError("The done is found but cannot parse.".to_string()))
+            }
+        },
+        None => return Err(TravelError::DBError("The item is found but there isn't Done.".to_string()))
+    };
 
     let todo_id = TodoId::from(&id_val);
 
-    // let todo = Todo::new(&todo_id, &summary, description, );
-    todo!()
+    Todo::new(&todo_id, &summary, description, due_date, Some(done))
 }
 
 /// Convert the DynamoDB result hashmap into Option string

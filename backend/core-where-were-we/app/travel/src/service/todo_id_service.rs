@@ -122,7 +122,6 @@ impl TodoIdServiceConcrete {
 
 #[cfg(test)]
 mod test {
-    use aws_sdk_dynamodb::Client;
     use tokio;
     use test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
     use super::*;
