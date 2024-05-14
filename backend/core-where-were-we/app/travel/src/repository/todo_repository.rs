@@ -93,7 +93,7 @@ impl TodoRepository for TodoRepositoryConcrete {
 
 
     async fn save_todo(&self, todo: &Todo) -> Result<(), TravelError> {
-        let pk_av = AttributeValue::S(todo.);
+        let pv
     }
 }
 
@@ -118,9 +118,13 @@ fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Todo, Trav
         Some(s) => s,
         None => return Err(TravelError::DBError("The item exists but the summary is not found".to_string()))
     };
-
+    
+    let mut description_val = String::new();
     let description: Option<&str> = match convert_hashmap_into_option_string(&item, "Description")? {
-        Some(d) => Some(d.as_str()),
+        Some(d) => {
+            description_val = d;
+            Some(&description_val)
+        },
         None => None
     };
 
