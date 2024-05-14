@@ -5,23 +5,30 @@ use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
 
 pub struct TodoListGroup {
+    /// travel ID
     travel_id: TravelId,
+    /// to-do group ID
     todo_group_id: TodoListGroupId,
+    /// this to-do group name
     group_name: String,
-    todo: Vec<Todo>
+    /// The collection of the to-do rest
+    todo: Vec<Todo>,
+    /// time offset from the UTC
+    tz: Option<i32>
 }
 
 impl TodoListGroup {
-    pub fn new(travel_id: &TravelId, todo_group_id: &TodoListGroupId, group_name: &str, todo: Vec<Todo>) -> Self {
+    pub fn new(travel_id: &TravelId, todo_group_id: &TodoListGroupId, group_name: &str, todo: Vec<Todo>, tz: Option<i32>) -> Self {
         Self {
             travel_id: travel_id.to_owned(),
             todo_group_id: todo_group_id.to_owned(),
             group_name: group_name.to_owned(),
-            todo
+            todo,
+            tz
         }
     }
 
-    /// remove a to do from this collection
+    /// remove a to-do from this collection
     pub fn remove_todo(&mut self, todo_id: &TodoId) {
         if let Some(index) = self.todo.iter().position(|x| x.todo_id().eq(todo_id)) {
             self.todo.remove(index);
@@ -44,7 +51,7 @@ mod test {
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
         let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None, None).unwrap();
-        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![]);
+        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![], None);
 
         // Act
         todo_list_group.add_todo(&todo);
@@ -59,7 +66,7 @@ mod test {
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
         let todo = Todo::new(&TodoId::from(&1u32), "summary", None, Some(42), None).unwrap();
-        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo]);
+        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo], Some(9));
 
         // Act
         todo_list_group.remove_todo(&TodoId::from(&1u32));
