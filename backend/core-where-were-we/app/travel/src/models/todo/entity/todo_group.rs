@@ -4,6 +4,7 @@ use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
 
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct TodoListGroup {
     /// travel ID
     travel_id: TravelId,

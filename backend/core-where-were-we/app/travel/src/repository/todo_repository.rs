@@ -1,6 +1,7 @@
 //! This is implementation of the to do repository.
 
 use std::collections::HashMap;
+use std::sync::Arc;
 use aws_sdk_dynamodb::types::AttributeValue;
 use utils::infrastructure::db::dynamo_db_client::dynamodb_client;
 use utils::settings::settings::table_name;
@@ -12,7 +13,7 @@ use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct TodoRepositoryConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String
@@ -61,12 +62,12 @@ impl TodoRepository for TodoRepositoryConcrete {
     }
 
     async fn save_todo_group(&self, todo_group: &TodoListGroup) -> Result<(), TravelError> {
-        
+
         let pk_av = AttributeValue::S(todo_group.travel_id().id().to_string());
         let sk_av = AttributeValue::S(format!("ToDoListGroup#{}", todo_group.todo_list_group_id().id()));
         let todo_list_group_id_av = AttributeValue::N(todo_group.todo_list_group_id().id().to_string());
         let name_av = AttributeValue::S(todo_group.group_name().to_string());
-        
+
         let mut put_item = self
             .client
             .put_item()
@@ -74,16 +75,38 @@ impl TodoRepository for TodoRepositoryConcrete {
             .item("SK", sk_av)
             .item("ToDoListId", todo_list_group_id_av)
             .item("Name", name_av);
-        
+
         if let Some(tz) = todo_group.tz() {
-            let tz_av = AttributeValue::N(tz.to_string());   
+            let tz_av = AttributeValue::N(tz.to_string());
             put_item = put_item.item("TZ", tz_av);
-        };  
-        
-        if let Err(e) = put_item.send().await {
-            return Err(TravelError::DBError(e.to_string()))
         };
         
+        let todo_group_result = tokio::task::spawn(put_item.send());
+
+        let mut handler = Vec::with_capacity(todo_group.todo().len() + 1);
+
+        let arc_self = Arc::new(self.clone());
+        let arc_todo = Arc::new(todo_group.to_owned());
+
+        for todo in todo_group.todo() {
+            let todo_c = todo.clone();
+            let repo = arc_self.clone();
+            let cp_todo = arc_todo.clone();
+            handler.push(tokio::task::spawn(async move {
+                repo.save_todo(cp_todo.travel_id(), cp_todo.todo_list_group_id(), &todo_c).await
+            }));
+        };
+        
+        for handle in handler {
+            if let Err(e) = handle.await {
+                return Err(TravelError::DBError(e.to_string()))
+            }
+        };
+        
+        if let Err(e) = todo_group_result.await {
+            return Err(TravelError::DBError(e.to_string()))
+        };
+
         Ok(())
     }
 
@@ -112,8 +135,6 @@ impl TodoRepository for TodoRepositoryConcrete {
         
         Ok(Some(todo))
     }
-
-
 
     async fn save_todo(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId, todo: &Todo) -> Result<(), TravelError> {
         let pk_av = AttributeValue::S(travel_id.id().to_string());
