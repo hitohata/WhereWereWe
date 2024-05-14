@@ -129,8 +129,8 @@ mod test {
     impl TodoIdServiceConcrete {
         async fn test_setting(client: &TestDynamoTable) -> Self {
             Self {
-                client: client.client.clone(),
-                table_name: client.table_name.to_string()
+                client: client.client(),
+                table_name: client.table_name()
             }
         }
     }

@@ -1,7 +1,6 @@
 //! This is implementation of the to do repository.
 
 use std::collections::HashMap;
-use aws_sdk_dynamodb::operation::put_item::{PutItemError, PutItemOutput};
 use aws_sdk_dynamodb::types::AttributeValue;
 use utils::infrastructure::db::dynamo_db_client::dynamodb_client;
 use utils::settings::settings::table_name;
@@ -197,5 +196,81 @@ fn convert_hashmap_into_option_string(item: &HashMap<String, AttributeValue>, ke
             }
         },
         None => Ok(None)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;    
+    use tokio;
+    use test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
+    
+    impl TodoRepositoryConcrete {
+        fn new_test_repo(client: &TestDynamoTable) -> Self {
+            Self {
+                client: client.client(),
+                table_name: client.table_name()
+            }
+        }
+    }
+    
+    fn test_todo_none(id: u32) -> Todo {
+        let todo_id = TodoId::from(&id);
+        let summary = "summer";
+        
+        Todo::new(&todo_id, summary, None, None, None).unwrap()
+    }
+
+    fn test_todo_full_val(id: u32) -> Todo {
+        let todo_id = TodoId::from(&id);
+        let summary = "summer summer";
+        let description = Some("description");
+        let due_date = Some(42i64);
+        let done = Some(true);
+
+        Todo::new(&todo_id, summary, description, due_date, done).unwrap()
+    }
+
+    #[tokio::test]
+    async fn test_todo() {
+        // Arrange
+        let table_name = "todo-test-db";
+        let travel_id = TravelId::generate();
+        let todo_list_group_id = TodoListGroupId::from(&1);
+        let test_db = TestDynamoTable::default(table_name).await;
+        let todo_repo = TodoRepositoryConcrete::new_test_repo(&test_db);
+        
+        // struct
+        let todo1 = test_todo_none(1);
+        let todo2 = test_todo_full_val(2);
+        
+        test_db.generate_test_table().await;
+        
+        // Act
+        // put item
+        todo_repo.save_todo(&travel_id, &todo_list_group_id, &todo1).await.expect("Save Todo 1 failed");
+        todo_repo.save_todo(&travel_id, &todo_list_group_id, &todo2).await.expect("Save Todo 1 failed");
+        
+        // get item
+        let result_todo_1 = todo_repo.find_todo_by_id(&travel_id, &todo_list_group_id, todo1.todo_id()).await;
+        let result_todo_2 = todo_repo.find_todo_by_id(&travel_id, &todo_list_group_id, todo2.todo_id()).await;
+        
+        
+        // Assert
+        
+        // to-do without attribute
+        assert!(result_todo_1.is_ok());
+        let fetched_todo_1 = result_todo_1.expect("fetched todo 1");
+        assert!(fetched_todo_1.is_some());
+        assert!(fetched_todo_1.unwrap().eq(&todo1));
+
+
+        // to-do with attribute
+        assert!(result_todo_2.is_ok());
+        let fetched_todo_2 = result_todo_2.expect("fetched todo 2");
+        assert!(fetched_todo_2.is_some());
+        assert!(fetched_todo_2.unwrap().eq(&todo2));
+
+        test_db.delete_table().await;
     }
 }

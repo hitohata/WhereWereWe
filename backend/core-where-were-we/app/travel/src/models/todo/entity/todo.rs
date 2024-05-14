@@ -2,7 +2,7 @@
 use crate::errors::errors::TravelError;
 use crate::models::todo::id::todo_id::TodoId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Todo {
     id: TodoId,
     /// This value must be grater than 0 and less than equal 200.
