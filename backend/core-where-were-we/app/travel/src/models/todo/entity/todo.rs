@@ -1,4 +1,4 @@
-//! todo struct
+//! to do struct
 use crate::errors::errors::TravelError;
 use crate::models::todo::id::todo_id::TodoId;
 

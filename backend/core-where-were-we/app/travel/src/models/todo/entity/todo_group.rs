@@ -1,4 +1,4 @@
-//! This is the collection of the todo list
+//! This is the collection of the to do list
 use crate::models::todo::entity::todo::Todo;
 use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
