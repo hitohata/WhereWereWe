@@ -45,6 +45,28 @@ impl Todo {
         &self.id
     }
 
+    pub fn summary(&self) -> &str {
+        &self.summary
+    }
+
+    pub fn description(&self) -> Option<&str> {
+        match &self.description {
+            Some(s) => Some(s),
+            None => None
+        }
+    }
+    
+    pub fn due_date(&self) -> Option<&i64> {
+        match &self.due_date {
+            Some(du) => Some(du),
+            None => None
+        }
+    }
+    
+    pub fn done(&self) -> bool {
+        (&self.done).to_owned()
+    }
+
     /// update the summary and the description
     pub fn update(&mut self, summary: &str, description: Option<&str>) -> Result<(), TravelError> {
 

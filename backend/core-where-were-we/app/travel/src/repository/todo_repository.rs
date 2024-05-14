@@ -1,6 +1,7 @@
 //! This is implementation of the to do repository.
 
 use std::collections::HashMap;
+use aws_sdk_dynamodb::operation::put_item::{PutItemError, PutItemOutput};
 use aws_sdk_dynamodb::types::AttributeValue;
 use utils::infrastructure::db::dynamo_db_client::dynamodb_client;
 use utils::settings::settings::table_name;
@@ -92,8 +93,36 @@ impl TodoRepository for TodoRepositoryConcrete {
 
 
 
-    async fn save_todo(&self, todo: &Todo) -> Result<(), TravelError> {
-        let pv
+    async fn save_todo(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId, todo: &Todo) -> Result<(), TravelError> {
+        let pk_av = AttributeValue::S(travel_id.id().to_string());
+        let sk_av = AttributeValue::S(format!("ToDoList#{}#ToDo#{}", todo_list_group_id.id(), todo.todo_id().id()));
+        let todo_id_av = AttributeValue::N(todo.todo_id().id().to_string());
+        let summary_av = AttributeValue::S(todo.summary().to_owned());
+        let done_av = AttributeValue::Bool(todo.done());
+
+        let mut put_item_builder = self
+            .client
+            .put_item()
+            .table_name(&self.table_name)
+            .item("PK", pk_av)
+            .item("SK", sk_av)
+            .item("TodoId", todo_id_av)
+            .item("Summary", summary_av)
+            .item("Done", done_av);
+        
+        if let Some(description) = todo.description() {
+            let description_av = AttributeValue::S(description.to_string());
+            put_item_builder = put_item_builder.item("Description", description_av);
+        };
+        
+        if let Some(due_date) = todo.due_date() {
+            put_item_builder = put_item_builder.item("DueDate", AttributeValue::N(due_date.to_string()));
+        };
+        
+        match put_item_builder.send().await {
+            Ok(_) => Ok(()),
+            Err(e) => Err(TravelError::DBError(e.to_string()))
+        }
     }
 }
 
@@ -108,7 +137,7 @@ fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Todo, Trav
         Ok(v) => {
             match v.parse::<u32>() {
                 Ok(id_number) => id_number,
-                Err(e) => return Err(TravelError::DBError("The Todo ID cannot parse into Number".to_string()))
+                Err(_) => return Err(TravelError::DBError("The Todo ID cannot parse into Number".to_string()))
             }
         }
         Err(_) => return Err(TravelError::DBError("The Todo ID cannot parse into Number".to_string()))
