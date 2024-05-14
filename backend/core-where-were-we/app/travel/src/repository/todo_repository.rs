@@ -61,7 +61,30 @@ impl TodoRepository for TodoRepositoryConcrete {
     }
 
     async fn save_todo_group(&self, todo_group: &TodoListGroup) -> Result<(), TravelError> {
-        todo!()
+        
+        let pk_av = AttributeValue::S(todo_group.travel_id().id().to_string());
+        let sk_av = AttributeValue::S(format!("ToDoListGroup#{}", todo_group.todo_list_group_id().id()));
+        let todo_list_group_id_av = AttributeValue::N(todo_group.todo_list_group_id().id().to_string());
+        let name_av = AttributeValue::S(todo_group.group_name().to_string());
+        
+        let mut put_item = self
+            .client
+            .put_item()
+            .item("PK", pk_av)
+            .item("SK", sk_av)
+            .item("ToDoListId", todo_list_group_id_av)
+            .item("Name", name_av);
+        
+        if let Some(tz) = todo_group.tz() {
+            let tz_av = AttributeValue::N(tz.to_string());   
+            put_item = put_item.item("TZ", tz_av);
+        };  
+        
+        if let Err(e) = put_item.send().await {
+            return Err(TravelError::DBError(e.to_string()))
+        };
+        
+        Ok(())
     }
 
     async fn find_todo_by_id(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId, todo: &TodoId) -> Result<Option<Todo>, TravelError> {

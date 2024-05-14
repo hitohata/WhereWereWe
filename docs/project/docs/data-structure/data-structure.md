@@ -47,8 +47,9 @@ Thus, there are ID manage tables.
 | SK         | ToDoListGroup#(todo list ID[^2]) | String | 
 | TodoListId | The todo ID                      | Number | 
 | Name       | todo list name                   | String |
-| ShareWith  | users this todo list shares with | String |
-| TZ         | timezone offset                  | number |
+| TZ         | timezone offset                  | Number |
+
+[//]: # (| ShareWith  | users this todo list shares with | String |)
 
 #### ToDo (Each)
 
