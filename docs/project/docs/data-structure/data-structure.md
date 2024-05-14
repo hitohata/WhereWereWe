@@ -56,10 +56,10 @@ Thus, there are ID manage tables.
 |:------------|:-----------------------------------------------|:--------|
 | PK          | Travel ID                                      | String  |
 | SK          | ToDoList#(todo list ID[^2])#ToDo#(todo ID[^2]) | String  | 
-| TodoId      | todo list group ID                             | number  |
+| TodoId      | todo list group ID                             | Number  |
 | Summary     | summary                                        | String  |
 | Description | description. Can be null                       | String  |
-| Due Date    | can be null. UTC. Timestamp                    | Number  | 
+| DueDate     | can be null. UTC. Timestamp                    | Number  | 
 | Done        | done or not                                    | boolean | 
 
 

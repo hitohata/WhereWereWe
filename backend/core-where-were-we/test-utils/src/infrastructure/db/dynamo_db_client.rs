@@ -18,8 +18,8 @@ pub async fn dynamodb_test_client() -> dynamodb::Client {
 
 /// The table struct for the test.
 pub struct TestDynamoTable {
-    pub client: dynamodb::Client,
-    pub table_name: String
+    client: dynamodb::Client,
+    table_name: String
 }
 
 impl TestDynamoTable {
@@ -29,7 +29,15 @@ impl TestDynamoTable {
             table_name: table_name.to_string()
         }
     }
-    
+
+    pub fn client(&self) -> dynamodb::Client {
+        self.client.clone()
+    }
+
+    pub fn table_name(&self) -> String {
+        self.table_name.to_string()
+    }
+
     /// This function is used for the test.
     pub async fn generate_test_table(&self) {
         let pk_attribute = AttributeDefinition::builder()

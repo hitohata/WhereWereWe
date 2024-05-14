@@ -2,7 +2,7 @@
 use crate::errors::errors::TravelError;
 use crate::models::todo::id::todo_id::TodoId;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Todo {
     id: TodoId,
     /// This value must be grater than 0 and less than equal 200.
@@ -43,6 +43,28 @@ impl Todo {
 
     pub fn todo_id(&self) -> &TodoId {
         &self.id
+    }
+
+    pub fn summary(&self) -> &str {
+        &self.summary
+    }
+
+    pub fn description(&self) -> Option<&str> {
+        match &self.description {
+            Some(s) => Some(s),
+            None => None
+        }
+    }
+    
+    pub fn due_date(&self) -> Option<&i64> {
+        match &self.due_date {
+            Some(du) => Some(du),
+            None => None
+        }
+    }
+    
+    pub fn done(&self) -> bool {
+        (&self.done).to_owned()
     }
 
     /// update the summary and the description

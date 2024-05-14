@@ -21,7 +21,6 @@ pub trait TodoIdService {
 const TODO_LIST_GROUP_KEY: &str = "ToDoListCounter";
 const TODO_KEY: &str = "ToDoCounter";
 
-#[derive(Debug)]
 pub struct TodoIdServiceConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String
@@ -123,7 +122,6 @@ impl TodoIdServiceConcrete {
 
 #[cfg(test)]
 mod test {
-    use aws_sdk_dynamodb::Client;
     use tokio;
     use test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
     use super::*;
@@ -131,8 +129,8 @@ mod test {
     impl TodoIdServiceConcrete {
         async fn test_setting(client: &TestDynamoTable) -> Self {
             Self {
-                client: client.client.clone(),
-                table_name: client.table_name.to_string()
+                client: client.client(),
+                table_name: client.table_name()
             }
         }
     }

@@ -82,21 +82,51 @@ impl TodoRepository for TodoRepositoryConcrete {
                     None => return Ok(None)
                 }
             },
-            Err(_) => return Err(TravelError::DBError("Dynamo sdk error".to_string()))
+            Err(e) => return Err(TravelError::DBError(e.to_string()))
         };
         
-        convert_into_todo(item)
+        let todo = convert_into_todo(item)?;
+        
+        Ok(Some(todo))
     }
 
 
 
-    async fn save_todo(&self, todo: &Todo) -> Result<(), TravelError> {
-        todo!()
+    async fn save_todo(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId, todo: &Todo) -> Result<(), TravelError> {
+        let pk_av = AttributeValue::S(travel_id.id().to_string());
+        let sk_av = AttributeValue::S(format!("ToDoList#{}#ToDo#{}", todo_list_group_id.id(), todo.todo_id().id()));
+        let todo_id_av = AttributeValue::N(todo.todo_id().id().to_string());
+        let summary_av = AttributeValue::S(todo.summary().to_owned());
+        let done_av = AttributeValue::Bool(todo.done());
+
+        let mut put_item_builder = self
+            .client
+            .put_item()
+            .table_name(&self.table_name)
+            .item("PK", pk_av)
+            .item("SK", sk_av)
+            .item("TodoId", todo_id_av)
+            .item("Summary", summary_av)
+            .item("Done", done_av);
+        
+        if let Some(description) = todo.description() {
+            let description_av = AttributeValue::S(description.to_string());
+            put_item_builder = put_item_builder.item("Description", description_av);
+        };
+        
+        if let Some(due_date) = todo.due_date() {
+            put_item_builder = put_item_builder.item("DueDate", AttributeValue::N(due_date.to_string()));
+        };
+        
+        match put_item_builder.send().await {
+            Ok(_) => Ok(()),
+            Err(e) => Err(TravelError::DBError(e.to_string()))
+        }
     }
 }
 
 /// Convert the item (HashMap) into the To do struct
-fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Option<Todo>, TravelError> {
+fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Todo, TravelError> {
     // to do ID is not found
     if item.get("TodoId").is_none() {
         return Err(TravelError::DBError("The item exists, but the Todo ID doesn't exist.".to_string()))
@@ -106,7 +136,7 @@ fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Option<Tod
         Ok(v) => {
             match v.parse::<u32>() {
                 Ok(id_number) => id_number,
-                Err(e) => return Err(TravelError::DBError("The Todo ID cannot parse into Number".to_string()))
+                Err(_) => return Err(TravelError::DBError("The Todo ID cannot parse into Number".to_string()))
             }
         }
         Err(_) => return Err(TravelError::DBError("The Todo ID cannot parse into Number".to_string()))
@@ -116,9 +146,13 @@ fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Option<Tod
         Some(s) => s,
         None => return Err(TravelError::DBError("The item exists but the summary is not found".to_string()))
     };
-
-    let description: Option<String> = match convert_hashmap_into_option_string(&item, "Description")? {
-        Some(d) => Some(d),
+    
+    let mut description_val = String::new();
+    let description: Option<&str> = match convert_hashmap_into_option_string(&item, "Description")? {
+        Some(d) => {
+            description_val = d;
+            Some(&description_val)
+        },
         None => None
     };
 
@@ -136,11 +170,20 @@ fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Option<Tod
         },
         None => None
     };
+    
+    let done: bool = match item.get("Done") {
+        Some(d) => {
+            match d.as_bool() {
+                Ok(b) => b.clone(),
+                Err(_) => return Err(TravelError::DBError("The done is found but cannot parse.".to_string()))
+            }
+        },
+        None => return Err(TravelError::DBError("The item is found but there isn't Done.".to_string()))
+    };
 
     let todo_id = TodoId::from(&id_val);
 
-    // let todo = Todo::new(&todo_id, &summary, description, );
-    todo!()
+    Todo::new(&todo_id, &summary, description, due_date, Some(done))
 }
 
 /// Convert the DynamoDB result hashmap into Option string
@@ -153,5 +196,81 @@ fn convert_hashmap_into_option_string(item: &HashMap<String, AttributeValue>, ke
             }
         },
         None => Ok(None)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;    
+    use tokio;
+    use test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
+    
+    impl TodoRepositoryConcrete {
+        fn new_test_repo(client: &TestDynamoTable) -> Self {
+            Self {
+                client: client.client(),
+                table_name: client.table_name()
+            }
+        }
+    }
+    
+    fn test_todo_none(id: u32) -> Todo {
+        let todo_id = TodoId::from(&id);
+        let summary = "summer";
+        
+        Todo::new(&todo_id, summary, None, None, None).unwrap()
+    }
+
+    fn test_todo_full_val(id: u32) -> Todo {
+        let todo_id = TodoId::from(&id);
+        let summary = "summer summer";
+        let description = Some("description");
+        let due_date = Some(42i64);
+        let done = Some(true);
+
+        Todo::new(&todo_id, summary, description, due_date, done).unwrap()
+    }
+
+    #[tokio::test]
+    async fn test_todo() {
+        // Arrange
+        let table_name = "todo-test-db";
+        let travel_id = TravelId::generate();
+        let todo_list_group_id = TodoListGroupId::from(&1);
+        let test_db = TestDynamoTable::default(table_name).await;
+        let todo_repo = TodoRepositoryConcrete::new_test_repo(&test_db);
+        
+        // struct
+        let todo1 = test_todo_none(1);
+        let todo2 = test_todo_full_val(2);
+        
+        test_db.generate_test_table().await;
+        
+        // Act
+        // put item
+        todo_repo.save_todo(&travel_id, &todo_list_group_id, &todo1).await.expect("Save Todo 1 failed");
+        todo_repo.save_todo(&travel_id, &todo_list_group_id, &todo2).await.expect("Save Todo 1 failed");
+        
+        // get item
+        let result_todo_1 = todo_repo.find_todo_by_id(&travel_id, &todo_list_group_id, todo1.todo_id()).await;
+        let result_todo_2 = todo_repo.find_todo_by_id(&travel_id, &todo_list_group_id, todo2.todo_id()).await;
+        
+        
+        // Assert
+        
+        // to-do without attribute
+        assert!(result_todo_1.is_ok());
+        let fetched_todo_1 = result_todo_1.expect("fetched todo 1");
+        assert!(fetched_todo_1.is_some());
+        assert!(fetched_todo_1.unwrap().eq(&todo1));
+
+
+        // to-do with attribute
+        assert!(result_todo_2.is_ok());
+        let fetched_todo_2 = result_todo_2.expect("fetched todo 2");
+        assert!(fetched_todo_2.is_some());
+        assert!(fetched_todo_2.unwrap().eq(&todo2));
+
+        test_db.delete_table().await;
     }
 }
