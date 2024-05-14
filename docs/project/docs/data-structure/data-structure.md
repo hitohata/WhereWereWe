@@ -32,33 +32,54 @@ The user's definition is the following.
 
 ### ToDo
 
+The ID is an auto-increment number.
+Thus, there are ID manage tables.
 
 * PK: Travel ID
 
 * SK: Composite ID
 
+#### TODO List Group
+
+| Key        | Value                            | Type   |
+|:-----------|:---------------------------------|:-------|
+| PK         | Travel ID                        | String |
+| SK         | ToDoListGroup#(todo list ID[^2]) | String | 
+| TodoListId | The todo ID                      | Number | 
+| Name       | todo list name                   | String |
+| ShareWith  | users this todo list shares with | String |
+| TZ         | timezone offset                  | number |
 
 #### ToDo (Each)
-
 
 | Key         | Value                                          | Type    |
 |:------------|:-----------------------------------------------|:--------|
 | PK          | Travel ID                                      | String  |
 | SK          | ToDoList#(todo list ID[^2])#ToDo#(todo ID[^2]) | String  | 
+| TodoId      | todo list group ID                             | number  |
 | Summary     | summary                                        | String  |
 | Description | description. Can be null                       | String  |
-| Due Date    | can be null                                    | String  | 
+| Due Date    | can be null. UTC. Timestamp                    | Number  | 
 | Done        | done or not                                    | boolean | 
 
-#### TODO List Group
 
-| Key       | Value                            | Type   |
-|:----------|:---------------------------------|:-------|
-| PK        | Travel ID                        | String |
-| SK        | ToDoList#(todo list ID[^2])      | String | 
-| Name      | todo list name                   | String |
-| ShareWith | users this todo list shares with | String |
+##### ToDo ID
 
+##### ToDo List Group ID Counter
+
+| Key   | Value             | Type   |
+|:------|:------------------|:-------|
+| PK    | Travel ID         | String |
+| SK    | "ToDoListCounter" | String |
+| Count | latest ID         | Number |
+
+##### ToDo ID Counter
+
+| Key   | Value                      | Type   |
+|:------|:---------------------------|:-------|
+| PK    | Travel ID                  | String |
+| SK    | ToDoCounter#(todo list id) | String |
+| Count | latest ID                  | Number |
 
 [^1]: Just a Placeholder
 [^2]: Variable. Actual ID

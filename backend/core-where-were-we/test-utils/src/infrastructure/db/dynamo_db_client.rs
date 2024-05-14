@@ -18,8 +18,8 @@ pub async fn dynamodb_test_client() -> dynamodb::Client {
 
 /// The table struct for the test.
 pub struct TestDynamoTable {
-    client: dynamodb::Client,
-    table_name: String
+    pub client: dynamodb::Client,
+    pub table_name: String
 }
 
 impl TestDynamoTable {
@@ -62,7 +62,7 @@ impl TestDynamoTable {
             .build()
             .unwrap();
 
-        self
+        let _ = self
             .client
             .create_table()
             .table_name(&self.table_name)
@@ -73,8 +73,7 @@ impl TestDynamoTable {
             .set_key_schema(Some(vec![partition_key_schema, sort_key_schema]))
             .provisioned_throughput(throughput)
             .send()
-            .await
-            .unwrap_or_else(|_| panic!("Creating a table failed: {}", &self.table_name));
+            .await;
     }
     
     /// remove a table

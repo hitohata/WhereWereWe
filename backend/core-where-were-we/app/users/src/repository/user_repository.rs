@@ -8,13 +8,13 @@ use crate::models::repository::user_repository::UserRepository;
 use crate::models::user::{User, Username};
 use crate::models::user_id::UserId;
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 struct UserRepositoryConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String,
 }
 
-impl Default for UserRepositoryConcrete {
+impl UserRepositoryConcrete {
     async fn default() -> Self {
         let table_name = table_name().to_string();
         Self {

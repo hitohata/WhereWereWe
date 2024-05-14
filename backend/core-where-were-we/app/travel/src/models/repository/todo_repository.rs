@@ -7,9 +7,9 @@ use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
 
-trait TodoRepository {
-    fn find_todo_group_by_id(travel_id: &TravelId, todo_list_group_id: &TodoListGroupId) -> Result<TodoListGroup, TravelError>;
-    fn save_todo_group(todo_group: &TodoListGroup) -> Result<(), TravelError>;
-    fn find_todo_by_id(travel_id: &TravelId, todo_list_group_id: &TodoListGroupId, todo: &TodoId) -> Result<Todo, TravelError>;
-    fn save_todo(todo: &Todo) -> Result<(), TravelError>;
+pub trait TodoRepository {
+    async fn find_todo_group_by_id(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId) -> Result<Option<TodoListGroup>, TravelError>;
+    async fn save_todo_group(&self, todo_group: &TodoListGroup) -> Result<(), TravelError>;
+    async fn find_todo_by_id(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId, todo: &TodoId) -> Result<Option<Todo>, TravelError>;
+    async fn save_todo(&self, todo: &Todo) -> Result<(), TravelError>;
 }
