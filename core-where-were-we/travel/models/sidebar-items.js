@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["todo","travel"]};
+window.SIDEBAR_ITEMS = {"mod":["repository","todo","travel"]};

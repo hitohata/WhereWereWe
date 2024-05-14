@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":["TodoIdService"]};
+window.SIDEBAR_ITEMS = {"constant":["TODO_KEY","TODO_LIST_GROUP_KEY"],"struct":["TodoIdServiceConcrete"],"trait":["TodoIdService"]};

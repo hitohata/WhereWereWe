@@ -7,11 +7,15 @@
 <a href="#5" id="5">5</a>
 <a href="#6" id="6">6</a>
 <a href="#7" id="7">7</a>
+<a href="#8" id="8">8</a>
+<a href="#9" id="9">9</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="attr">#[derive(Error, Debug)]
 </span><span class="kw">pub enum </span>TravelError {
     <span class="attr">#[error(<span class="string">"{0}"</span>)]
-    </span>DomainError(String)
+    </span>DomainError(String),
+    <span class="attr">#[error(<span class="string">"{0}"</span>)]
+    </span>DBError(String)
 }
 </code></pre></div></section></main></body></html>
