@@ -7,6 +7,10 @@ edition = "2021"
 thiserror = "1.0.59"
 uuid = "1.8.0"
 users = { path = "../users" }
+utils = { path = "../../utils" }
+aws-sdk-dynamodb = "1.27.0"
+chrono = "0.4.38"
+tokio = "1.37.0"
 
 [dev-dependencies]
 test-utils = { path = "../../test-utils" }

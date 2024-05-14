@@ -1,4 +1,4 @@
-//! This is the collection of the todo list
+//! This is the collection of the to do list
 use crate::models::todo::entity::todo::Todo;
 use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
@@ -43,7 +43,7 @@ mod test {
         // Arrange
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
-        let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None).unwrap();
+        let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None, None).unwrap();
         let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![]);
 
         // Act
@@ -58,7 +58,7 @@ mod test {
         // Arrange
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
-        let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None).unwrap();
+        let todo = Todo::new(&TodoId::from(&1u32), "summary", None, Some(42), None).unwrap();
         let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo]);
 
         // Act

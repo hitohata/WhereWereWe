@@ -10,3 +10,9 @@ impl From<&u32> for TodoListGroupId {
         Self { id: value.to_owned() }
     }
 }
+
+impl TodoListGroupId {
+    pub fn id(&self) -> &u32 {
+        &self.id
+    }
+}
