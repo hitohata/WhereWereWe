@@ -78,11 +78,11 @@ impl TodoRepository for TodoRepositoryConcrete {
     }
 
     /// get the auto-increment like value.
-    /// https://hitohata.github.io/WhereWereWe/project/data-structure/#todo-list-group-id-counter 
+    /// https://hitohata.github.io/WhereWereWe/project/data-structure/#todo-list-group-id-counter
     /// Then, call get to-do list group using that data.
     async fn list_todo_list_group(&self, travel_id: &TravelId) -> Result<Vec<TodoListGroup>, TravelError> {
-        
-        let count_result = 
+
+        let count_result =
             self
                 .client
                 .get_item()
@@ -91,7 +91,7 @@ impl TodoRepository for TodoRepositoryConcrete {
                 .key("SK", AttributeValue::S("ToDoListCounter".to_string()))
                 .send()
                 .await;
-        
+
         let count_attribute = match count_result {
             Ok(count) => {
                 match count.item {
@@ -102,6 +102,8 @@ impl TodoRepository for TodoRepositoryConcrete {
             Err(e) => return Err(TravelError::DBError(e.to_string()))
         };
         
+        println!("{:?}", count_attribute);
+
         let count = match count_attribute.get("Count") {
             Some(v) => {
                 match v.as_n() {
@@ -116,25 +118,25 @@ impl TodoRepository for TodoRepositoryConcrete {
             }
             None => return Err(TravelError::DBError("Count value is not found".to_string()))
         };
-        
+
         let mut handlers = Vec::with_capacity(count);
-        
+
         let arc_self = Arc::new(self.clone());
         let arc_travel_id = Arc::new(travel_id.clone());
-        
+
         for i in 1..=count {
             let repo = arc_self.clone();
             let t_id = arc_travel_id.clone();
             let todo_list_group_id = TodoListGroupId::from(&(i as u32));
-            
+
             handlers.push(tokio::task::spawn(async move {
                 repo.find_todo_list_group_by_id(&t_id, &todo_list_group_id).await
             }))
-            
+
         }
-        
+
         let mut todo_list_groups: Vec<TodoListGroup> = Vec::new();
-        
+
         for handler in handlers {
             match handler.await {
                 Ok(handler_res) => {
@@ -150,7 +152,7 @@ impl TodoRepository for TodoRepositoryConcrete {
                 Err(e) => return Err(TravelError::DBError(e.to_string()))
             }
         }
-        
+
         Ok(todo_list_groups)
     }
 
@@ -420,7 +422,8 @@ mod test {
     use super::*;    
     use tokio;
     use test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
-    
+    use crate::models::travel::id::travel_id;
+
     impl TodoRepositoryConcrete {
         fn new_test_repo(client: &TestDynamoTable) -> Self {
             Self {
@@ -573,6 +576,68 @@ mod test {
         let todo_list_group_result = result.expect("getting todo list group failed");
         assert!(todo_list_group_result.is_none());
 
+        test_db.delete_table().await;
+    }
+
+
+    #[tokio::test]
+    /// when call this function when there is no data,
+    /// returns the empty vector
+    async fn todo_list_todo_list_group_data() {
+        // Arrange
+        let table_name = "todo-list-todo-list-group-db";
+        let travel_id = TravelId::generate();
+        let test_db = TestDynamoTable::default(table_name).await;
+        let todo_repo = TodoRepositoryConcrete::new_test_repo(&test_db);
+
+        // init DB
+        test_db.generate_test_table().await;
+
+        // set the count to 3
+        test_db.client().put_item().table_name(table_name)
+            .item("PK", AttributeValue::S(travel_id.id().to_string()))
+            .item("SK", AttributeValue::S("ToDoListCounter".to_string()))
+            .item("Count", AttributeValue::N(3.to_string()))
+            .send()
+            .await.expect("Count up failed");
+
+        // to-do list group
+        let todo_list_group_1 = TodoListGroup::new(&travel_id, &TodoListGroupId::from(&1), "group1", vec![], None).unwrap();
+        let todo_list_group_2 = TodoListGroup::new(&travel_id, &TodoListGroupId::from(&2), "group1", vec![], None).unwrap();
+        
+        // put data
+        todo_repo.save_todo_list_group(&todo_list_group_1).await.unwrap();
+        todo_repo.save_todo_list_group(&todo_list_group_2).await.unwrap();
+
+        // Act
+        let result = todo_repo.list_todo_list_group(&travel_id).await;
+
+        assert!(result.is_ok());
+        assert_eq!(result.expect("list todo list group error").len(), 2);
+
+        test_db.delete_table().await;
+    }
+    
+
+    #[tokio::test]
+    /// when call this function when there is no data,
+    /// returns the empty vector
+    async fn todo_list_todo_list_group_with_no_data() {
+        // Arrange
+        let table_name = "todo-list-todo-list-group-with-no-data-db";
+        let travel_id = TravelId::generate();
+        let test_db = TestDynamoTable::default(table_name).await;
+        let todo_repo = TodoRepositoryConcrete::new_test_repo(&test_db);
+
+        // init DB
+        test_db.generate_test_table().await;
+
+        // Act
+        let result = todo_repo.list_todo_list_group(&travel_id).await;
+        
+        assert!(result.is_ok());
+        assert_eq!(result.expect("list todo list group error").len(), 0);
+        
         test_db.delete_table().await;
     }
 }
