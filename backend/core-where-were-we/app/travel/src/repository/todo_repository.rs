@@ -260,7 +260,7 @@ fn convert_into_todo_list_group(travel_id: &TravelId, item: &HashMap<String, Att
         None => None
     };
 
-    Ok(TodoListGroup::new(travel_id, &todo_id, &name, todos.to_owned(), tz))
+    Ok(TodoListGroup::new(travel_id, &todo_id, &name, todos.to_owned(), tz)?)
 }
 
 
@@ -457,7 +457,7 @@ mod test {
         let todo1 = test_todo_none(1);
         let todo2 = test_todo_full_val(2);
 
-        let todo_list_group = TodoListGroup::new(&travel_id, &todo_list_group_id, "name", vec![todo1.to_owned(), todo2.to_owned()], Option::Some(42));
+        let todo_list_group = TodoListGroup::new(&travel_id, &todo_list_group_id, "name", vec![todo1.to_owned(), todo2.to_owned()], Option::Some(42)).unwrap();
 
         // init DB
         test_db.generate_test_table().await;

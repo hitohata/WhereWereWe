@@ -1,4 +1,5 @@
 //! This is the collection of the to do list
+use crate::errors::errors::TravelError;
 use crate::models::todo::entity::todo::Todo;
 use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
@@ -19,14 +20,23 @@ pub struct TodoListGroup {
 }
 
 impl TodoListGroup {
-    pub fn new(travel_id: &TravelId, todo_group_id: &TodoListGroupId, group_name: &str, todo: Vec<Todo>, tz: Option<i32>) -> Self {
-        Self {
+    pub fn new(travel_id: &TravelId, todo_group_id: &TodoListGroupId, group_name: &str, todo: Vec<Todo>, tz: Option<i32>) -> Result<Self, TravelError> {
+        
+        if group_name.len() < 1 {
+            return Err(TravelError::DomainError("The travel name cannot be empty".to_string()))
+        }
+        
+        if 200 <= group_name.len() {
+            return Err(TravelError::DomainError("The travel name cannot be grater than or equal to 200".to_string()))
+        }
+        
+        Ok(Self {
             travel_id: travel_id.to_owned(),
             todo_list_group_id: todo_group_id.to_owned(),
             group_name: group_name.to_owned(),
             todo,
             tz
-        }
+        })
     }
     
     pub fn travel_id(&self) -> &TravelId {
@@ -75,7 +85,7 @@ mod test {
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
         let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None, None).unwrap();
-        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![], None);
+        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![], None).unwrap();
 
         // Act
         todo_list_group.add_todo(&todo);
@@ -90,7 +100,8 @@ mod test {
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
         let todo = Todo::new(&TodoId::from(&1u32), "summary", None, Some(42), None).unwrap();
-        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo], Some(9));
+        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo], Some(9)).unwrap();
+        
 
         // Act
         todo_list_group.remove_todo(&TodoId::from(&1u32));
