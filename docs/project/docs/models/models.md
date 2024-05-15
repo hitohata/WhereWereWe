@@ -50,10 +50,11 @@ classDiagram
     }
     
     class TodoListGroup~AggrigateRoot~ {
-        TodoGroupId: id
-        List~UserId~: shareWith
-        List~Todo~: todoList
-        share(InvolvedUserId) Todo
+        TravelId: tragvelId
+        TodoGroupId: todoGroupListId
+        String: groupName 
+        List~Todo~: todo
+        Number~nullable~: tz
     }
     
     class Todo~Entity~ {
