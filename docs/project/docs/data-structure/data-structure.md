@@ -12,7 +12,7 @@ None
 
 ### Local Secondary Index (LSI)
 
-Name: Travel Date
+Name: TravelDate
 
 * PK: Travel ID
 * StartDate: start date of the travel
