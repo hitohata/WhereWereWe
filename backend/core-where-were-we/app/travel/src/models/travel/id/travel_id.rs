@@ -4,7 +4,7 @@ use crate::errors::errors::TravelError;
 
 /// travel ID
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
-pub (crate) struct TravelId {
+pub struct TravelId {
     id: String
 }
 
