@@ -11,6 +11,7 @@ utils = { path = "../../utils" }
 aws-sdk-dynamodb = "1.27.0"
 chrono = "0.4.38"
 tokio = "1.37.0"
+mockall = "0.12.1"
 
 [dev-dependencies]
 test-utils = { path = "../../test-utils" }

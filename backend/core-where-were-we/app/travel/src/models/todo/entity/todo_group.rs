@@ -4,11 +4,12 @@ use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
 
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct TodoListGroup {
     /// travel ID
     travel_id: TravelId,
     /// to-do group ID
-    todo_group_id: TodoListGroupId,
+    todo_list_group_id: TodoListGroupId,
     /// this to-do group name
     group_name: String,
     /// The collection of the to-do rest
@@ -21,10 +22,33 @@ impl TodoListGroup {
     pub fn new(travel_id: &TravelId, todo_group_id: &TodoListGroupId, group_name: &str, todo: Vec<Todo>, tz: Option<i32>) -> Self {
         Self {
             travel_id: travel_id.to_owned(),
-            todo_group_id: todo_group_id.to_owned(),
+            todo_list_group_id: todo_group_id.to_owned(),
             group_name: group_name.to_owned(),
             todo,
             tz
+        }
+    }
+    
+    pub fn travel_id(&self) -> &TravelId {
+        &self.travel_id
+    }
+    
+    pub fn todo_list_group_id(&self) -> &TodoListGroupId {
+        &self.todo_list_group_id
+    }
+    
+    pub fn group_name(&self) -> &str {
+        &self.group_name
+    }
+    
+    pub fn todo(&self) -> &Vec<Todo> {
+        &self.todo
+    } 
+    
+    pub fn tz(&self) -> Option<i32> {
+        match self.tz {
+            Some(t) => Some(t),
+            None => None
         }
     }
 
