@@ -16,18 +16,22 @@
 <a href="#14" id="14">14</a>
 <a href="#15" id="15">15</a>
 <a href="#16" id="16">16</a>
-</pre></div><pre class="rust"><code><span class="doccomment">//! The repository trait of the todo
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a>
+</pre></div><pre class="rust"><code><span class="doccomment">//! The repository trait of the to-do
 
-</span><span class="kw">use </span><span class="kw">crate</span>::errors::errors::TravelError;
+</span><span class="kw">use </span>mockall::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::errors::errors::TravelError;
 <span class="kw">use </span><span class="kw">crate</span>::models::todo::entity::todo::Todo;
 <span class="kw">use </span><span class="kw">crate</span>::models::todo::entity::todo_group::TodoListGroup;
 <span class="kw">use </span><span class="kw">crate</span>::models::todo::id::todo_id::TodoId;
 <span class="kw">use </span><span class="kw">crate</span>::models::todo::id::todo_list_group_id::TodoListGroupId;
 <span class="kw">use </span><span class="kw">crate</span>::models::travel::id::travel_id::TravelId;
 
-<span class="kw">pub trait </span>TodoRepository {
-    <span class="kw">async fn </span>find_todo_group_by_id(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>TravelId, todo_list_group_id: <span class="kw-2">&amp;</span>TodoListGroupId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;TodoListGroup&gt;, TravelError&gt;;
-    <span class="kw">async fn </span>save_todo_group(<span class="kw-2">&amp;</span><span class="self">self</span>, todo_group: <span class="kw-2">&amp;</span>TodoListGroup) -&gt; <span class="prelude-ty">Result</span>&lt;(), TravelError&gt;;
+<span class="attr">#[automock]
+</span><span class="kw">pub trait </span>TodoRepository {
+    <span class="kw">async fn </span>find_todo_list_group_by_id(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>TravelId, todo_list_group_id: <span class="kw-2">&amp;</span>TodoListGroupId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;TodoListGroup&gt;, TravelError&gt;;
+    <span class="kw">async fn </span>save_todo_list_group(<span class="kw-2">&amp;</span><span class="self">self</span>, todo_group: <span class="kw-2">&amp;</span>TodoListGroup) -&gt; <span class="prelude-ty">Result</span>&lt;(), TravelError&gt;;
     <span class="kw">async fn </span>find_todo_by_id(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>TravelId, todo_list_group_id: <span class="kw-2">&amp;</span>TodoListGroupId, todo: <span class="kw-2">&amp;</span>TodoId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Todo&gt;, TravelError&gt;;
     <span class="kw">async fn </span>list_todo(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>TravelId, todo_list_group_id: <span class="kw-2">&amp;</span>TodoListGroupId) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Todo&gt;, TravelError&gt;;
     <span class="kw">async fn </span>save_todo(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>TravelId, todo_list_group_id: <span class="kw-2">&amp;</span>TodoListGroupId, todo: <span class="kw-2">&amp;</span>Todo) -&gt; <span class="prelude-ty">Result</span>&lt;(), TravelError&gt;;

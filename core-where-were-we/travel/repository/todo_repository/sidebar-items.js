@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["convert_hashmap_into_option_string","convert_into_todo"],"struct":["TodoRepositoryConcrete"]};
+window.SIDEBAR_ITEMS = {"fn":["convert_hashmap_into_option_string","convert_into_todo","convert_into_todo_list_group"],"struct":["TodoRepositoryConcrete"]};
