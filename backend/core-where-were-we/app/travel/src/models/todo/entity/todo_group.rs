@@ -63,15 +63,17 @@ impl TodoListGroup {
     }
 
     /// remove a to-do from this collection
-    pub fn remove_todo(&mut self, todo_id: &TodoId) {
+    pub fn remove_todo(mut self, todo_id: &TodoId) -> Self {
         if let Some(index) = self.todo.iter().position(|x| x.todo_id().eq(todo_id)) {
             self.todo.remove(index);
         }
+        self
     }
 
     /// add a new to do to this collection
-    pub fn add_todo(&mut self, todo: &Todo) {
+    pub fn add_todo(mut self, todo: &Todo) -> Self {
         self.todo.push(todo.clone());
+        self
     }
 }
 
@@ -85,13 +87,13 @@ mod test {
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
         let todo = Todo::new(&TodoId::from(&1u32), "summary", None, None, None).unwrap();
-        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![], None).unwrap();
+        let todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![], None).unwrap();
 
         // Act
-        todo_list_group.add_todo(&todo);
+        let updated = todo_list_group.add_todo(&todo);
 
         // Assert
-        assert_eq!(todo_list_group.todo.len(), 1);
+        assert_eq!(updated.todo.len(), 1);
     }
 
     #[test]
@@ -100,13 +102,13 @@ mod test {
         let travel_id = TravelId::generate();
         let todo_group_id = TodoListGroupId::from(&1);
         let todo = Todo::new(&TodoId::from(&1u32), "summary", None, Some(42), None).unwrap();
-        let mut todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo], Some(9)).unwrap();
+        let todo_list_group = TodoListGroup::new(&travel_id, &todo_group_id, "name", vec![todo], Some(9)).unwrap();
         
 
         // Act
-        todo_list_group.remove_todo(&TodoId::from(&1u32));
+        let updated = todo_list_group.remove_todo(&TodoId::from(&1u32));
 
         // Assert
-        assert_eq!(todo_list_group.todo.len(), 0);
+        assert_eq!(updated.todo.len(), 0);
     }
 }
