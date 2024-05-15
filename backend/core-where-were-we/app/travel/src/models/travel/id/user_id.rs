@@ -8,6 +8,12 @@ pub struct UserId {
     id: String
 }
 
+impl UserId {
+    pub fn id(&self) -> &str {
+        &self.id
+    }
+}
+
 impl TryFrom<&str> for UserId {
     type Error = TravelError;
 
