@@ -5,13 +5,13 @@ use crate::models::user_id::UserId;
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct User {
     /// User ID
-    pub (crate) id: UserId,
+    id: UserId,
     /// Username
-    pub (crate) name: Username,
-    pub (crate) email: String,
+    name: Username,
+    email: String,
     /// the partners
     /// if there is no partners, this value will be an empty vector.
-    pub (crate) partners: Vec<UserId>
+    partners: Vec<UserId>
 }
 
 impl User {
@@ -26,10 +26,27 @@ impl User {
             }
         }
     }
+    
+    pub fn id(&self) -> &UserId { 
+        &self.id
+    }
+    
+    pub fn name(&self) -> &str {
+        &self.name.name
+    }
+    
+    pub fn email(&self) -> &str {
+        &self.email
+    } 
+    
+    pub fn partners(&self) -> &Vec<UserId> {
+        &self.partners
+    }
 
     // change the username
-    pub fn update_name(&mut self, name: &Username) {
-        self.name = name.to_owned()
+    pub fn update_name(mut self, name: &Username) -> Self {
+        self.name = name.to_owned();
+        self
     }
 
     // add a new partner
@@ -50,7 +67,13 @@ impl User {
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Username {
     // must be 0 < name <= 255
-    pub name: String
+    name: String
+}
+
+impl Username {
+    pub fn name(&self) -> &str {
+        &self.name
+    }
 }
 
 impl TryFrom<&str> for Username {
@@ -77,9 +100,9 @@ mod user_test {
 
     #[test]
     fn test_change_name() {
-        let mut user = User::new(&UserId::generate(), &Username::try_from("name").unwrap(), "", None);
-        user.update_name(&Username::try_from("name2").unwrap());
-        assert_eq!(user.name.name, "name2");
+        let user = User::new(&UserId::generate(), &Username::try_from("name").unwrap(), "", None);
+        let updated = user.update_name(&Username::try_from("name2").unwrap());
+        assert_eq!(updated.name.name, "name2");
     }
 
     #[test]

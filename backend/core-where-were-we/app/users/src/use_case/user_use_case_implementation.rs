@@ -138,16 +138,16 @@ where
         };
 
         let user_or_option = self.user_repository.find_by_id(&user_id_struct).await?;
-        let mut user = match user_or_option {
+        let user = match user_or_option {
             Some(user) => {user},
             None => return Err(UsersError::UserNotFind(user_id.to_string()))
         };
 
-        user.update_name(&user_name);
+        let updated_name_user = user.update_name(&user_name);
 
-        self.user_repository.save(&user).await?;
+        self.user_repository.save(&updated_name_user).await?;
 
-        Ok(UserDto::from(user))
+        Ok(UserDto::from(updated_name_user))
     }
 }
 
