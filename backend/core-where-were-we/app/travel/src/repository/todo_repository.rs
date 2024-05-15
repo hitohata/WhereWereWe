@@ -101,8 +101,6 @@ impl TodoRepository for TodoRepositoryConcrete {
             },
             Err(e) => return Err(TravelError::DBError(e.to_string()))
         };
-        
-        println!("{:?}", count_attribute);
 
         let count = match count_attribute.get("Count") {
             Some(v) => {
