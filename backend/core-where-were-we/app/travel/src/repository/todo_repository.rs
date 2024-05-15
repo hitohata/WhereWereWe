@@ -2,6 +2,7 @@
 
 use std::collections::HashMap;
 use std::sync::Arc;
+use aws_sdk_dynamodb::operation::get_item::{GetItemError, GetItemOutput};
 use aws_sdk_dynamodb::types::AttributeValue;
 use utils::infrastructure::db::dynamo_db_client::dynamodb_client;
 use utils::settings::settings::table_name;
@@ -32,33 +33,45 @@ impl TodoRepositoryConcrete {
 impl TodoRepository for TodoRepositoryConcrete {
     async fn find_todo_group_by_id(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId) -> Result<Option<TodoListGroup>, TravelError> {
 
-        let result =
-            self
+        let get_todo_group_handler =
+            tokio::task::spawn(self
                 .client
                 .get_item()
                 .table_name(&self.table_name)
                 .key("PK", AttributeValue::S(travel_id.id().to_string()))
                 .key("SK", AttributeValue::S(format!("ToDoList#{}", todo_list_group_id.id())))
                 .send()
-                .await;
+            );
 
-        let item = match result {
-            Ok(item) => item,
-            Err(e) => {
-                return Err(TravelError::DBError(e.to_string()))
+        // get to-dos
+        let arc_repo = Arc::new(self.clone());
+        let arc_travel_id = Arc::new(travel_id.clone());
+        let arc_list_group_id = Arc::new(todo_list_group_id.clone());
+        let todos_handler = tokio::task::spawn(async move {
+            arc_repo.list_todo(&arc_travel_id.clone(), &arc_list_group_id.clone()).await
+        });
+        
+        let todos = match todos_handler.await {
+            Ok(todo_result) => todo_result?,
+            Err(e) => return Err(TravelError::DBError(e.to_string()))
+        };
+        
+        let item = match get_todo_group_handler.await {
+            Ok(join_result) => {
+                match join_result {
+                    Ok(get_item) => {
+                        match get_item.item {
+                            Some(item) => {item}
+                            None => return Ok(None)
+                        }
+                    }
+                    Err(e) => return Err(TravelError::DBError(e.to_string()))
+                }
             }
+            Err(e) => return Err(TravelError::DBError(e.to_string()))
         };
 
-        match item.item {
-            Some(item) => {
-
-                // let todo_list =
-                //
-                // Ok(None)
-                todo!()
-            }
-            None => Ok(None)
-        }
+        Ok(Some(convert_into_todo_list_group(travel_id, &item, &todos)?))
     }
 
     async fn save_todo_group(&self, todo_group: &TodoListGroup) -> Result<(), TravelError> {
@@ -73,7 +86,7 @@ impl TodoRepository for TodoRepositoryConcrete {
             .put_item()
             .item("PK", pk_av)
             .item("SK", sk_av)
-            .item("ToDoListId", todo_list_group_id_av)
+            .item("ToDoListGroupId", todo_list_group_id_av)
             .item("Name", name_av);
 
         if let Some(tz) = todo_group.tz() {
@@ -205,6 +218,47 @@ impl TodoRepository for TodoRepositoryConcrete {
         }
     }
 }
+
+/// Convert the item into the To-do List Group
+fn convert_into_todo_list_group(travel_id: &TravelId, item: &HashMap<String, AttributeValue>, todos: &Vec<Todo>) -> Result<TodoListGroup, TravelError> {
+    let todo_id = match item.get("TodoListGroupId") {
+        Some(todo_av) => {
+            match todo_av.as_n() {
+                Ok(as_n) => {
+                    match as_n.parse::<u32>() {
+                        Ok(id) => TodoListGroupId::from(&id),
+                        Err(_) => return Err(TravelError::DBError("Todo list group id cannot be parsed.".to_string()))
+                    }
+                }
+                Err(_) => return Err(TravelError::DBError("Todo list group id cannot be parsed.".to_string()))
+            }
+        },
+        None => return Err(TravelError::DBError("The todo list is not found.".to_string()))
+    };
+    
+    let name = match convert_hashmap_into_option_string(item, "Name")? {
+        Some(name) => name,
+        None => return Err(TravelError::DBError("The todo list name is not found.".to_string()))
+    };
+    
+    let tz: Option<i32> = match item.get("TZ") {
+        Some(todo_av) => {
+            match todo_av.as_n() {
+                Ok(as_n) => {
+                    match as_n.parse::<i32>() {
+                        Ok(tz) => Some(tz),
+                        Err(_) => return Err(TravelError::DBError("TZ cannot be parsed.".to_string()))
+                    }
+                }
+                Err(_) => return Err(TravelError::DBError("TZ cannot be parsed.".to_string()))
+            }
+        },
+        None => None
+    };
+
+    Ok(TodoListGroup::new(travel_id, &todo_id, &name, todos.to_owned(), tz))
+}
+
 
 /// Convert the item (HashMap) into the To do struct
 fn convert_into_todo(item: &HashMap<String, AttributeValue>) -> Result<Todo, TravelError> {

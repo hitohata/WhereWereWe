@@ -41,13 +41,13 @@ Thus, there are ID manage tables.
 
 #### TODO List Group
 
-| Key        | Value                            | Type   |
-|:-----------|:---------------------------------|:-------|
-| PK         | Travel ID                        | String |
-| SK         | ToDoListGroup#(todo list ID[^2]) | String | 
-| TodoListId | The todo ID                      | Number | 
-| Name       | todo list name                   | String |
-| TZ         | timezone offset                  | Number |
+| Key             | Value                            | Type   |
+|:----------------|:---------------------------------|:-------|
+| PK              | Travel ID                        | String |
+| SK              | ToDoListGroup#(todo list ID[^2]) | String | 
+| TodoListGroupId | The todo group ID                | Number | 
+| Name            | todo list name                   | String |
+| TZ              | timezone offset                  | Number |
 
 [//]: # (| ShareWith  | users this todo list shares with | String |)
 
