@@ -112,6 +112,8 @@
 <a href="#110" id="110">110</a>
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This is the collection of the to do list
 </span><span class="kw">use </span><span class="kw">crate</span>::errors::errors::TravelError;
 <span class="kw">use </span><span class="kw">crate</span>::models::todo::entity::todo::Todo;
@@ -177,16 +179,18 @@
     }
 
     <span class="doccomment">/// remove a to-do from this collection
-    </span><span class="kw">pub fn </span>remove_todo(<span class="kw-2">&amp;mut </span><span class="self">self</span>, todo_id: <span class="kw-2">&amp;</span>TodoId) {
+    </span><span class="kw">pub fn </span>remove_todo(<span class="kw-2">mut </span><span class="self">self</span>, todo_id: <span class="kw-2">&amp;</span>TodoId) -&gt; <span class="self">Self </span>{
         <span class="kw">if let </span><span class="prelude-val">Some</span>(index) = <span class="self">self</span>.todo.iter().position(|x| x.todo_id().eq(todo_id)) {
             <span class="self">self</span>.todo.remove(index);
         }
-    }
+        <span class="self">self
+    </span>}
 
     <span class="doccomment">/// add a new to do to this collection
-    </span><span class="kw">pub fn </span>add_todo(<span class="kw-2">&amp;mut </span><span class="self">self</span>, todo: <span class="kw-2">&amp;</span>Todo) {
+    </span><span class="kw">pub fn </span>add_todo(<span class="kw-2">mut </span><span class="self">self</span>, todo: <span class="kw-2">&amp;</span>Todo) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.todo.push(todo.clone());
-    }
+        <span class="self">self
+    </span>}
 }
 
 <span class="attr">#[cfg(test)]
@@ -199,13 +203,13 @@
         </span><span class="kw">let </span>travel_id = TravelId::generate();
         <span class="kw">let </span>todo_group_id = TodoListGroupId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
         <span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>TodoId::from(<span class="kw-2">&amp;</span><span class="number">1u32</span>), <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>todo_list_group = TodoListGroup::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>todo_group_id, <span class="string">"name"</span>, <span class="macro">vec!</span>[], <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>todo_list_group = TodoListGroup::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>todo_group_id, <span class="string">"name"</span>, <span class="macro">vec!</span>[], <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
-        </span>todo_list_group.add_todo(<span class="kw-2">&amp;</span>todo);
+        </span><span class="kw">let </span>updated = todo_list_group.add_todo(<span class="kw-2">&amp;</span>todo);
 
         <span class="comment">// Assert
-        </span><span class="macro">assert_eq!</span>(todo_list_group.todo.len(), <span class="number">1</span>);
+        </span><span class="macro">assert_eq!</span>(updated.todo.len(), <span class="number">1</span>);
     }
 
     <span class="attr">#[test]
@@ -214,13 +218,13 @@
         </span><span class="kw">let </span>travel_id = TravelId::generate();
         <span class="kw">let </span>todo_group_id = TodoListGroupId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
         <span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>TodoId::from(<span class="kw-2">&amp;</span><span class="number">1u32</span>), <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="number">42</span>), <span class="prelude-val">None</span>).unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>todo_list_group = TodoListGroup::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>todo_group_id, <span class="string">"name"</span>, <span class="macro">vec!</span>[todo], <span class="prelude-val">Some</span>(<span class="number">9</span>)).unwrap();
+        <span class="kw">let </span>todo_list_group = TodoListGroup::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>todo_group_id, <span class="string">"name"</span>, <span class="macro">vec!</span>[todo], <span class="prelude-val">Some</span>(<span class="number">9</span>)).unwrap();
         
 
         <span class="comment">// Act
-        </span>todo_list_group.remove_todo(<span class="kw-2">&amp;</span>TodoId::from(<span class="kw-2">&amp;</span><span class="number">1u32</span>));
+        </span><span class="kw">let </span>updated = todo_list_group.remove_todo(<span class="kw-2">&amp;</span>TodoId::from(<span class="kw-2">&amp;</span><span class="number">1u32</span>));
 
         <span class="comment">// Assert
-        </span><span class="macro">assert_eq!</span>(todo_list_group.todo.len(), <span class="number">0</span>);
+        </span><span class="macro">assert_eq!</span>(updated.todo.len(), <span class="number">0</span>);
     }
 }</code></pre></div></section></main></body></html>
