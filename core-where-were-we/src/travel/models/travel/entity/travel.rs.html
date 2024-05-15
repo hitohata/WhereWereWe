@@ -153,6 +153,7 @@
 <a href="#151" id="151">151</a>
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! travel struct
 </span><span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span><span class="kw">crate</span>::models::travel::id::{travel_id::TravelId, user_id::UserId};
@@ -213,35 +214,37 @@
     }
 
     <span class="doccomment">/// add a traveler into this travel
-    </span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">fn </span>add_traveler(<span class="kw-2">&amp;mut </span><span class="self">self</span>, traveler_id: <span class="kw-2">&amp;</span>UserId) {
+    </span><span class="kw">pub fn </span>add_traveler(<span class="kw-2">mut </span><span class="self">self</span>, traveler_id: <span class="kw-2">&amp;</span>UserId) -&gt; <span class="self">Self </span>{
         <span class="kw">if </span>!<span class="self">self</span>.travelers.contains(traveler_id) {
             <span class="self">self</span>.travelers.insert(traveler_id.to_owned());
-        }
-    }
+        };
+        <span class="self">self
+    </span>}
 
     <span class="doccomment">/// involve a user into this travel
-    </span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">fn </span>involve_user(<span class="kw-2">&amp;mut </span><span class="self">self</span>, involved_user_id: <span class="kw-2">&amp;</span>UserId) {
+    </span><span class="kw">pub fn </span>involve_user(<span class="kw-2">mut </span><span class="self">self</span>, involved_user_id: <span class="kw-2">&amp;</span>UserId) -&gt; <span class="self">Self </span>{
         <span class="kw">if </span>!<span class="self">self</span>.involved_users.contains(involved_user_id) {
             <span class="self">self</span>.travelers.insert(involved_user_id.to_owned());
-        }
-    }
+        };
+        <span class="self">self
+    </span>}
 
     <span class="doccomment">/// remove a traveler from this travel😢
-    </span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">fn </span>remove_traveler(<span class="kw-2">&amp;mut </span><span class="self">self</span>, traveler_id: <span class="kw-2">&amp;</span>UserId) -&gt; <span class="prelude-ty">Result</span>&lt;(), TravelError&gt; {
+    </span><span class="kw">pub fn </span>remove_traveler(<span class="kw-2">mut </span><span class="self">self</span>, traveler_id: <span class="kw-2">&amp;</span>UserId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
         <span class="kw">match </span><span class="self">self</span>.travelers.len() == <span class="number">1 </span>{
             <span class="bool-val">true </span>=&gt; <span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"There are only one traveler, so cannot remove."</span>.into())),
             <span class="bool-val">false </span>=&gt; {
                 <span class="self">self</span>.travelers.remove(traveler_id);
-                <span class="prelude-val">Ok</span>(())
+                <span class="prelude-val">Ok</span>(<span class="self">self</span>)
             }
-
         }
     }
 
     <span class="doccomment">/// preclude an involved user from this travel
-    </span><span class="kw">pub </span>(<span class="kw">crate</span>) <span class="kw">fn </span>preclude_user(<span class="kw-2">&amp;mut </span><span class="self">self</span>, precluded_user_id: <span class="kw-2">&amp;</span>UserId) {
+    </span><span class="kw">pub fn </span>preclude_user(<span class="kw-2">mut </span><span class="self">self</span>, precluded_user_id: <span class="kw-2">&amp;</span>UserId) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.travelers.remove(precluded_user_id);
-    }
+        <span class="self">self
+    </span>}
 }
 
 <span class="attr">#[cfg(test)]
@@ -270,19 +273,19 @@
         <span class="kw">let </span>travel_id = TravelId::generate();
         <span class="kw">let </span>traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         <span class="kw">let </span>name = <span class="string">"Back to the future"</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>travel = Travel::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span><span class="macro">vec!</span>[traveler_id.clone()], <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>travel = Travel::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span><span class="macro">vec!</span>[traveler_id.clone()], <span class="prelude-val">None</span>).unwrap();
 
         <span class="macro">assert_eq!</span>(travel.travelers().len(), <span class="number">1</span>);
 
         <span class="comment">// can add
         </span><span class="kw">let </span>traveler2_id = UserId::try_from(TravelId::generate().id()).unwrap();
-        travel.add_traveler(<span class="kw-2">&amp;</span>traveler2_id);
-        <span class="macro">assert_eq!</span>(travel.travelers().len(), <span class="number">2</span>);
+        <span class="kw">let </span>updated_travel = travel.add_traveler(<span class="kw-2">&amp;</span>traveler2_id);
+        <span class="macro">assert_eq!</span>(updated_travel.travelers().len(), <span class="number">2</span>);
 
 
         <span class="comment">// the duplication will be ignored
-        </span>travel.add_traveler(<span class="kw-2">&amp;</span>traveler2_id);
-        <span class="macro">assert_eq!</span>(travel.travelers().len(), <span class="number">2</span>);
+        </span><span class="kw">let </span>duplicate = updated_travel.add_traveler(<span class="kw-2">&amp;</span>traveler2_id);
+        <span class="macro">assert_eq!</span>(duplicate.travelers().len(), <span class="number">2</span>);
     }
 
     <span class="attr">#[test]
@@ -291,18 +294,17 @@
         <span class="kw">let </span>traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         <span class="kw">let </span>traveler2_id = UserId::try_from(TravelId::generate().id()).unwrap();
         <span class="kw">let </span>name = <span class="string">"Back to the future"</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>travel = Travel::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span><span class="macro">vec!</span>[traveler_id.clone(), traveler2_id.clone()], <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>travel = Travel::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span><span class="macro">vec!</span>[traveler_id.clone(), traveler2_id.clone()], <span class="prelude-val">None</span>).unwrap();
 
         <span class="macro">assert_eq!</span>(travel.travelers().len(), <span class="number">2</span>);
 
         <span class="comment">// can remove
-        </span>travel.remove_traveler(<span class="kw-2">&amp;</span>traveler2_id).unwrap();
-        <span class="macro">assert_eq!</span>(travel.travelers().len(), <span class="number">1</span>);
+        </span><span class="kw">let </span>removed = travel.remove_traveler(<span class="kw-2">&amp;</span>traveler2_id).unwrap();
+        <span class="macro">assert_eq!</span>(removed.travelers().len(), <span class="number">1</span>);
 
 
         <span class="comment">// if there is only one user in the struct, cannot remove
-        </span><span class="kw">let </span>res = travel.remove_traveler(<span class="kw-2">&amp;</span>traveler_id);
+        </span><span class="kw">let </span>res = removed.remove_traveler(<span class="kw-2">&amp;</span>traveler_id);
         <span class="macro">assert!</span>(res.is_err());
-        <span class="macro">assert_eq!</span>(travel.travelers().len(), <span class="number">1</span>);
     }
 }</code></pre></div></section></main></body></html>
