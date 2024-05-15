@@ -111,8 +111,28 @@
 <a href="#109" id="109">109</a>
 <a href="#110" id="110">110</a>
 <a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>aws_sdk_dynamodb <span class="kw">as </span>dynamodb;
-<span class="kw">use </span>aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType};
+<span class="kw">use </span>aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType, LocalSecondaryIndex, Projection, ProjectionType};
 <span class="kw">use </span>utils::settings::settings::dynamo_endpoint;
 
 <span class="doccomment">/// The DynamoDB user client for the test.
@@ -164,6 +184,12 @@
             .attribute_type(ScalarAttributeType::S)
             .build()
             .unwrap();
+
+        <span class="kw">let </span>start_date_attribute = AttributeDefinition::builder()
+            .attribute_name(<span class="string">"StartDate"</span>)
+            .attribute_type(ScalarAttributeType::S)
+            .build()
+            .unwrap();
         
         <span class="kw">let </span>partition_key_schema = KeySchemaElement::builder()
             .attribute_name(<span class="string">"PK"</span>)
@@ -182,19 +208,33 @@
             .write_capacity_units(<span class="number">5</span>)
             .build()
             .unwrap();
+        
+        <span class="kw">let </span>travel_date_secondary_index = LocalSecondaryIndex::builder()
+            .index_name(<span class="string">"TravelDate"</span>)
+            .key_schema(partition_key_schema.clone())
+            .key_schema(KeySchemaElement::builder().attribute_name(<span class="string">"StartDate"</span>.to_string()).key_type(KeyType::Range).build().unwrap())
+            .projection(Projection::builder().projection_type(ProjectionType::All).build())
+            .build()
+            .unwrap();
 
-        <span class="kw">let _ </span>= <span class="self">self
+        <span class="kw">let </span>res = <span class="self">self
             </span>.client
             .create_table()
             .table_name(<span class="kw-2">&amp;</span><span class="self">self</span>.table_name)
             .set_attribute_definitions(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[
                 pk_attribute,
                 sk_attribute,
+                start_date_attribute
             ]))
             .set_key_schema(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[partition_key_schema, sort_key_schema]))
+            .set_local_secondary_indexes(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[travel_date_secondary_index]))
             .provisioned_throughput(throughput)
             .send()
             .<span class="kw">await</span>;
+        
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = res {
+            <span class="macro">println!</span>(<span class="string">"{:?}"</span>, e);
+        }
     }
     
     <span class="doccomment">/// remove a table
