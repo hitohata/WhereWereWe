@@ -10,6 +10,13 @@ The PK and SK is just set as "PK" as "SK".
 
 None
 
+### Local Secondary Index (LSI)
+
+Name: Travel Date
+
+* PK: Travel ID
+* StartDate: start date of the travel
+
 ## User
 
 The user's definition is the following.
