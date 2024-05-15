@@ -277,12 +277,12 @@
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(user))
     }
     <span class="kw">async fn </span>save(<span class="kw-2">&amp;</span><span class="self">self</span>, user: <span class="kw-2">&amp;</span>User) -&gt; <span class="prelude-ty">Result</span>&lt;(), UsersError&gt; {
-        <span class="kw">let </span>user_id_av = AttributeValue::S(user.id.id().to_string());
+        <span class="kw">let </span>user_id_av = AttributeValue::S(user.id().id().to_string());
         <span class="kw">let </span>sk_av = AttributeValue::S(<span class="string">"USER"</span>.to_string());
-        <span class="kw">let </span>name_av = AttributeValue::S(user.name.name.to_string());
-        <span class="kw">let </span>email_av = AttributeValue::S(user.email.to_string());
+        <span class="kw">let </span>name_av = AttributeValue::S(user.name().to_string());
+        <span class="kw">let </span>email_av = AttributeValue::S(user.email().to_string());
         <span class="kw">let </span>partners_av = AttributeValue::L(
-            user.partners
+            user.partners()
                 .iter()
                 .map(|p| AttributeValue::S(p.id().to_string()))
                 .collect::&lt;Vec&lt;AttributeValue&gt;&gt;(),
@@ -367,7 +367,7 @@
 
         <span class="comment">// Act
         </span><span class="kw">let _ </span>= repository.save(<span class="kw-2">&amp;</span>user).<span class="kw">await</span>; <span class="comment">// save user
-        </span><span class="kw">let </span>retrieved_user = repository.find_by_id(<span class="kw-2">&amp;</span>user.id).<span class="kw">await</span>.unwrap();
+        </span><span class="kw">let </span>retrieved_user = repository.find_by_id(<span class="kw-2">&amp;</span>user.id()).<span class="kw">await</span>.unwrap();
 
         <span class="comment">// Assert
         </span><span class="kw">match </span>retrieved_user {

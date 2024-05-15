@@ -379,16 +379,16 @@
         };
 
         <span class="kw">let </span>user_or_option = <span class="self">self</span>.user_repository.find_by_id(<span class="kw-2">&amp;</span>user_id_struct).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span><span class="kw-2">mut </span>user = <span class="kw">match </span>user_or_option {
+        <span class="kw">let </span>user = <span class="kw">match </span>user_or_option {
             <span class="prelude-val">Some</span>(user) =&gt; {user},
             <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(UsersError::UserNotFind(user_id.to_string()))
         };
 
-        user.update_name(<span class="kw-2">&amp;</span>user_name);
+        <span class="kw">let </span>updated_name_user = user.update_name(<span class="kw-2">&amp;</span>user_name);
 
-        <span class="self">self</span>.user_repository.save(<span class="kw-2">&amp;</span>user).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="self">self</span>.user_repository.save(<span class="kw-2">&amp;</span>updated_name_user).<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(UserDto::from(user))
+        <span class="prelude-val">Ok</span>(UserDto::from(updated_name_user))
     }
 }
 
