@@ -26,3 +26,13 @@ Date with timezone
 Data with timezone.
 This can be null.
 You can start a journey following your heart, and stop your journey when you find the place you want to live.
+
+#### Travelers
+
+The user ID collection.
+This represents actual travelers.
+
+#### Involved Users
+
+The user ID collection.
+This represents involved people like host.
