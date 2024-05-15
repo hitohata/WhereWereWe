@@ -198,11 +198,6 @@
 <a href="#196" id="196">196</a>
 <a href="#197" id="197">197</a>
 <a href="#198" id="198">198</a>
-<a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a>
-<a href="#201" id="201">201</a>
-<a href="#202" id="202">202</a>
-<a href="#203" id="203">203</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! to do struct
 </span><span class="kw">use </span><span class="kw">crate</span>::errors::errors::TravelError;
 <span class="kw">use </span><span class="kw">crate</span>::models::todo::id::todo_id::TodoId;
@@ -273,21 +268,15 @@
     }
 
     <span class="doccomment">/// update the summary and the description
-    </span><span class="kw">pub fn </span>update(<span class="kw-2">&amp;mut </span><span class="self">self</span>, summary: <span class="kw-2">&amp;</span>str, description: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), TravelError&gt; {
+    </span><span class="kw">pub fn </span>update(<span class="kw-2">mut </span><span class="self">self</span>, summary: <span class="kw-2">&amp;</span>str, description: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
 
-        <span class="kw">if let </span><span class="prelude-val">Err</span>(summary_error) = validate_summary(summary) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(summary_error);
-        };
-
-        <span class="kw">if let </span><span class="prelude-val">Err</span>(description_err) = validate_description(description) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(description_err)
-        }
         <span class="self">self</span>.summary = summary.to_string();
         <span class="self">self</span>.description = <span class="kw">match </span>description {
             <span class="prelude-val">Some</span>(d) =&gt; <span class="prelude-val">Some</span>(d.to_string()),
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None
         </span>};
-        <span class="prelude-val">Ok</span>(())
+
+        <span class="self">Self</span>::new(<span class="kw-2">&amp;</span><span class="self">self</span>.id, summary, description, <span class="self">self</span>.due_date, <span class="prelude-val">Some</span>(<span class="self">self</span>.done))
     }
     <span class="kw">pub fn </span>toggle_todo(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
         <span class="self">self</span>.done = !<span class="self">self</span>.done
@@ -343,22 +332,23 @@
     </span><span class="kw">fn </span>test_update() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">"updated"</span>, <span class="prelude-val">Some</span>(<span class="string">"updated description"</span>));
 
         <span class="comment">// Assert
         </span><span class="macro">assert!</span>(updated.is_ok());
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>todo.summary, <span class="string">"updated"</span>);
-        <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>todo.description.unwrap(), <span class="string">"updated description"</span>);
+        <span class="kw">let </span>updated_result = updated.expect(<span class="string">"updated todo unwrap failed"</span>);
+        <span class="macro">assert_eq!</span>(updated_result.summary(), <span class="string">"updated"</span>);
+        <span class="macro">assert_eq!</span>(updated_result.description().unwrap(), <span class="string">"updated description"</span>);
     }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_update_summary_cannot_be_zero() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">""</span>, <span class="prelude-val">None</span>);
@@ -371,7 +361,7 @@
     </span><span class="kw">fn </span>test_update_summary_cannot_be_grater_than_200() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="kw-2">&amp;</span>String::from_utf8(<span class="macro">vec!</span>[<span class="string">b'X'</span>; <span class="number">201</span>]).unwrap(), <span class="prelude-val">None</span>);
@@ -384,7 +374,7 @@
     </span><span class="kw">fn </span>test_update_description_cannot_be_zero() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">"summary"</span>, <span class="prelude-val">Some</span>(<span class="string">""</span>));
@@ -397,7 +387,7 @@
     </span><span class="kw">fn </span>test_update_description_cannot_be_grater_than_500() {
         <span class="comment">// Arrange
         </span><span class="kw">let </span>todo_id = TodoId::from(<span class="kw-2">&amp;</span><span class="number">1</span>);
-        <span class="kw">let </span><span class="kw-2">mut </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
+        <span class="kw">let </span>todo = Todo::new(<span class="kw-2">&amp;</span>todo_id, <span class="string">"summary"</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).unwrap();
 
         <span class="comment">// Act
         </span><span class="kw">let </span>updated = todo.update(<span class="string">"summary"</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>String::from_utf8(<span class="macro">vec!</span>[<span class="string">b'X'</span>; <span class="number">501</span>]).unwrap()));
