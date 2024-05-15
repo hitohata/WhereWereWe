@@ -58,34 +58,36 @@ impl Travel {
     }
 
     /// add a traveler into this travel
-    pub (crate) fn add_traveler(&mut self, traveler_id: &UserId) {
+    pub fn add_traveler(mut self, traveler_id: &UserId) -> Self {
         if !self.travelers.contains(traveler_id) {
             self.travelers.insert(traveler_id.to_owned());
-        }
+        };
+        self
     }
 
     /// involve a user into this travel
-    pub (crate) fn involve_user(&mut self, involved_user_id: &UserId) {
+    pub fn involve_user(mut self, involved_user_id: &UserId) -> Self {
         if !self.involved_users.contains(involved_user_id) {
             self.travelers.insert(involved_user_id.to_owned());
-        }
+        };
+        self
     }
 
     /// remove a traveler from this travel😢
-    pub (crate) fn remove_traveler(&mut self, traveler_id: &UserId) -> Result<(), TravelError> {
+    pub fn remove_traveler(mut self, traveler_id: &UserId) -> Result<Self, TravelError> {
         match self.travelers.len() == 1 {
             true => Err(TravelError::DomainError("There are only one traveler, so cannot remove.".into())),
             false => {
                 self.travelers.remove(traveler_id);
-                Ok(())
+                Ok(self)
             }
-
         }
     }
 
     /// preclude an involved user from this travel
-    pub (crate) fn preclude_user(&mut self, precluded_user_id: &UserId) {
+    pub fn preclude_user(mut self, precluded_user_id: &UserId) -> Self {
         self.travelers.remove(precluded_user_id);
+        self
     }
 }
 
@@ -115,19 +117,19 @@ mod test {
         let travel_id = TravelId::generate();
         let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let name = "Back to the future";
-        let mut travel = Travel::new(&travel_id, &name, &vec![traveler_id.clone()], None).unwrap();
+        let travel = Travel::new(&travel_id, &name, &vec![traveler_id.clone()], None).unwrap();
 
         assert_eq!(travel.travelers().len(), 1);
 
         // can add
         let traveler2_id = UserId::try_from(TravelId::generate().id()).unwrap();
-        travel.add_traveler(&traveler2_id);
-        assert_eq!(travel.travelers().len(), 2);
+        let updated_travel = travel.add_traveler(&traveler2_id);
+        assert_eq!(updated_travel.travelers().len(), 2);
 
 
         // the duplication will be ignored
-        travel.add_traveler(&traveler2_id);
-        assert_eq!(travel.travelers().len(), 2);
+        let duplicate = updated_travel.add_traveler(&traveler2_id);
+        assert_eq!(duplicate.travelers().len(), 2);
     }
 
     #[test]
@@ -136,18 +138,17 @@ mod test {
         let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let traveler2_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let name = "Back to the future";
-        let mut travel = Travel::new(&travel_id, &name, &vec![traveler_id.clone(), traveler2_id.clone()], None).unwrap();
+        let travel = Travel::new(&travel_id, &name, &vec![traveler_id.clone(), traveler2_id.clone()], None).unwrap();
 
         assert_eq!(travel.travelers().len(), 2);
 
         // can remove
-        travel.remove_traveler(&traveler2_id).unwrap();
-        assert_eq!(travel.travelers().len(), 1);
+        let removed = travel.remove_traveler(&traveler2_id).unwrap();
+        assert_eq!(removed.travelers().len(), 1);
 
 
         // if there is only one user in the struct, cannot remove
-        let res = travel.remove_traveler(&traveler_id);
+        let res = removed.remove_traveler(&traveler_id);
         assert!(res.is_err());
-        assert_eq!(travel.travelers().len(), 1);
     }
 }
