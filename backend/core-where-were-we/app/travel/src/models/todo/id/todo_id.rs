@@ -1,4 +1,4 @@
-//! todo ID
+//! to-do ID
 //! This is auto increment number
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct TodoId {
