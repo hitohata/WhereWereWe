@@ -763,7 +763,7 @@
         <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None
     </span>};
 
-    <span class="prelude-val">Ok</span>(TodoListGroup::new(travel_id, <span class="kw-2">&amp;</span>todo_id, <span class="kw-2">&amp;</span>name, todos.to_owned(), tz))
+    <span class="prelude-val">Ok</span>(TodoListGroup::new(travel_id, <span class="kw-2">&amp;</span>todo_id, <span class="kw-2">&amp;</span>name, todos.to_owned(), tz)<span class="question-mark">?</span>)
 }
 
 
@@ -960,7 +960,7 @@
         </span><span class="kw">let </span>todo1 = test_todo_none(<span class="number">1</span>);
         <span class="kw">let </span>todo2 = test_todo_full_val(<span class="number">2</span>);
 
-        <span class="kw">let </span>todo_list_group = TodoListGroup::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>todo_list_group_id, <span class="string">"name"</span>, <span class="macro">vec!</span>[todo1.to_owned(), todo2.to_owned()], Option::Some(<span class="number">42</span>));
+        <span class="kw">let </span>todo_list_group = TodoListGroup::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>todo_list_group_id, <span class="string">"name"</span>, <span class="macro">vec!</span>[todo1.to_owned(), todo2.to_owned()], Option::Some(<span class="number">42</span>)).unwrap();
 
         <span class="comment">// init DB
         </span>test_db.generate_test_table().<span class="kw">await</span>;
