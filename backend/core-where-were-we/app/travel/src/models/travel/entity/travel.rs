@@ -76,6 +76,17 @@ impl Travel {
     pub fn name(&self) -> &str {
         &self.name
     }
+    
+    pub fn start_date(&self) -> &DateTime<FixedOffset> {
+        &self.start_date
+    }
+
+    pub fn end_date(&self) -> Option<&DateTime<FixedOffset>> {
+        match &self.end_date {
+            Some(d) => Some(d),
+            None => None
+        }
+    }
 
     pub fn travelers(&self) -> Vec<UserId> {
         self.travelers.clone().into_iter().collect::<Vec<UserId>>()
