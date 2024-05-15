@@ -68,21 +68,15 @@ impl Todo {
     }
 
     /// update the summary and the description
-    pub fn update(&mut self, summary: &str, description: Option<&str>) -> Result<(), TravelError> {
+    pub fn update(mut self, summary: &str, description: Option<&str>) -> Result<Self, TravelError> {
 
-        if let Err(summary_error) = validate_summary(summary) {
-            return Err(summary_error);
-        };
-
-        if let Err(description_err) = validate_description(description) {
-            return Err(description_err)
-        }
         self.summary = summary.to_string();
         self.description = match description {
             Some(d) => Some(d.to_string()),
             None => None
         };
-        Ok(())
+
+        Self::new(&self.id, summary, description, self.due_date, Some(self.done))
     }
     pub fn toggle_todo(&mut self) {
         self.done = !self.done
@@ -138,22 +132,23 @@ mod test {
     fn test_update() {
         // Arrange
         let todo_id = TodoId::from(&1);
-        let mut todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
+        let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
         let updated = todo.update("updated", Some("updated description"));
 
         // Assert
         assert!(updated.is_ok());
-        assert_eq!(&todo.summary, "updated");
-        assert_eq!(&todo.description.unwrap(), "updated description");
+        let updated_result = updated.expect("updated todo unwrap failed");
+        assert_eq!(updated_result.summary(), "updated");
+        assert_eq!(updated_result.description().unwrap(), "updated description");
     }
 
     #[test]
     fn test_update_summary_cannot_be_zero() {
         // Arrange
         let todo_id = TodoId::from(&1);
-        let mut todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
+        let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
         let updated = todo.update("", None);
@@ -166,7 +161,7 @@ mod test {
     fn test_update_summary_cannot_be_grater_than_200() {
         // Arrange
         let todo_id = TodoId::from(&1);
-        let mut todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
+        let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
         let updated = todo.update(&String::from_utf8(vec![b'X'; 201]).unwrap(), None);
@@ -179,7 +174,7 @@ mod test {
     fn test_update_description_cannot_be_zero() {
         // Arrange
         let todo_id = TodoId::from(&1);
-        let mut todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
+        let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
         let updated = todo.update("summary", Some(""));
@@ -192,7 +187,7 @@ mod test {
     fn test_update_description_cannot_be_grater_than_500() {
         // Arrange
         let todo_id = TodoId::from(&1);
-        let mut todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
+        let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
         let updated = todo.update("summary", Some(&String::from_utf8(vec![b'X'; 501]).unwrap()));
