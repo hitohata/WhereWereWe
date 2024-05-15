@@ -72,9 +72,86 @@ impl TodoRepository for TodoRepositoryConcrete {
             }
             Err(e) => return Err(TravelError::DBError(e.to_string()))
         };
-        
+
         let todo_list_group = convert_into_todo_list_group(travel_id, &item, &todos)?;
         Ok(Some(todo_list_group))
+    }
+
+    /// get the auto-increment like value.
+    /// https://hitohata.github.io/WhereWereWe/project/data-structure/#todo-list-group-id-counter 
+    /// Then, call get to-do list group using that data.
+    async fn list_todo_list_group(&self, travel_id: &TravelId) -> Result<Vec<TodoListGroup>, TravelError> {
+        
+        let count_result = 
+            self
+                .client
+                .get_item()
+                .table_name(&self.table_name)
+                .key("PK", AttributeValue::S(travel_id.id().to_string()))
+                .key("SK", AttributeValue::S("ToDoListCounter".to_string()))
+                .send()
+                .await;
+        
+        let count_attribute = match count_result {
+            Ok(count) => {
+                match count.item {
+                    Some(item) => item,
+                    None => return Ok(Vec::new()) // return empty vector
+                }
+            },
+            Err(e) => return Err(TravelError::DBError(e.to_string()))
+        };
+        
+        let count = match count_attribute.get("Count") {
+            Some(v) => {
+                match v.as_n() {
+                    Ok(count_string) => {
+                        match count_string.parse::<usize>() {
+                            Ok(count) => count,
+                            Err(_) => return Err(TravelError::DBError("Parsing count is failed.".to_string()))
+                        }
+                    }
+                    Err(_) => return Err(TravelError::DBError("Parsing count is failed.".to_string()))
+                }
+            }
+            None => return Err(TravelError::DBError("Count value is not found".to_string()))
+        };
+        
+        let mut handlers = Vec::with_capacity(count);
+        
+        let arc_self = Arc::new(self.clone());
+        let arc_travel_id = Arc::new(travel_id.clone());
+        
+        for i in 1..=count {
+            let repo = arc_self.clone();
+            let t_id = arc_travel_id.clone();
+            let todo_list_group_id = TodoListGroupId::from(&(i as u32));
+            
+            handlers.push(tokio::task::spawn(async move {
+                repo.find_todo_list_group_by_id(&t_id, &todo_list_group_id).await
+            }))
+            
+        }
+        
+        let mut todo_list_groups: Vec<TodoListGroup> = Vec::new();
+        
+        for handler in handlers {
+            match handler.await {
+                Ok(handler_res) => {
+                    match handler_res {
+                        Ok(res) => {
+                            if let Some(todo_list_group) = res {
+                                todo_list_groups.push(todo_list_group)
+                            }
+                        },
+                        Err(e) => return Err(e)
+                    }
+                }
+                Err(e) => return Err(TravelError::DBError(e.to_string()))
+            }
+        }
+        
+        Ok(todo_list_groups)
     }
 
     async fn save_todo_list_group(&self, todo_group: &TodoListGroup) -> Result<(), TravelError> {
@@ -100,7 +177,7 @@ impl TodoRepository for TodoRepositoryConcrete {
 
         let todo_group_result = tokio::task::spawn(put_item.send());
 
-        let mut handler = Vec::with_capacity(todo_group.todo().len() + 1);
+        let mut handler = Vec::with_capacity(todo_group.todo().len());
 
         let arc_self = Arc::new(self.clone());
         let arc_todo = Arc::new(todo_group.to_owned());
@@ -119,7 +196,7 @@ impl TodoRepository for TodoRepositoryConcrete {
                 return Err(TravelError::DBError(e.to_string()))
             }
         };
-        
+
         if let Err(e) = todo_group_result.await {
             return Err(TravelError::DBError(e.to_string()))
         };
