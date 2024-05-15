@@ -1,5 +1,5 @@
 use aws_sdk_dynamodb as dynamodb;
-use aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType};
+use aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType, LocalSecondaryIndex, Projection, ProjectionType};
 use utils::settings::settings::dynamo_endpoint;
 
 /// The DynamoDB user client for the test.
@@ -51,6 +51,12 @@ impl TestDynamoTable {
             .attribute_type(ScalarAttributeType::S)
             .build()
             .unwrap();
+
+        let start_date_attribute = AttributeDefinition::builder()
+            .attribute_name("StartDate")
+            .attribute_type(ScalarAttributeType::S)
+            .build()
+            .unwrap();
         
         let partition_key_schema = KeySchemaElement::builder()
             .attribute_name("PK")
@@ -69,19 +75,33 @@ impl TestDynamoTable {
             .write_capacity_units(5)
             .build()
             .unwrap();
+        
+        let travel_date_secondary_index = LocalSecondaryIndex::builder()
+            .index_name("TravelDate")
+            .key_schema(partition_key_schema.clone())
+            .key_schema(KeySchemaElement::builder().attribute_name("StartDate".to_string()).key_type(KeyType::Range).build().unwrap())
+            .projection(Projection::builder().projection_type(ProjectionType::All).build())
+            .build()
+            .unwrap();
 
-        let _ = self
+        let res = self
             .client
             .create_table()
             .table_name(&self.table_name)
             .set_attribute_definitions(Some(vec![
                 pk_attribute,
                 sk_attribute,
+                start_date_attribute
             ]))
             .set_key_schema(Some(vec![partition_key_schema, sort_key_schema]))
+            .set_local_secondary_indexes(Some(vec![travel_date_secondary_index]))
             .provisioned_throughput(throughput)
             .send()
             .await;
+        
+        if let Err(e) = res {
+            println!("{:?}", e);
+        }
     }
     
     /// remove a table

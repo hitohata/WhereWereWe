@@ -10,6 +10,13 @@ The PK and SK is just set as "PK" as "SK".
 
 None
 
+### Local Secondary Index (LSI)
+
+Name: TravelDate
+
+* PK: Travel ID
+* StartDate: start date of the travel
+
 ## User
 
 The user's definition is the following.
@@ -29,6 +36,19 @@ The user's definition is the following.
 
 
 ## Travel
+
+### Travel
+
+| Key           | Value                           | Type   |
+|:--------------|:--------------------------------|:-------|
+| PK            | Travel id                       | String |
+| SK            | "Travel"[^1]                    | String | 
+| Name          | name of this travel             | String |
+| StartDate     | Start date (ISO8601)            | String |
+| EndDate       | end date (ISO8601). Can be null | String |
+| Travelers     | a list of User IDs              | List   |
+| InvolvedUsers | a list of User IDs              | List   |
+
 
 ### ToDo
 
