@@ -80,7 +80,7 @@ impl TodoRepository for TodoRepositoryConcrete {
             let tz_av = AttributeValue::N(tz.to_string());
             put_item = put_item.item("TZ", tz_av);
         };
-        
+
         let todo_group_result = tokio::task::spawn(put_item.send());
 
         let mut handler = Vec::with_capacity(todo_group.todo().len() + 1);
@@ -96,13 +96,13 @@ impl TodoRepository for TodoRepositoryConcrete {
                 repo.save_todo(cp_todo.travel_id(), cp_todo.todo_list_group_id(), &todo_c).await
             }));
         };
-        
+
         for handle in handler {
             if let Err(e) = handle.await {
                 return Err(TravelError::DBError(e.to_string()))
             }
         };
-        
+
         if let Err(e) = todo_group_result.await {
             return Err(TravelError::DBError(e.to_string()))
         };
@@ -131,9 +131,46 @@ impl TodoRepository for TodoRepositoryConcrete {
             Err(e) => return Err(TravelError::DBError(e.to_string()))
         };
         
-        let todo = convert_into_todo(item)?;
+        let todo = convert_into_todo(&item)?;
         
         Ok(Some(todo))
+    }
+
+    async fn list_todo(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId) -> Result<Vec<Todo>, TravelError> {
+
+        let pk_av = AttributeValue::S(travel_id.id().to_string());
+        let sk_av = AttributeValue::S(format!("ToDoList#{}#", todo_list_group_id.id()));
+
+        let result = self
+            .client
+            .query()
+            .table_name(self.table_name.as_str())
+            .key_condition_expression("PK = :pk and begins_with(SK, :sk)")
+            .expression_attribute_values(":pk", pk_av)
+            .expression_attribute_values(":sk", sk_av)
+            .send()
+            .await;
+
+        let items = match result {
+            Ok(r) => r.items,
+            Err(e) => return Err(TravelError::DBError(e.to_string()))
+        };
+
+        match items {
+            Some(items) => {
+                let mut todos: Vec<Todo> = Vec::with_capacity(items.len());
+
+                for todo in items {
+                    match convert_into_todo(&todo) {
+                        Ok(todo_struct) => {todos.push(todo_struct)}
+                        Err(e) => return Err(TravelError::DBError(e.to_string()))
+                    }
+                };
+
+                Ok(todos)
+            },
+            None => Ok(Vec::new())
+        }
     }
 
     async fn save_todo(&self, travel_id: &TravelId, todo_list_group_id: &TodoListGroupId, todo: &Todo) -> Result<(), TravelError> {
@@ -170,7 +207,7 @@ impl TodoRepository for TodoRepositoryConcrete {
 }
 
 /// Convert the item (HashMap) into the To do struct
-fn convert_into_todo(item: HashMap<String, AttributeValue>) -> Result<Todo, TravelError> {
+fn convert_into_todo(item: &HashMap<String, AttributeValue>) -> Result<Todo, TravelError> {
     // to do ID is not found
     if item.get("TodoId").is_none() {
         return Err(TravelError::DBError("The item exists, but the Todo ID doesn't exist.".to_string()))
@@ -314,6 +351,37 @@ mod test {
         let fetched_todo_2 = result_todo_2.expect("fetched todo 2");
         assert!(fetched_todo_2.is_some());
         assert!(fetched_todo_2.unwrap().eq(&todo2));
+
+        test_db.delete_table().await;
+    }
+
+    #[tokio::test]
+    async fn test_list_todo() {
+        // Arrange
+        let table_name = "list-todo-test-db";
+        let travel_id = TravelId::generate();
+        let todo_list_group_id = TodoListGroupId::from(&1);
+        let test_db = TestDynamoTable::default(table_name).await;
+        let todo_repo = TodoRepositoryConcrete::new_test_repo(&test_db);
+
+        // struct
+        let todo1 = test_todo_none(1);
+        let todo2 = test_todo_full_val(2);
+
+        // init DB
+        test_db.generate_test_table().await;
+
+        // put item
+        todo_repo.save_todo(&travel_id, &todo_list_group_id, &todo1).await.expect("Save Todo 1 failed");
+        todo_repo.save_todo(&travel_id, &todo_list_group_id, &todo2).await.expect("Save Todo 1 failed");
+
+
+        // Act
+        let result = todo_repo.list_todo(&travel_id, &todo_list_group_id).await;
+
+        // Assert
+        assert!(result.is_ok());
+        assert_eq!(result.expect("result unwrap error").len(), 2);
 
         test_db.delete_table().await;
     }
