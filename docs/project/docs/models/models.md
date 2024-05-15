@@ -30,10 +30,11 @@ classDiagram
     
     class Travel~AggrigateRoot~ {
         TravelId: id
-        String: name    
+        String: name
+        Datetime: startDate
+        Datetime~nullable~: endDate
         List~TravelerId~: travelers
         List~InvolvedUserId~: involvedUsers
-        List~TodoGropId~: todos
     }
     
     class TravelerGroup {
@@ -75,5 +76,4 @@ classDiagram
     Todo --* TodoListGroup
     TodoListGroupId --* TodoListGroup
     UserId --* TodoListGroup
-    TodoListGroupId --* Travel
 ```
