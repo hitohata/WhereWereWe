@@ -86,12 +86,12 @@ impl UserRepository for UserRepositoryConcrete {
         Ok(Some(user))
     }
     async fn save(&self, user: &User) -> Result<(), UsersError> {
-        let user_id_av = AttributeValue::S(user.id.id().to_string());
+        let user_id_av = AttributeValue::S(user.id().id().to_string());
         let sk_av = AttributeValue::S("USER".to_string());
-        let name_av = AttributeValue::S(user.name.name.to_string());
-        let email_av = AttributeValue::S(user.email.to_string());
+        let name_av = AttributeValue::S(user.name().to_string());
+        let email_av = AttributeValue::S(user.email().to_string());
         let partners_av = AttributeValue::L(
-            user.partners
+            user.partners()
                 .iter()
                 .map(|p| AttributeValue::S(p.id().to_string()))
                 .collect::<Vec<AttributeValue>>(),
@@ -176,7 +176,7 @@ mod test {
 
         // Act
         let _ = repository.save(&user).await; // save user
-        let retrieved_user = repository.find_by_id(&user.id).await.unwrap();
+        let retrieved_user = repository.find_by_id(&user.id()).await.unwrap();
 
         // Assert
         match retrieved_user {

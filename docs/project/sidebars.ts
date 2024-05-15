@@ -39,10 +39,6 @@ const sidebars: SidebarsConfig = {
       {
         type: 'category',
         label: 'Data Structure',
-        link: {
-          type: 'doc',
-          id: 'data-structure/data-structure',
-        },
         items: ['data-structure/schema', 'data-structure/data-structure'],
       }
   ],
