@@ -22,7 +22,7 @@ pub struct Travel {
 
 impl Travel {
     /// the travelers and the involved users can be None.
-    pub fn new(travel_id: &TravelId, name: &str, start_date: &str, end_date: Option<&str>, travelers: &[UserId], involved_users: Option<&[UserId]>) -> Result<Self, TravelError> {
+    pub fn new(travel_id: &TravelId, name: &str, start_date: &str, end_date: Option<&str>, travelers: &Vec<UserId>, involved_users: Option<&Vec<UserId>>) -> Result<Self, TravelError> {
 
         if name.is_empty() {
             return Err(TravelError::DomainError("Travel name cannot be empty".to_owned()))
