@@ -6,12 +6,13 @@ use crate::errors::errors::TravelError;
 
 #[derive(Debug, Clone)]
 pub struct Travel {
+    /// the Travel ID
     travel_id: TravelId,
     /// the length must be grater than 0 and less than equal 255.
     name: String,
-    // start datetime of this travel
+    /// start datetime of this travel
     start_date: DateTime<FixedOffset>,
-    // end datetime of this travel
+    /// end datetime of this travel
     end_date: Option<DateTime<FixedOffset>>,
     /// Travelers are HashSet since the value cannot be duplication.
     travelers: HashSet<UserId>,
