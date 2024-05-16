@@ -36,6 +36,7 @@ impl Travel {
             return Err(TravelError::DomainError("Traveler must be set".into()));
         }
 
+        println!("{:?}", start_date);
         let start_date_struct = match DateTime::parse_from_rfc3339(start_date) {
             Ok(date) => date,
             Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
@@ -43,16 +44,18 @@ impl Travel {
 
         let end_date_struct = match end_date {
             Some(date) => {
+                println!("{:?}", date);
+                println!("{:?}", DateTime::parse_from_rfc3339(date));
                 match DateTime::parse_from_rfc3339(date) {
                     Ok(date) => Some(date),
-                    Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
+                    Err(e) => return Err(TravelError::DomainError("datetime parse error".to_string()))
                 }
             },
             None => None
         };
 
         if let Some(end) = end_date_struct {
-            if end >= start_date_struct {
+            if end <= start_date_struct {
                 return Err(TravelError::DomainError("The end date must be later from the start date".to_string()))
             }
         }
@@ -161,7 +164,7 @@ mod test {
         let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let name = "Back to the future";
         let start_date = Local::now().to_rfc3339();
-        let end_date = (Local::now().checked_add_days(Days::new(5))).unwrap().to_rfc3339();
+        let end_date = (Local::now().checked_sub_days(Days::new(5))).unwrap().to_rfc3339();
         
         // Act
         let travel_or_error = Travel::new(&travel_id, &name, &start_date, Some(&end_date), &vec![traveler_id.clone()], None);
