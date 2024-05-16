@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["__mock_MockTravelRepository","__mock_MockTravelRepository_TravelRepository"],"struct":["MockTravelRepository","MockTravelRepository_TravelRepository"],"trait":["TravelRepository"]};

@@ -640,7 +640,6 @@
 <a href="#638" id="638">638</a>
 <a href="#639" id="639">639</a>
 <a href="#640" id="640">640</a>
-<a href="#641" id="641">641</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! This is implementation of the to do repository.
 
 </span><span class="kw">use </span>std::collections::HashMap;
@@ -1063,7 +1062,6 @@
     <span class="kw">use super</span>::<span class="kw-2">*</span>;    
     <span class="kw">use </span>tokio;
     <span class="kw">use </span>test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
-    <span class="kw">use </span><span class="kw">crate</span>::models::travel::id::travel_id;
 
     <span class="kw">impl </span>TodoRepositoryConcrete {
         <span class="kw">fn </span>new_test_repo(client: <span class="kw-2">&amp;</span>TestDynamoTable) -&gt; <span class="self">Self </span>{

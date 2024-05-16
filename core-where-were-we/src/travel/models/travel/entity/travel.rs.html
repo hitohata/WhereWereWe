@@ -213,6 +213,10 @@
 <a href="#211" id="211">211</a>
 <a href="#212" id="212">212</a>
 <a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! travel struct
 </span><span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>chrono::{DateTime, FixedOffset};
@@ -221,12 +225,13 @@
 
 <span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>Travel {
-    travel_id: TravelId,
+    <span class="doccomment">/// the Travel ID
+    </span>travel_id: TravelId,
     <span class="doccomment">/// the length must be grater than 0 and less than equal 255.
     </span>name: String,
-    <span class="comment">// start datetime of this travel
+    <span class="doccomment">/// start datetime of this travel
     </span>start_date: DateTime&lt;FixedOffset&gt;,
-    <span class="comment">// end datetime of this travel
+    <span class="doccomment">/// end datetime of this travel
     </span>end_date: <span class="prelude-ty">Option</span>&lt;DateTime&lt;FixedOffset&gt;&gt;,
     <span class="doccomment">/// Travelers are HashSet since the value cannot be duplication.
     </span>travelers: HashSet&lt;UserId&gt;,
@@ -236,7 +241,7 @@
 
 <span class="kw">impl </span>Travel {
     <span class="doccomment">/// the travelers and the involved users can be None.
-    </span><span class="kw">pub fn </span>new(travel_id: <span class="kw-2">&amp;</span>TravelId, name: <span class="kw-2">&amp;</span>str, start_date: <span class="kw-2">&amp;</span>str, end_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, travelers: <span class="kw-2">&amp;</span>[UserId], involved_users: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[UserId]&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
+    </span><span class="kw">pub fn </span>new(travel_id: <span class="kw-2">&amp;</span>TravelId, name: <span class="kw-2">&amp;</span>str, start_date: <span class="kw-2">&amp;</span>str, end_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, travelers: <span class="kw-2">&amp;</span>Vec&lt;UserId&gt;, involved_users: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Vec&lt;UserId&gt;&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, TravelError&gt; {
 
         <span class="kw">if </span>name.is_empty() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"Travel name cannot be empty"</span>.to_owned()))
@@ -250,6 +255,7 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"Traveler must be set"</span>.into()));
         }
 
+        <span class="macro">println!</span>(<span class="string">"{:?}"</span>, start_date);
         <span class="kw">let </span>start_date_struct = <span class="kw">match </span>DateTime::parse_from_rfc3339(start_date) {
             <span class="prelude-val">Ok</span>(date) =&gt; date,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"datetime parse error"</span>.to_string()))
@@ -257,6 +263,8 @@
 
         <span class="kw">let </span>end_date_struct = <span class="kw">match </span>end_date {
             <span class="prelude-val">Some</span>(date) =&gt; {
+                <span class="macro">println!</span>(<span class="string">"{:?}"</span>, date);
+                <span class="macro">println!</span>(<span class="string">"{:?}"</span>, DateTime::parse_from_rfc3339(date));
                 <span class="kw">match </span>DateTime::parse_from_rfc3339(date) {
                     <span class="prelude-val">Ok</span>(date) =&gt; <span class="prelude-val">Some</span>(date),
                     <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"datetime parse error"</span>.to_string()))
@@ -266,7 +274,7 @@
         </span>};
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>(end) = end_date_struct {
-            <span class="kw">if </span>end &gt;= start_date_struct {
+            <span class="kw">if </span>end &lt;= start_date_struct {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"The end date must be later from the start date"</span>.to_string()))
             }
         }
@@ -375,7 +383,7 @@
         <span class="kw">let </span>traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         <span class="kw">let </span>name = <span class="string">"Back to the future"</span>;
         <span class="kw">let </span>start_date = Local::now().to_rfc3339();
-        <span class="kw">let </span>end_date = (Local::now().checked_add_days(Days::new(<span class="number">5</span>))).unwrap().to_rfc3339();
+        <span class="kw">let </span>end_date = (Local::now().checked_sub_days(Days::new(<span class="number">5</span>))).unwrap().to_rfc3339();
         
         <span class="comment">// Act
         </span><span class="kw">let </span>travel_or_error = Travel::new(<span class="kw-2">&amp;</span>travel_id, <span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span>start_date, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>end_date), <span class="kw-2">&amp;</span><span class="macro">vec!</span>[traveler_id.clone()], <span class="prelude-val">None</span>);

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["todo_repository"]};
+window.SIDEBAR_ITEMS = {"mod":["todo_repository","travel_repository"]};
