@@ -48,7 +48,7 @@ impl Travel {
                 println!("{:?}", DateTime::parse_from_rfc3339(date));
                 match DateTime::parse_from_rfc3339(date) {
                     Ok(date) => Some(date),
-                    Err(e) => return Err(TravelError::DomainError("datetime parse error".to_string()))
+                    Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
                 }
             },
             None => None

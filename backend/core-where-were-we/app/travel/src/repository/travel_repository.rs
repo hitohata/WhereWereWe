@@ -60,7 +60,7 @@ impl TravelRepository for TravelRepositoryConcrete {
                 Some(item) => item,
                 None => return Ok(None)
             }}
-            Err(_) => return Err(TravelError::DomainError(e.to_string()))
+            Err(e) => return Err(TravelError::DomainError(e.to_string()))
         };
 
         Ok(Some(convert_to_travel(get_travel, travel_id)?))
