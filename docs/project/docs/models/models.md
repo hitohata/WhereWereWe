@@ -29,7 +29,7 @@ classDiagram
     }
     
     class Travel~AggrigateRoot~ {
-        TravelId: id
+        TravelId: travelId
         String: name
         Datetime: startDate
         Datetime~nullable~: endDate

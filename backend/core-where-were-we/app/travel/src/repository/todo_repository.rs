@@ -420,7 +420,6 @@ mod test {
     use super::*;    
     use tokio;
     use test_utils::infrastructure::db::dynamo_db_client::TestDynamoTable;
-    use crate::models::travel::id::travel_id;
 
     impl TodoRepositoryConcrete {
         fn new_test_repo(client: &TestDynamoTable) -> Self {

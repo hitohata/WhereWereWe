@@ -1,13 +1,19 @@
 //! travel struct
 use std::collections::HashSet;
+use chrono::{DateTime, FixedOffset};
 use crate::models::travel::id::{travel_id::TravelId, user_id::UserId};
 use crate::errors::errors::TravelError;
 
 #[derive(Debug, Clone)]
 pub struct Travel {
+    /// the Travel ID
     travel_id: TravelId,
     /// the length must be grater than 0 and less than equal 255.
     name: String,
+    /// start datetime of this travel
+    start_date: DateTime<FixedOffset>,
+    /// end datetime of this travel
+    end_date: Option<DateTime<FixedOffset>>,
     /// Travelers are HashSet since the value cannot be duplication.
     travelers: HashSet<UserId>,
     /// Same as the travelers, this is also HashSet
@@ -16,7 +22,7 @@ pub struct Travel {
 
 impl Travel {
     /// the travelers and the involved users can be None.
-    pub fn new(travel_id: &TravelId, name: &str, travelers: &[UserId], involved_users: Option<&[UserId]>) -> Result<Self, TravelError> {
+    pub fn new(travel_id: &TravelId, name: &str, start_date: &str, end_date: Option<&str>, travelers: &Vec<UserId>, involved_users: Option<&Vec<UserId>>) -> Result<Self, TravelError> {
 
         if name.is_empty() {
             return Err(TravelError::DomainError("Travel name cannot be empty".to_owned()))
@@ -30,10 +36,36 @@ impl Travel {
             return Err(TravelError::DomainError("Traveler must be set".into()));
         }
 
+        println!("{:?}", start_date);
+        let start_date_struct = match DateTime::parse_from_rfc3339(start_date) {
+            Ok(date) => date,
+            Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
+        };
+
+        let end_date_struct = match end_date {
+            Some(date) => {
+                println!("{:?}", date);
+                println!("{:?}", DateTime::parse_from_rfc3339(date));
+                match DateTime::parse_from_rfc3339(date) {
+                    Ok(date) => Some(date),
+                    Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
+                }
+            },
+            None => None
+        };
+
+        if let Some(end) = end_date_struct {
+            if end <= start_date_struct {
+                return Err(TravelError::DomainError("The end date must be later from the start date".to_string()))
+            }
+        }
+
         Ok(Self {
             travel_id: travel_id.clone(),
             name: name.into(),
             travelers:  HashSet::from_iter(travelers.iter().cloned()),
+            start_date: start_date_struct,
+            end_date: end_date_struct,
             involved_users: match involved_users {
                 Some(i) => HashSet::from_iter(i.iter().cloned()),
                 None => HashSet::new()
@@ -47,6 +79,17 @@ impl Travel {
 
     pub fn name(&self) -> &str {
         &self.name
+    }
+    
+    pub fn start_date(&self) -> &DateTime<FixedOffset> {
+        &self.start_date
+    }
+
+    pub fn end_date(&self) -> Option<&DateTime<FixedOffset>> {
+        match &self.end_date {
+            Some(d) => Some(d),
+            None => None
+        }
     }
 
     pub fn travelers(&self) -> Vec<UserId> {
@@ -94,13 +137,15 @@ impl Travel {
 #[cfg(test)]
 mod test {
     use super::*;
+    use chrono::{Days, Local};
 
     #[test]
     fn test_new_travel() {
         let travel_id = TravelId::generate();
         let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let name = "Back to the future";
-        let travel_or_error = Travel::new(&travel_id, &name, &vec![traveler_id.clone()], None);
+        let datetime = Local::now().to_rfc3339();
+        let travel_or_error = Travel::new(&travel_id, &name, &datetime, None, &vec![traveler_id.clone()], None);
 
         assert!(travel_or_error.is_ok());
 
@@ -113,11 +158,28 @@ mod test {
     }
 
     #[test]
+    fn test_when_end_date_is_earlier_than_start_date() {
+        // Arrange
+        let travel_id = TravelId::generate();
+        let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
+        let name = "Back to the future";
+        let start_date = Local::now().to_rfc3339();
+        let end_date = (Local::now().checked_sub_days(Days::new(5))).unwrap().to_rfc3339();
+        
+        // Act
+        let travel_or_error = Travel::new(&travel_id, &name, &start_date, Some(&end_date), &vec![traveler_id.clone()], None);
+        
+        // Assert
+        assert!(travel_or_error.is_err());
+    }
+
+    #[test]
     fn test_add_traveler() {
         let travel_id = TravelId::generate();
         let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let name = "Back to the future";
-        let travel = Travel::new(&travel_id, &name, &vec![traveler_id.clone()], None).unwrap();
+        let datetime = Local::now().to_rfc3339();
+        let travel = Travel::new(&travel_id, &name, &datetime, None, &vec![traveler_id.clone()], None).unwrap();
 
         assert_eq!(travel.travelers().len(), 1);
 
@@ -138,7 +200,8 @@ mod test {
         let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let traveler2_id = UserId::try_from(TravelId::generate().id()).unwrap();
         let name = "Back to the future";
-        let travel = Travel::new(&travel_id, &name, &vec![traveler_id.clone(), traveler2_id.clone()], None).unwrap();
+        let datetime = Local::now().to_rfc3339();
+        let travel = Travel::new(&travel_id, &name, &datetime, None, &vec![traveler_id.clone(), traveler2_id.clone()], None).unwrap();
 
         assert_eq!(travel.travelers().len(), 2);
 
