@@ -6,12 +6,12 @@ use crate::models::travel::entity::travel::Travel;
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct TravelDto {
-    travel_id: String,
-    name: String,
-    start_date: String,
-    end_date: Option<String>,
-    travelers: Vec<String>,
-    involved_users: Vec<String>
+    pub travel_id: String,
+    pub name: String,
+    pub start_date: String,
+    pub end_date: Option<String>,
+    pub travelers: Vec<String>,
+    pub involved_users: Vec<String>
 }
 
 impl From<&Travel> for TravelDto {

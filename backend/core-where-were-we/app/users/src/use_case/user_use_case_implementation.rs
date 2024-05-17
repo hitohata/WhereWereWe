@@ -230,7 +230,7 @@ mod add_partner_test {
 
         let use_case = CreateUserUseCaseInteractor::new(mock_repo);
 
-        // Action
+        // Act
         let res_user = use_case.remove_partner(user_id.id(), partner_id.id()).await.unwrap();
 
         // Assert
