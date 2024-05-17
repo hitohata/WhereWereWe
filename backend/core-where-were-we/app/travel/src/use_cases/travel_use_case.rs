@@ -47,7 +47,6 @@ impl<R> TravelUseCases for TravelUseCasesInteractor<R>
 
 #[cfg(test)]
 mod test {
-    use std::any::Any;
     use crate::models::repository::travel_repository::MockTravelRepository;
     use super::*;
     
