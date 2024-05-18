@@ -471,7 +471,7 @@
 
         <span class="kw">let </span>use_case = CreateUserUseCaseInteractor::new(mock_repo);
 
-        <span class="comment">// Action
+        <span class="comment">// Act
         </span><span class="kw">let </span>res_user = use_case.remove_partner(user_id.id(), partner_id.id()).<span class="kw">await</span>.unwrap();
 
         <span class="comment">// Assert

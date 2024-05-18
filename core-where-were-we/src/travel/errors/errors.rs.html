@@ -9,6 +9,8 @@
 <a href="#7" id="7">7</a>
 <a href="#8" id="8">8</a>
 <a href="#9" id="9">9</a>
+<a href="#10" id="10">10</a>
+<a href="#11" id="11">11</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>thiserror::Error;
 
 <span class="attr">#[derive(Error, Debug)]
@@ -16,6 +18,8 @@
     <span class="attr">#[error(<span class="string">"{0}"</span>)]
     </span>DomainError(String),
     <span class="attr">#[error(<span class="string">"{0}"</span>)]
-    </span>DBError(String)
+    </span>DBError(String),
+    <span class="attr">#[error(<span class="string">"{0} not found"</span>)]
+    </span>NotFound(String)
 }
 </code></pre></div></section></main></body></html>
