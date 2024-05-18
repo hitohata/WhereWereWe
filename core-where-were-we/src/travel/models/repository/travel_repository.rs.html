@@ -12,16 +12,20 @@
 <a href="#10" id="10">10</a>
 <a href="#11" id="11">11</a>
 <a href="#12" id="12">12</a>
+<a href="#13" id="13">13</a>
+<a href="#14" id="14">14</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Travel Repository
 
 </span><span class="kw">use </span>mockall::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::errors::errors::TravelError;
 <span class="kw">use </span><span class="kw">crate</span>::models::travel::entity::travel::Travel;
 <span class="kw">use </span><span class="kw">crate</span>::models::travel::id::travel_id::TravelId;
+<span class="kw">use </span><span class="kw">crate</span>::models::travel::id::user_id::UserId;
 
 <span class="attr">#[automock]
 </span><span class="kw">pub trait </span>TravelRepository {
     <span class="kw">async fn </span>find_by_id(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>TravelId) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Travel&gt;, TravelError&gt;;
+    <span class="kw">async fn </span>is_users_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>TravelId, user_id: <span class="kw-2">&amp;</span>UserId) -&gt; <span class="prelude-ty">Result</span>&lt;bool, TravelError&gt;;
     <span class="kw">async fn </span>save(<span class="kw-2">&amp;</span><span class="self">self</span>, travel: <span class="kw-2">&amp;</span>Travel) -&gt; <span class="prelude-ty">Result</span>&lt;(), TravelError&gt;;
 }
 </code></pre></div></section></main></body></html>

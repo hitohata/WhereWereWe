@@ -181,6 +181,67 @@
 <a href="#179" id="179">179</a>
 <a href="#180" id="180">180</a>
 <a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Travel use cases
 
 </span><span class="kw">use </span><span class="kw">crate</span>::dtos::travel::TravelDto;
@@ -192,11 +253,13 @@
 
 <span class="kw">pub trait </span>TravelUseCases {
     <span class="doccomment">/// get a travel
-    </span><span class="kw">async fn </span>get_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;TravelDto&gt;, TravelError&gt;;
+    </span><span class="kw">async fn </span>get_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str, user_id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;TravelDto&gt;, TravelError&gt;;
     <span class="doccomment">/// Create a new travel
     /// The request user is set as one of the travelers.
     </span><span class="kw">async fn </span>create_new_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>str, travel_name: <span class="kw-2">&amp;</span>str, start_date: <span class="kw-2">&amp;</span>str, end_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;TravelDto, TravelError&gt;;
-    <span class="kw">async fn </span>modify_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str, travel_name: <span class="kw-2">&amp;</span>str, start_date: <span class="kw-2">&amp;</span>str, end_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, travelers: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;, involved_users: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;TravelDto, TravelError&gt;;
+    <span class="doccomment">/// Only travelers can modify the travel information.
+    /// When the involved user tries to modify, its attempt will be rejected. 
+    </span><span class="kw">async fn </span>modify_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str, travel_name: <span class="kw-2">&amp;</span>str, start_date: <span class="kw-2">&amp;</span>str, end_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, travelers: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;, involved_users: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;, user_id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;TravelDto, TravelError&gt;;
 }
 
 <span class="kw">pub struct </span>TravelUseCasesInteractor&lt;R&gt; {
@@ -212,12 +275,18 @@
 <span class="kw">impl</span>&lt;R&gt; TravelUseCases <span class="kw">for </span>TravelUseCasesInteractor&lt;R&gt;
     <span class="kw">where </span>R: TravelRepository
 {
-    <span class="kw">async fn </span>get_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;TravelDto&gt;, TravelError&gt; {
+    <span class="kw">async fn </span>get_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str, user_id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;TravelDto&gt;, TravelError&gt; {
         <span class="kw">let </span>travel_id_struct = TravelId::try_from(travel_id)<span class="question-mark">?</span>;
+        <span class="kw">let </span>user_id_struct = UserId::try_from(user_id)<span class="question-mark">?</span>;
         <span class="kw">let </span>travel = <span class="self">self</span>.travel_repository.find_by_id(<span class="kw-2">&amp;</span>travel_id_struct).<span class="kw">await</span><span class="question-mark">?</span>;
         
         <span class="prelude-val">Ok</span>(<span class="kw">match </span>travel {
-            <span class="prelude-val">Some</span>(t) =&gt; <span class="prelude-val">Some</span>(TravelDto::from(<span class="kw-2">&amp;</span>t)),
+            <span class="prelude-val">Some</span>(t) =&gt; {
+                <span class="kw">match </span>t.is_related_parties(<span class="kw-2">&amp;</span>user_id_struct) {
+                    <span class="bool-val">true </span>=&gt; <span class="prelude-val">Some</span>(TravelDto::from(<span class="kw-2">&amp;</span>t)),
+                    <span class="bool-val">false </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::AuthenticationError)
+                }
+            },
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None
         </span>})
     }
@@ -235,13 +304,22 @@
         <span class="prelude-val">Ok</span>(TravelDto::from(<span class="kw-2">&amp;</span>travel))
     }
 
-    <span class="kw">async fn </span>modify_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str, travel_name: <span class="kw-2">&amp;</span>str, start_date: <span class="kw-2">&amp;</span>str, end_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, travelers: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;, involved_users: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;TravelDto, TravelError&gt; {
+    <span class="kw">async fn </span>modify_travel(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str, travel_name: <span class="kw-2">&amp;</span>str, start_date: <span class="kw-2">&amp;</span>str, end_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, travelers: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;, involved_users: <span class="kw-2">&amp;</span>Vec&lt;<span class="kw-2">&amp;</span>str&gt;, user_id: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;TravelDto, TravelError&gt; {
         
         <span class="kw">let </span>travel_id_struct = TravelId::try_from(travel_id)<span class="question-mark">?</span>;
+        <span class="kw">let </span>user_id_struct = UserId::try_from(user_id)<span class="question-mark">?</span>;
         
-        <span class="kw">if </span><span class="self">self</span>.travel_repository.find_by_id(<span class="kw-2">&amp;</span>travel_id_struct).<span class="kw">await</span>.is_err() {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::NotFound(<span class="string">"Travel data"</span>.to_string()))
-        };
+        <span class="kw">let </span>travel_data = <span class="self">self</span>.travel_repository.find_by_id(<span class="kw-2">&amp;</span>travel_id_struct).<span class="kw">await</span><span class="question-mark">?</span>;
+        
+        <span class="comment">// check validation
+        </span><span class="kw">match </span>travel_data {
+            <span class="prelude-val">Some</span>(travel) =&gt; {
+                <span class="kw">if </span>!travel.is_traveler(<span class="kw-2">&amp;</span>user_id_struct) {
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::AuthenticationError)
+                }
+            },
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::NotFound(<span class="string">"Travel data"</span>.to_string()))
+        }
         
         <span class="kw">let </span><span class="kw-2">mut </span>travelers_vec: Vec&lt;UserId&gt; = Vec::new();
         <span class="kw">let </span><span class="kw-2">mut </span>involved_users_vec = Vec::new();
@@ -314,7 +392,7 @@
         
         </span><span class="kw">let </span>travel_id = TravelId::generate();
         
-        <span class="kw">let </span>travelers = <span class="macro">vec!</span>[user_id];
+        <span class="kw">let </span>travelers = <span class="macro">vec!</span>[user_id.clone()];
         
         <span class="kw">let </span>travel = Travel::new(<span class="kw-2">&amp;</span>travel_id, <span class="string">"travel name"</span>,<span class="string">"2024-05-12T06:28:49+00:00"</span>, <span class="prelude-val">Some</span>(<span class="string">"2024-05-13T06:28:49+00:00"</span>) , <span class="kw-2">&amp;</span>travelers, <span class="prelude-val">None</span>).unwrap();
         
@@ -323,17 +401,23 @@
             .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(travel.clone())));
         
         mock_repo
+            .expect_is_users_travel()
+            .returning(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>));
+        
+        mock_repo
             .expect_save()
             .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(()));
 
         <span class="kw">let </span>use_case = TravelUseCasesInteractor::new(mock_repo);
 
-        <span class="comment">// Act
-        </span><span class="kw">let </span>result = use_case.modify_travel(travel_id.id(), <span class="string">"updated"</span>, <span class="string">"2024-05-12T06:28:49+00:00"</span>, <span class="prelude-val">Some</span>(<span class="string">"2024-05-13T06:28:49+00:00"</span>) , <span class="kw-2">&amp;</span>travelers.iter().map(|t| t.id()).collect(), <span class="kw-2">&amp;</span><span class="macro">vec!</span>[]).<span class="kw">await</span>;
+        <span class="kw">let </span>travel_id = TravelId::try_from(travel_id.id()).unwrap();
 
+        <span class="comment">// Act
+        </span><span class="kw">let </span>result = use_case.modify_travel(travel_id.id(), <span class="string">"updated"</span>, <span class="string">"2024-05-12T06:28:49+00:00"</span>, <span class="prelude-val">Some</span>(<span class="string">"2024-05-13T06:28:49+00:00"</span>) , <span class="kw-2">&amp;</span>travelers.iter().map(|t| t.id()).collect(), <span class="kw-2">&amp;</span><span class="macro">vec!</span>[], user_id.id()).<span class="kw">await</span>;
+        
         <span class="comment">// Assert
         </span><span class="macro">assert!</span>(result.is_ok());
-
+        
         <span class="kw">let </span>travel_dto = result.unwrap();
         <span class="macro">assert_eq!</span>(travel_dto.name, <span class="string">"updated"</span>);
     }
@@ -342,13 +426,15 @@
     </span><span class="kw">async fn </span>test_modify_travel_if_the_travel_is_not_found() {
 
         <span class="comment">// Arrange
+
+        </span><span class="kw">let </span>user_id = UserId::try_from(TravelId::generate().id()).unwrap(); <span class="comment">// user ID and the travel ID both are the UUID.
         </span><span class="kw">let </span><span class="kw-2">mut </span>mock_repo = MockTravelRepository::new();
         <span class="kw">let </span>travel_id = TravelId::generate();
 
         mock_repo
             .expect_find_by_id()
             .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>));
-
+        
         mock_repo
             .expect_save()
             .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(()));
@@ -356,9 +442,45 @@
         <span class="kw">let </span>use_case = TravelUseCasesInteractor::new(mock_repo);
 
         <span class="comment">// Act
-        </span><span class="kw">let </span>result = use_case.modify_travel(travel_id.id(), <span class="string">"updated"</span>, <span class="string">"2024-05-12T06:28:49+00:00"</span>, <span class="prelude-val">Some</span>(<span class="string">"2024-05-13T06:28:49+00:00"</span>) , <span class="kw-2">&amp;</span><span class="macro">vec!</span>[], <span class="kw-2">&amp;</span><span class="macro">vec!</span>[]).<span class="kw">await</span>;
+        </span><span class="kw">let </span>result = use_case.modify_travel(travel_id.id(), <span class="string">"updated"</span>, <span class="string">"2024-05-12T06:28:49+00:00"</span>, <span class="prelude-val">Some</span>(<span class="string">"2024-05-13T06:28:49+00:00"</span>) , <span class="kw-2">&amp;</span><span class="macro">vec!</span>[], <span class="kw-2">&amp;</span><span class="macro">vec!</span>[], user_id.id()).<span class="kw">await</span>;
 
         <span class="comment">// Assert
         </span><span class="macro">assert!</span>(result.is_err());
+    }
+
+
+    <span class="attr">#[tokio::test]
+    </span><span class="kw">async fn </span>test_modify_travel_user_is_not_in_the_ravel() {
+
+        <span class="comment">// Arrange
+        </span><span class="kw">let </span><span class="kw-2">mut </span>mock_repo = MockTravelRepository::new();
+        <span class="kw">let </span>user_id = UserId::try_from(TravelId::generate().id()).unwrap(); <span class="comment">// user ID and the travel ID both are the UUID.
+
+        </span><span class="kw">let </span>travel_id = TravelId::generate();
+
+        <span class="kw">let </span>travelers = <span class="macro">vec!</span>[user_id.clone()];
+
+        <span class="kw">let </span>travel = Travel::new(<span class="kw-2">&amp;</span>travel_id, <span class="string">"travel name"</span>,<span class="string">"2024-05-12T06:28:49+00:00"</span>, <span class="prelude-val">Some</span>(<span class="string">"2024-05-13T06:28:49+00:00"</span>) , <span class="kw-2">&amp;</span>travelers, <span class="prelude-val">None</span>).unwrap();
+
+        mock_repo
+            .expect_find_by_id()
+            .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(travel.clone())));
+
+        mock_repo
+            .expect_save()
+            .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(()));
+
+        <span class="kw">let </span>use_case = TravelUseCasesInteractor::new(mock_repo);
+
+        <span class="kw">let </span>travel_id = TravelId::try_from(travel_id.id()).unwrap();
+
+        <span class="comment">// Act
+        </span><span class="kw">let </span>result = use_case.modify_travel(travel_id.id(), <span class="string">"updated"</span>, <span class="string">"2024-05-12T06:28:49+00:00"</span>, <span class="prelude-val">Some</span>(<span class="string">"2024-05-13T06:28:49+00:00"</span>) , <span class="kw-2">&amp;</span>travelers.iter().map(|t| t.id()).collect(), <span class="kw-2">&amp;</span><span class="macro">vec!</span>[], user_id.id()).<span class="kw">await</span>;
+
+        <span class="comment">// Assert
+        </span><span class="macro">assert!</span>(result.is_ok());
+
+        <span class="kw">let </span>travel_dto = result.unwrap();
+        <span class="macro">assert_eq!</span>(travel_dto.name, <span class="string">"updated"</span>);
     }
 }</code></pre></div></section></main></body></html>

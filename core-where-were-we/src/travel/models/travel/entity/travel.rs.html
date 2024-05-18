@@ -260,6 +260,8 @@
 <a href="#258" id="258">258</a>
 <a href="#259" id="259">259</a>
 <a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! travel struct
 </span><span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>chrono::{DateTime, FixedOffset};
@@ -298,7 +300,6 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"Traveler must be set"</span>.into()));
         }
 
-        <span class="macro">println!</span>(<span class="string">"{:?}"</span>, start_date);
         <span class="kw">let </span>start_date_struct = <span class="kw">match </span>DateTime::parse_from_rfc3339(start_date) {
             <span class="prelude-val">Ok</span>(date) =&gt; date,
             <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"datetime parse error"</span>.to_string()))
@@ -306,8 +307,6 @@
 
         <span class="kw">let </span>end_date_struct = <span class="kw">match </span>end_date {
             <span class="prelude-val">Some</span>(date) =&gt; {
-                <span class="macro">println!</span>(<span class="string">"{:?}"</span>, date);
-                <span class="macro">println!</span>(<span class="string">"{:?}"</span>, DateTime::parse_from_rfc3339(date));
                 <span class="kw">match </span>DateTime::parse_from_rfc3339(date) {
                     <span class="prelude-val">Ok</span>(date) =&gt; <span class="prelude-val">Some</span>(date),
                     <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(TravelError::DomainError(<span class="string">"datetime parse error"</span>.to_string()))
@@ -398,6 +397,11 @@
     <span class="doccomment">/// Check if the user provided as an argument is related to the parties of this travel.
     </span><span class="kw">pub fn </span>is_related_parties(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>UserId) -&gt; bool {
         <span class="self">self</span>.travelers.contains(user_id) || <span class="self">self</span>.involved_users.contains(user_id)
+    }
+    
+    <span class="doccomment">/// Check it the user is traveler or not.
+    </span><span class="kw">pub fn </span>is_traveler(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>UserId) -&gt; bool {
+        <span class="self">self</span>.travelers.contains(user_id)
     }
 }
 
