@@ -154,4 +154,28 @@ mod test {
         let travel_dto = result.unwrap();
         assert_eq!(travel_dto.name, "updated");
     }
+
+    #[tokio::test]
+    async fn test_modify_travel_if_the_travel_is_not_found() {
+
+        // Arrange
+        let mut mock_repo = MockTravelRepository::new();
+        let travel_id = TravelId::generate();
+
+        mock_repo
+            .expect_find_by_id()
+            .returning(move |_| Ok(None));
+
+        mock_repo
+            .expect_save()
+            .returning(move |_| Ok(()));
+
+        let use_case = TravelUseCasesInteractor::new(mock_repo);
+
+        // Act
+        let result = use_case.modify_travel(travel_id.id(), "updated", "2024-05-12T06:28:49+00:00", Some("2024-05-13T06:28:49+00:00") , &vec![], &vec![]).await;
+
+        // Assert
+        assert!(result.is_err());
+    }
 }
