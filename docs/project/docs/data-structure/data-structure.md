@@ -49,6 +49,14 @@ The user's definition is the following.
 | Travelers     | a list of User IDs              | List   |
 | InvolvedUsers | a list of User IDs              | List   |
 
+### Travel - User
+
+To bind the user and the travel.
+
+| Key           | Value                   | Type   |
+|:--------------|:------------------------|:-------|
+| PK            | User ID                 | String |
+| SK            | Travels#(Travel ID[^2]) | String | 
 
 ### ToDo
 
