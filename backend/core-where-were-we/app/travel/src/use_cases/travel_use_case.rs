@@ -13,6 +13,8 @@ pub trait TravelUseCases {
     /// Create a new travel
     /// The request user is set as one of the travelers.
     async fn create_new_travel(&self, user_id: &str, travel_name: &str, start_date: &str, end_date: Option<&str>) -> Result<TravelDto, TravelError>;
+    /// Only travelers can modify the travel information.
+    /// When the involved user tries to modify, its attempt will be rejected. 
     async fn modify_travel(&self, travel_id: &str, travel_name: &str, start_date: &str, end_date: Option<&str>, travelers: &Vec<&str>, involved_users: &Vec<&str>, user_id: &str) -> Result<TravelDto, TravelError>;
 }
 
@@ -68,7 +70,7 @@ impl<R> TravelUseCases for TravelUseCasesInteractor<R>
         // check validation
         match travel_data {
             Some(travel) => {
-                if !travel.is_related_parties(&user_id_struct) {
+                if !travel.is_traveler(&user_id_struct) {
                     return Err(TravelError::AuthenticationError)
                 }
             },

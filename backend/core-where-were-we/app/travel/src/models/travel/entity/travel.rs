@@ -134,6 +134,11 @@ impl Travel {
     pub fn is_related_parties(&self, user_id: &UserId) -> bool {
         self.travelers.contains(user_id) || self.involved_users.contains(user_id)
     }
+    
+    /// Check it the user is traveler or not.
+    pub fn is_traveler(&self, user_id: &UserId) -> bool {
+        self.travelers.contains(user_id)
+    }
 }
 
 #[cfg(test)]
