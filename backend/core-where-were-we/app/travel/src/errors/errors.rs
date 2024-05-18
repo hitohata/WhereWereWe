@@ -7,5 +7,7 @@ pub enum TravelError {
     #[error("{0}")]
     DBError(String),
     #[error("{0} not found")]
-    NotFound(String)
+    NotFound(String),
+    #[error("Authentication Error")]
+    AuthenticationError
 }

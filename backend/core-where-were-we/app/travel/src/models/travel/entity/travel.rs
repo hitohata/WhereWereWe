@@ -36,7 +36,6 @@ impl Travel {
             return Err(TravelError::DomainError("Traveler must be set".into()));
         }
 
-        println!("{:?}", start_date);
         let start_date_struct = match DateTime::parse_from_rfc3339(start_date) {
             Ok(date) => date,
             Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
@@ -44,8 +43,6 @@ impl Travel {
 
         let end_date_struct = match end_date {
             Some(date) => {
-                println!("{:?}", date);
-                println!("{:?}", DateTime::parse_from_rfc3339(date));
                 match DateTime::parse_from_rfc3339(date) {
                     Ok(date) => Some(date),
                     Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
@@ -136,6 +133,11 @@ impl Travel {
     /// Check if the user provided as an argument is related to the parties of this travel.
     pub fn is_related_parties(&self, user_id: &UserId) -> bool {
         self.travelers.contains(user_id) || self.involved_users.contains(user_id)
+    }
+    
+    /// Check it the user is traveler or not.
+    pub fn is_traveler(&self, user_id: &UserId) -> bool {
+        self.travelers.contains(user_id)
     }
 }
 

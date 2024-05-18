@@ -65,6 +65,27 @@ impl TravelRepository for TravelRepositoryConcrete {
 
         Ok(Some(convert_to_travel(get_travel, travel_id)?))
     }
+    async fn is_users_travel(&self, travel_id: &TravelId, user_id: &UserId) -> Result<bool, TravelError> {
+
+        let pk_av = AttributeValue::S(user_id.id().to_string());
+        let sk_av = AttributeValue::S(format!("Travels#{}", travel_id.id().to_string()));
+
+        match self
+            .client
+            .get_item()
+            .table_name(&self.table_name)
+            .key("PK", pk_av)
+            .key("SK", sk_av)
+            .send()
+            .await {
+            Ok(t) => { match t.item {
+                Some(item) => Ok(true),
+                None => Ok(false)
+            }}
+            Err(e) => Err(TravelError::DomainError(e.to_string()))
+        }
+    }
+    
     async fn save(&self, travel: &Travel) -> Result<(), TravelError> {
 
         let pk_av = AttributeValue::S(travel.travel_id().id().to_string());
