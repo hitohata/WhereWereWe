@@ -5,5 +5,7 @@ pub enum TravelError {
     #[error("{0}")]
     DomainError(String),
     #[error("{0}")]
-    DBError(String)
+    DBError(String),
+    #[error("{0} not found")]
+    NotFound(String)
 }
