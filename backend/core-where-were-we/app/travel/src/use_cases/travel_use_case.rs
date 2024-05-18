@@ -38,7 +38,7 @@ impl<R> TravelUseCases for TravelUseCasesInteractor<R>
             Some(t) => {
                 match t.is_related_parties(&user_id_struct) {
                     true => Some(TravelDto::from(&t)),
-                    false => Err(TravelError::AuthenticationError)
+                    false => return Err(TravelError::AuthenticationError)
                 }
             },
             None => None
@@ -63,14 +63,16 @@ impl<R> TravelUseCases for TravelUseCasesInteractor<R>
         let travel_id_struct = TravelId::try_from(travel_id)?;
         let user_id_struct = UserId::try_from(user_id)?;
         
-        let (travel_data, is_users_travel) = tokio::try_join!(self.travel_repository.find_by_id(&travel_id_struct), self.travel_repository.is_users_travel(&travel_id_struct, &user_id_struct))?;
+        let travel_data = self.travel_repository.find_by_id(&travel_id_struct).await?;
         
-        if travel_data.is_none() {
-            return Err(TravelError::NotFound("Travel data".to_string()));
-        };
-        
-        if !is_users_travel {
-            return Err(TravelError::AuthenticationError);
+        // check validation
+        match travel_data {
+            Some(travel) => {
+                if !travel.is_related_parties(&user_id_struct) {
+                    return Err(TravelError::AuthenticationError)
+                }
+            },
+            None => return Err(TravelError::NotFound("Travel data".to_string()))
         }
         
         let mut travelers_vec: Vec<UserId> = Vec::new();
@@ -188,10 +190,6 @@ mod test {
             .returning(move |_| Ok(None));
         
         mock_repo
-            .expect_is_users_travel()
-            .returning(move |_, _| Ok(true));
-
-        mock_repo
             .expect_save()
             .returning(move |_| Ok(()));
 
@@ -221,10 +219,6 @@ mod test {
         mock_repo
             .expect_find_by_id()
             .returning(move |_| Ok(Some(travel.clone())));
-
-        mock_repo
-            .expect_is_users_travel()
-            .returning(move |_, _| Ok(true));
 
         mock_repo
             .expect_save()
