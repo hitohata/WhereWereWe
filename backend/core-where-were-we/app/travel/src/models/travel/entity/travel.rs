@@ -132,6 +132,11 @@ impl Travel {
         self.travelers.remove(precluded_user_id);
         self
     }
+    
+    /// Check if the user provided as an argument is related to the parties of this travel.
+    pub fn is_related_parties(&self, user_id: &UserId) -> bool {
+        self.travelers.contains(user_id) || self.involved_users.contains(user_id)
+    }
 }
 
 #[cfg(test)]
@@ -213,5 +218,43 @@ mod test {
         // if there is only one user in the struct, cannot remove
         let res = removed.remove_traveler(&traveler_id);
         assert!(res.is_err());
+    }
+    
+    #[test]
+    fn test_is_related_parties() {
+        // Arrange
+        let travel_id = TravelId::generate();
+        let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
+        let involved_user_id = UserId::try_from(TravelId::generate().id()).unwrap();
+        let name = "Back to the future";
+        let datetime = Local::now().to_rfc3339();
+        let travel = Travel::new(&travel_id, &name, &datetime, None, &vec![traveler_id.clone()], Some(&vec![involved_user_id.clone()])).unwrap();
+        
+        // Act
+        let result_traveler = travel.is_related_parties(&traveler_id);
+        let result_involved_user = travel.is_related_parties(&involved_user_id);
+        
+        // Assert
+        assert!(result_traveler);
+        assert!(result_involved_user);
+    }
+
+
+    #[test]
+    fn test_is_not_related_parties() {
+        // Arrange
+        let travel_id = TravelId::generate();
+        let traveler_id = UserId::try_from(TravelId::generate().id()).unwrap();
+        let involved_user_id = UserId::try_from(TravelId::generate().id()).unwrap();
+        let stranger_id = UserId::try_from(TravelId::generate().id()).unwrap();
+        let name = "Back to the future";
+        let datetime = Local::now().to_rfc3339();
+        let travel = Travel::new(&travel_id, &name, &datetime, None, &vec![traveler_id.clone()], Some(&vec![involved_user_id.clone()])).unwrap();
+
+        // Act
+        let result = travel.is_related_parties(&stranger_id);
+
+        // Assert
+        assert_eq!(result, false);
     }
 }
