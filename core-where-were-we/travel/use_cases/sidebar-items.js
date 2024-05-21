@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["travel_use_case"]};
+window.SIDEBAR_ITEMS = {"mod":["todo_use_cases","travel_use_case"]};
