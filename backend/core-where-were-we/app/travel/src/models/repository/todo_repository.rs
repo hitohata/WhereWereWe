@@ -3,7 +3,7 @@
 use mockall::*;
 use crate::errors::errors::TravelError;
 use crate::models::todo::entity::todo::Todo;
-use crate::models::todo::entity::todo_group::TodoListGroup;
+use crate::models::todo::entity::todo_list_group::TodoListGroup;
 use crate::models::todo::id::todo_id::TodoId;
 use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
