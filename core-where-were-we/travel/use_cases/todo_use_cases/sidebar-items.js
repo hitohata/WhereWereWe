@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"trait":["ToDoUseCases"]};
+window.SIDEBAR_ITEMS = {"struct":["TodoUseCaseInstractor"],"trait":["ToDoUseCases"]};
