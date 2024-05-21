@@ -1503,7 +1503,6 @@ dependencies = [
  "test-utils",
  "thiserror",
  "tokio",
- "users",
  "utils",
  "uuid",
 ]
