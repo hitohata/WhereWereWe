@@ -207,7 +207,23 @@ impl<R, RP, S> ToDoUseCases for TodoUseCaseInstractor<R, RP, S>
     }
 
     async fn toggle_todo_done(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, todo_id: &u32) -> Result<ToDoDto, TravelError> {
-        todo!()
+        // check authentication
+        self.check_authentication(user_id, travel_id).await?;
+
+        let travel_id = TravelId::try_from(travel_id)?;
+        let todo_list_group_id = TodoListGroupId::from(todo_list_group_id);
+        let todo_id = TodoId::from(todo_id);
+
+        let todo = match self.todo_repository.find_todo_by_id(&travel_id, &todo_list_group_id, &todo_id).await? {
+            Some(t) => t,
+            None => return Err(TravelError::NotFound("The requested todo is not found".to_string()))
+        };
+
+        let updated_todo = todo.toggle_todo();
+
+        self.todo_repository.save_todo(&travel_id, &todo_list_group_id, &updated_todo).await?;
+
+        Ok(ToDoDto::from(&updated_todo))
     }
 
 }
