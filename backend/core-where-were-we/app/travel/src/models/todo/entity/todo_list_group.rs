@@ -75,6 +75,17 @@ impl TodoListGroup {
         self.todo.push(todo.clone());
         self
     }
+    
+    /// update the to-do list group by creating a new struct
+    pub fn update(&self, group_name: &str, tz: Option<i32>) -> Result<Self, TravelError> {
+        TodoListGroup::new(
+            &self.travel_id,
+            &self.todo_list_group_id,
+            group_name,
+            self.todo.to_owned(),
+            tz
+        )
+    }
 }
 
 #[cfg(test)]

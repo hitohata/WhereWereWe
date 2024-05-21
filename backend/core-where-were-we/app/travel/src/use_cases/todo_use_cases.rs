@@ -23,7 +23,7 @@ pub trait ToDoUseCases {
     /// create a new to-do
     async fn crate_new_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError>;
     /// update a to-do list group
-    async fn update_todo_list_group(&self, travel_id: &str, todo_list_group_id: &u32, name: &str, tz: Option<isize>) -> Result<ToDoDto, TravelError>;
+    async fn update_todo_list_group(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, name: &str, tz: Option<i32>) -> Result<ToDoListGroupDto, TravelError>;
     /// update a to-do
     async fn update_todo(&self, travel_id: &str, todo_list_group_id: &u32, todo_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError>;
     /// toggle done section
@@ -167,8 +167,23 @@ impl<R, RP, S> ToDoUseCases for TodoUseCaseInstractor<R, RP, S>
         Ok(ToDoDto::from(&todo))
     }
 
-    async fn update_todo_list_group(&self, travel_id: &str, todo_list_group_id: &u32, name: &str, tz: Option<isize>) -> Result<ToDoDto, TravelError> {
-        todo!()
+    async fn update_todo_list_group(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, name: &str, tz: Option<i32>) -> Result<ToDoListGroupDto, TravelError> {
+        // check authentication
+        self.check_authentication(user_id, travel_id).await?;
+        
+        let travel_id = TravelId::try_from(travel_id)?;
+        let todo_list_group_id = TodoListGroupId::from(todo_list_group_id);
+        
+        let todo_list_group = match self.todo_repository.find_todo_list_group_by_id(&travel_id, &todo_list_group_id).await? {
+            Some(t) => t,
+            None => return Err(TravelError::NotFound("The requested todo list group is not found.".to_string()))
+        };
+        
+        let updated = todo_list_group.update(name, tz)?;
+        
+        self.todo_repository.save_todo_list_group(&updated).await?;
+        
+        Ok(ToDoListGroupDto::from(&updated))
     }
 
     async fn update_todo(&self, travel_id: &str, todo_list_group_id: &u32, todo_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError> {
