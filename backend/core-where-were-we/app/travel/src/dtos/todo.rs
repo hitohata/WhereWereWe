@@ -2,7 +2,7 @@
 use serde::{Serialize, Deserialize};
 use chrono;
 use crate::models::todo::entity::todo::Todo;
-use crate::models::todo::entity::todo_group::TodoListGroup;
+use crate::models::todo::entity::todo_list_group::TodoListGroup;
 
 /// To-do list group DTO
 #[derive(Serialize, Deserialize)]

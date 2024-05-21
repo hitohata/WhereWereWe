@@ -9,5 +9,7 @@ pub enum TravelError {
     #[error("{0} not found")]
     NotFound(String),
     #[error("Authentication Error")]
-    AuthenticationError
+    AuthenticationError,
+    #[error("{0}")]
+    UseCaseError(String)
 }

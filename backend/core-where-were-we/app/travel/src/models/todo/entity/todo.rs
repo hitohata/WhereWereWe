@@ -78,8 +78,9 @@ impl Todo {
 
         Self::new(&self.id, summary, description, self.due_date, Some(self.done))
     }
-    pub fn toggle_todo(&mut self) {
-        self.done = !self.done
+    pub fn toggle_todo(mut self) -> Self {
+        self.done = !self.done;
+        self
     }
 }
 
