@@ -2,6 +2,7 @@ use crate::dtos::todo::{ToDoDto, ToDoListGroupDto};
 use crate::errors::errors::TravelError;
 use crate::models::repository::todo_repository::TodoRepository;
 use crate::models::repository::travel_repository::TravelRepository;
+use crate::models::travel::id::travel_id::TravelId;
 
 pub trait ToDoUseCases {
     /// get a to-do list of the travel
@@ -42,7 +43,16 @@ impl<R, RP> ToDoUseCases for TodoUseCaseInstractor<R, RP>
     where R: TravelRepository, RP: TodoRepository
 {
     async fn travel_to_do_list_group(&self, travel_id: &str) -> Result<Vec<ToDoListGroupDto>, TravelError> {
-        todo!()
+        
+        let travel_id_struct = match TravelId::try_from(travel_id) {
+            Ok(t_id) => t_id,
+            Err(e) => return Err(e)
+        };
+        
+        match self.todo_repository.list_todo_list_group(&travel_id_struct).await {
+            Ok(todo_list_group) => Ok(todo_list_group.iter().map(|el| ToDoListGroupDto::from(el)).collect()),
+            Err(e) => Err(e)
+        }
     }
 
     async fn get_todo_list_group(&self, travel_id: &str, to_do_list_group_id: &str) -> Result<Option<ToDoListGroupDto>, TravelError> {
