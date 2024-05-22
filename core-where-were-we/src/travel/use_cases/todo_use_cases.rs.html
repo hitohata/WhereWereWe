@@ -250,7 +250,7 @@
     </span><span class="kw">async fn </span>get_todo(<span class="kw-2">&amp;</span><span class="self">self</span>, travel_id: <span class="kw-2">&amp;</span>str, todo_list_group_id: <span class="kw-2">&amp;</span>u32, todo_id: <span class="kw-2">&amp;</span>u32) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;ToDoDto&gt;, TravelError&gt;;
     <span class="doccomment">/// create a new to-do group
     /// The empty to-do is also created
-    </span><span class="kw">async fn </span>create_new_todo_group(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>str, travel_id: <span class="kw-2">&amp;</span>str, name: <span class="kw-2">&amp;</span>str, tz: <span class="prelude-ty">Option</span>&lt;i64&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ToDoListGroupDto, TravelError&gt;;
+    </span><span class="kw">async fn </span>create_new_todo_list_group(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>str, travel_id: <span class="kw-2">&amp;</span>str, name: <span class="kw-2">&amp;</span>str, tz: <span class="prelude-ty">Option</span>&lt;i64&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ToDoListGroupDto, TravelError&gt;;
     <span class="doccomment">/// create a new to-do
     </span><span class="kw">async fn </span>crate_new_todo(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>str, travel_id: <span class="kw-2">&amp;</span>str, todo_list_group_id: <span class="kw-2">&amp;</span>u32, summary: <span class="kw-2">&amp;</span>str, description: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, due_date: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ToDoDto, TravelError&gt;;
     <span class="doccomment">/// update a to-do list group
@@ -347,7 +347,7 @@
 
     }
 
-    <span class="kw">async fn </span>create_new_todo_group(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>str, travel_id: <span class="kw-2">&amp;</span>str, name: <span class="kw-2">&amp;</span>str, tz: <span class="prelude-ty">Option</span>&lt;i64&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ToDoListGroupDto, TravelError&gt; {
+    <span class="kw">async fn </span>create_new_todo_list_group(<span class="kw-2">&amp;</span><span class="self">self</span>, user_id: <span class="kw-2">&amp;</span>str, travel_id: <span class="kw-2">&amp;</span>str, name: <span class="kw-2">&amp;</span>str, tz: <span class="prelude-ty">Option</span>&lt;i64&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;ToDoListGroupDto, TravelError&gt; {
         <span class="comment">// check authentication
         </span><span class="self">self</span>.check_authentication(user_id, travel_id).<span class="kw">await</span><span class="question-mark">?</span>;
 
