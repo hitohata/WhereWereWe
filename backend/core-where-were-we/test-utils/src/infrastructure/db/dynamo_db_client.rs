@@ -1,5 +1,5 @@
 use aws_sdk_dynamodb as dynamodb;
-use aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType, LocalSecondaryIndex, Projection, ProjectionType};
+use aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType, GlobalSecondaryIndex, LocalSecondaryIndex, Projection, ProjectionType};
 use utils::settings::settings::dynamo_endpoint;
 
 /// The DynamoDB user client for the test.
@@ -57,6 +57,12 @@ impl TestDynamoTable {
             .attribute_type(ScalarAttributeType::S)
             .build()
             .unwrap();
+
+        let email_attribute = AttributeDefinition::builder()
+            .attribute_name("EMail")
+            .attribute_type(ScalarAttributeType::S)
+            .build()
+            .unwrap();
         
         let partition_key_schema = KeySchemaElement::builder()
             .attribute_name("PK")
@@ -70,9 +76,30 @@ impl TestDynamoTable {
             .build()
             .unwrap();
         
+        let email_hash_key_schema = KeySchemaElement::builder()
+            .attribute_name("EMail")
+            .key_type(KeyType::Hash)
+            .build()
+            .unwrap();
+        
+        let partition_key_range_key_schema = KeySchemaElement::builder()
+            .attribute_name("PK")
+            .key_type(KeyType::Range)
+            .build()
+            .unwrap();
+        
         let throughput = ProvisionedThroughput::builder()
             .read_capacity_units(10)
             .write_capacity_units(5)
+            .build()
+            .unwrap();
+        
+        let email_user_global_secondary_index = GlobalSecondaryIndex::builder()
+            .index_name("UserEmail")
+            .key_schema(email_hash_key_schema)
+            .key_schema(partition_key_range_key_schema)
+            .projection(Projection::builder().projection_type(ProjectionType::KeysOnly).build())
+            .provisioned_throughput(ProvisionedThroughput::builder().read_capacity_units(1).write_capacity_units(1).build().unwrap())
             .build()
             .unwrap();
         
@@ -91,9 +118,11 @@ impl TestDynamoTable {
             .set_attribute_definitions(Some(vec![
                 pk_attribute,
                 sk_attribute,
-                start_date_attribute
+                start_date_attribute,
+                email_attribute
             ]))
             .set_key_schema(Some(vec![partition_key_schema, sort_key_schema]))
+            .set_global_secondary_indexes(Some(vec![email_user_global_secondary_index]))
             .set_local_secondary_indexes(Some(vec![travel_date_secondary_index]))
             .provisioned_throughput(throughput)
             .send()
