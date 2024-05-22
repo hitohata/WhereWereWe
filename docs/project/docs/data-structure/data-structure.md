@@ -8,7 +8,10 @@ The PK and SK is just set as "PK" as "SK".
 
 ### Global Secondary Index (GSI)
 
-None
+Name: UserEmail
+
+* PK: Email
+* SK: User ID
 
 ### Local Secondary Index (LSI)
 
