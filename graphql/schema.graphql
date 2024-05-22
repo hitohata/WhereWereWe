@@ -1,0 +1,60 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Mutation {
+    updateMe(name: String!): User!
+    addPartner(partnerId: ID!): User!
+    removePartner(partnerId: ID!): User!,
+    createNewTravel(travelName: String!, startDate: String!, endDate: String): Travel!
+    updateTravel(travelId: ID!, travelName: String!, startDate: String!, endDate: String, travelers: [ID!]!, involvedUsers: [ID!]): Travel!
+    createNewTodoListGroup(travelId: ID!, name: String!, tz: Int): ToDoListGroup!
+    updateTodoListGroup(travelId: ID!, todoListGroupId: ID!, name: String!, tz: Int): ToDoListGroup!
+    crateNewTodo(travelId: ID!, todoListGroupId: ID!, summary: String!, description: String, dueDate: String): ToDo!
+    updateTodo(travelId: ID!, todoListGroupId: ID!, todoId: ID!, summary: String!, description: String, dueDate: String): ToDo!
+    toggleTodo(travelId: ID!, todoListGroupId: ID!, todoId: ID!): ToDo!
+}
+
+type Query {
+    me: User!,
+    user(id: ID!): User,
+    myTravels: [Travel!]!,
+    todoListGroups(travelId: ID!): [ToDoListGroup!]!,
+    todos(travelId: ID!, todoListGroupId: ID!): [ToDo!]!
+}
+
+type Partner {
+    id: ID!,
+    name: String!
+}
+
+type User {
+    id: ID!,
+    name: String!,
+    partners: [Partner!]!
+}
+
+type Travel {
+    travelId: ID!,
+    name: String!,
+    startDate: String!,
+    endDate: String,
+    travelers: [ID!]!,
+    involvedUsers: [ID!]!
+}
+
+type ToDo {
+    id: ID!,
+    summary: String!
+    description: String,
+    due_date: String
+    done: Boolean
+}
+
+type ToDoListGroup {
+    todoListGroupId: ID!,
+    groupName: String,
+    todo: [ToDo!]!,
+    tz: Int
+}
