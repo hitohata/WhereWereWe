@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["db"]};
+window.SIDEBAR_ITEMS = {"mod":["controller","db"]};
