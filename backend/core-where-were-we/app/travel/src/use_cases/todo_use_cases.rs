@@ -19,7 +19,7 @@ pub trait ToDoUseCases {
     async fn get_todo(&self, travel_id: &str, todo_list_group_id: &u32, todo_id: &u32) -> Result<Option<ToDoDto>, TravelError>;
     /// create a new to-do group
     /// The empty to-do is also created
-    async fn create_new_todo_group(&self, user_id: &str, travel_id: &str, name: &str, tz: Option<i64>) -> Result<ToDoListGroupDto, TravelError>;
+    async fn create_new_todo_list_group(&self, user_id: &str, travel_id: &str, name: &str, tz: Option<i64>) -> Result<ToDoListGroupDto, TravelError>;
     /// create a new to-do
     async fn crate_new_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError>;
     /// update a to-do list group
@@ -116,7 +116,7 @@ impl<R, RP, S> ToDoUseCases for TodoUseCaseInstractor<R, RP, S>
 
     }
 
-    async fn create_new_todo_group(&self, user_id: &str, travel_id: &str, name: &str, tz: Option<i64>) -> Result<ToDoListGroupDto, TravelError> {
+    async fn create_new_todo_list_group(&self, user_id: &str, travel_id: &str, name: &str, tz: Option<i64>) -> Result<ToDoListGroupDto, TravelError> {
         // check authentication
         self.check_authentication(user_id, travel_id).await?;
 
