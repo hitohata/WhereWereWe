@@ -1,0 +1,46 @@
+schema {
+    query: Query
+}
+
+type Query {
+    me: User!,
+    user(id: ID!): User,
+    myTravels: [Travel!]!,
+    todoListGroups(travelId: ID!): [Travel!]!,
+    todos(travelId: ID!, todoListGroupId: ID!): [ToDo!]!
+}
+
+type Partner {
+    id: ID!,
+    name: String!
+}
+
+type User {
+    id: ID!,
+    name: String!,
+    partners: [Partner!]!
+}
+
+type Travel {
+    travelId: ID!,
+    name: String!,
+    startDate: String!,
+    endDate: String,
+    travelers: [ID!]!,
+    involvedUsers: [ID!]!
+}
+
+type ToDo {
+    id: ID!,
+    summary: String!
+    description: String,
+    due_date: String
+    done: Boolean
+}
+
+type ToDoListGroup {
+    todoListGroupId: ID!,
+    groupName: String,
+    todo: [ToDo!]!,
+    tz: Int
+}
