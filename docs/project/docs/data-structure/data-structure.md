@@ -13,12 +13,16 @@ Name: UserEmail
 * PK: Email
 * SK: User ID
 
+Projection: Key Only
+
 ### Local Secondary Index (LSI)
 
 Name: TravelDate
 
 * PK: Travel ID
 * StartDate: start date of the travel
+
+Projection: All
 
 ## User
 
