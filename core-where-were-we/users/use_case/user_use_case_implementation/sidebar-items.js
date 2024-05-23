@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["to_user_id_struct"],"struct":["CreateUserUseCaseInteractor"]};
+window.SIDEBAR_ITEMS = {"fn":["to_user_id_struct"],"struct":["UserUseCasesInteractor"]};

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["dtos","errors","models","repository","use_case"]};
+window.SIDEBAR_ITEMS = {"mod":["dtos","errors","interface","models","repository","use_case"]};

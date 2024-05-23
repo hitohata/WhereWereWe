@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["StatusCode"],"fn":["response","to_code"],"struct":["HttpResponse"]};
+window.SIDEBAR_ITEMS = {"enum":["ErrorStatus","OkStatus"],"struct":["ErrHttpResponse","OkHttpResponse"]};

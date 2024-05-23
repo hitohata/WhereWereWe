@@ -200,13 +200,13 @@
 <span class="kw">use </span><span class="kw">crate</span>::models::user_id::UserId;
 
 <span class="attr">#[derive(Debug)]
-</span><span class="kw">struct </span>UserRepositoryConcrete {
+</span><span class="kw">pub struct </span>UserRepositoryConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String,
 }
 
 <span class="kw">impl </span>UserRepositoryConcrete {
-    <span class="kw">async fn </span>default() -&gt; <span class="self">Self </span>{
+    <span class="kw">pub async fn </span>default() -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>table_name = table_name().to_string();
         <span class="self">Self </span>{
             client: dynamodb_client().<span class="kw">await</span>,

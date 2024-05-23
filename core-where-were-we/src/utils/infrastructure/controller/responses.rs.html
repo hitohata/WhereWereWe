@@ -41,45 +41,54 @@
 <a href="#39" id="39">39</a>
 <a href="#40" id="40">40</a>
 <a href="#41" id="41">41</a>
-</pre></div><pre class="rust"><code>
-<span class="kw">struct </span>HttpResponse&lt;T&gt; {
+<a href="#42" id="42">42</a>
+<a href="#43" id="43">43</a>
+<a href="#44" id="44">44</a>
+<a href="#45" id="45">45</a>
+<a href="#46" id="46">46</a>
+</pre></div><pre class="rust"><code><span class="kw">pub struct </span>OkHttpResponse&lt;T&gt; {
     status_code: usize,
     data: T,
 }
 
+<span class="kw">pub struct </span>ErrHttpResponse {
+    status_code: usize,
+    message: <span class="prelude-ty">Option</span>&lt;String&gt;
+}
+
 <span class="doccomment">/// The status code enum
-</span><span class="kw">pub enum </span>StatusCode {
-    OK,
-    Created,
-    Accepted,
-    NoContent,
-    BadRequest,
-    Unauthorized,
-    Forbidden,
-    NotFound,
-    Unexpected
+</span><span class="kw">pub enum </span>OkStatus {
+    OK = <span class="number">200</span>,
+    Created = <span class="number">201</span>,
+    Accepted = <span class="number">202</span>,
+    NoContent = <span class="number">204</span>,
 }
 
-<span class="doccomment">/// mapper
-</span><span class="kw">fn </span>to_code(status_code: StatusCode) -&gt; usize {
-    <span class="kw">match </span>status_code {
-        StatusCode::OK =&gt; <span class="number">200</span>,
-        StatusCode::Created =&gt; <span class="number">201</span>,
-        StatusCode::Accepted =&gt; <span class="number">202</span>,
-        StatusCode::NoContent =&gt; <span class="number">204</span>,
-        StatusCode::BadRequest =&gt; <span class="number">400</span>,
-        StatusCode::Unauthorized =&gt; <span class="number">401</span>,
-        StatusCode::Forbidden =&gt; <span class="number">403</span>,
-        StatusCode::NotFound =&gt; <span class="number">404</span>,
-        StatusCode::Unexpected =&gt; <span class="number">500
-    </span>}
-}
+<span class="kw">pub enum </span>ErrorStatus {
+    BadRequest = <span class="number">400</span>,
+    Unauthorized = <span class="number">401</span>,
+    Forbidden = <span class="number">403</span>,
+    NotFound = <span class="number">404</span>,
+    InternalServerError = <span class="number">500
+</span>}
 
-<span class="kw">pub fn </span>response&lt;T&gt;(status_code: StatusCode, value: T) -&gt; HttpResponse&lt;T&gt; {
-    HttpResponse {
-        status_code: to_code(status_code),
-        data: value
+<span class="kw">impl</span>&lt;T&gt; OkHttpResponse&lt;T&gt; {
+    <span class="kw">pub fn </span>new(status: OkStatus, value: T) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            status_code: status <span class="kw">as </span>usize,
+            data: value
+        }
     }
 }
 
-</code></pre></div></section></main></body></html>
+<span class="kw">impl </span>ErrHttpResponse {
+    <span class="kw">pub fn </span>new(status: ErrorStatus, message: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            status_code: status <span class="kw">as </span>usize,
+            message: <span class="kw">match </span>message {
+                <span class="prelude-val">Some</span>(m) =&gt; <span class="prelude-val">Some</span>(m.to_owned()),
+                <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None
+            </span>}
+        }
+    }
+}</code></pre></div></section></main></body></html>

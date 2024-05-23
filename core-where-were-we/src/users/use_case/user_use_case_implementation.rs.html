@@ -249,17 +249,17 @@
 <span class="kw">use </span><span class="kw">crate</span>::models::user_id::UserId;
 <span class="kw">use </span><span class="kw">crate</span>::use_case::user_use_cases::UserUseCases;
 
-<span class="kw">pub struct </span>CreateUserUseCaseInteractor&lt;R&gt; {
+<span class="kw">pub struct </span>UserUseCasesInteractor&lt;R&gt; {
     user_repository: R,
 }
 
-<span class="kw">impl</span>&lt;R&gt; CreateUserUseCaseInteractor&lt;R&gt; {
+<span class="kw">impl</span>&lt;R&gt; UserUseCasesInteractor&lt;R&gt; {
     <span class="kw">pub fn </span>new(user_repository: R) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ user_repository }
     }
 }
 
-<span class="kw">impl</span>&lt;R&gt; UserUseCases <span class="kw">for </span>CreateUserUseCaseInteractor&lt;R&gt;
+<span class="kw">impl</span>&lt;R&gt; UserUseCases <span class="kw">for </span>UserUseCasesInteractor&lt;R&gt;
 <span class="kw">where
     </span>R: UserRepository,
 {
@@ -435,7 +435,7 @@
             .expect_save()
             .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(()));
 
-        <span class="kw">let </span>use_case = CreateUserUseCaseInteractor::new(mock_repo);
+        <span class="kw">let </span>use_case = UserUseCasesInteractor::new(mock_repo);
 
         <span class="comment">// Action
         </span><span class="kw">let </span>res_user = use_case.add_partner(user_id.id(), partner_id.id()).<span class="kw">await</span>.unwrap();
@@ -469,7 +469,7 @@
             .expect_save()
             .returning(<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(()));
 
-        <span class="kw">let </span>use_case = CreateUserUseCaseInteractor::new(mock_repo);
+        <span class="kw">let </span>use_case = UserUseCasesInteractor::new(mock_repo);
 
         <span class="comment">// Act
         </span><span class="kw">let </span>res_user = use_case.remove_partner(user_id.id(), partner_id.id()).<span class="kw">await</span>.unwrap();
