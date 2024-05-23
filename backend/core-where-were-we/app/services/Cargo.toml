@@ -1,0 +1,17 @@
+[package]
+name = "services"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+utils = { path = "../../utils" }
+aws-sdk-dynamodb = "1.28.0"
+thiserror = "1.0.60"
+
+[dev-dependencies]
+test-utils = { path = "../../test-utils" }
+tokio = "1.37.0"
+
+[lib]
+name = "services"
+path = "src/lib.rs"

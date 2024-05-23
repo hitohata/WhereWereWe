@@ -12,6 +12,7 @@ edition = "2021"
 members = [
     "app/users",
     "app/travel",
+    "app/services",
     "utils",
     "test-utils",
 ]

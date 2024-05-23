@@ -38,14 +38,14 @@ impl Travel {
 
         let start_date_struct = match DateTime::parse_from_rfc3339(start_date) {
             Ok(date) => date,
-            Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
+            Err(_) => return Err(TravelError::DomainError("datetime parse errors".to_string()))
         };
 
         let end_date_struct = match end_date {
             Some(date) => {
                 match DateTime::parse_from_rfc3339(date) {
                     Ok(date) => Some(date),
-                    Err(_) => return Err(TravelError::DomainError("datetime parse error".to_string()))
+                    Err(_) => return Err(TravelError::DomainError("datetime parse errors".to_string()))
                 }
             },
             None => None

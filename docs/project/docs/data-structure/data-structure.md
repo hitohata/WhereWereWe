@@ -8,7 +8,11 @@ The PK and SK is just set as "PK" as "SK".
 
 ### Global Secondary Index (GSI)
 
-None
+Name: UserEmail
+
+* PK: EMail
+
+Projection: Key Only
 
 ### Local Secondary Index (LSI)
 
@@ -16,6 +20,8 @@ Name: TravelDate
 
 * PK: Travel ID
 * StartDate: start date of the travel
+
+Projection: All
 
 ## User
 
