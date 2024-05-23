@@ -8,17 +8,17 @@ use crate::models::user::{User, Username};
 use crate::models::user_id::UserId;
 use crate::use_case::user_use_cases::UserUseCases;
 
-pub struct CreateUserUseCaseInteractor<R> {
+pub struct UserUseCasesInteractor<R> {
     user_repository: R,
 }
 
-impl<R> CreateUserUseCaseInteractor<R> {
+impl<R> UserUseCasesInteractor<R> {
     pub fn new(user_repository: R) -> Self {
         Self { user_repository }
     }
 }
 
-impl<R> UserUseCases for CreateUserUseCaseInteractor<R>
+impl<R> UserUseCases for UserUseCasesInteractor<R>
 where
     R: UserRepository,
 {
@@ -194,7 +194,7 @@ mod add_partner_test {
             .expect_save()
             .returning(move |_| Ok(()));
 
-        let use_case = CreateUserUseCaseInteractor::new(mock_repo);
+        let use_case = UserUseCasesInteractor::new(mock_repo);
 
         // Action
         let res_user = use_case.add_partner(user_id.id(), partner_id.id()).await.unwrap();
@@ -228,7 +228,7 @@ mod add_partner_test {
             .expect_save()
             .returning(move |_| Ok(()));
 
-        let use_case = CreateUserUseCaseInteractor::new(mock_repo);
+        let use_case = UserUseCasesInteractor::new(mock_repo);
 
         // Act
         let res_user = use_case.remove_partner(user_id.id(), partner_id.id()).await.unwrap();
