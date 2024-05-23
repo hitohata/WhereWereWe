@@ -10,8 +10,7 @@ The PK and SK is just set as "PK" as "SK".
 
 Name: UserEmail
 
-* PK: Email
-* SK: User ID
+* PK: EMail
 
 Projection: Key Only
 

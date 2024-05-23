@@ -516,7 +516,7 @@ mod test {
 
         // Assert
         assert!(result.is_ok());
-        assert_eq!(result.expect("result unwrap error").len(), 2);
+        assert_eq!(result.expect("result unwrap errors").len(), 2);
 
         test_db.delete_table().await;
     }
@@ -610,7 +610,7 @@ mod test {
         let result = todo_repo.list_todo_list_group(&travel_id).await;
 
         assert!(result.is_ok());
-        assert_eq!(result.expect("list todo list group error").len(), 2);
+        assert_eq!(result.expect("list todo list group errors").len(), 2);
 
         test_db.delete_table().await;
     }
@@ -633,7 +633,7 @@ mod test {
         let result = todo_repo.list_todo_list_group(&travel_id).await;
         
         assert!(result.is_ok());
-        assert_eq!(result.expect("list todo list group error").len(), 0);
+        assert_eq!(result.expect("list todo list group errors").len(), 0);
         
         test_db.delete_table().await;
     }
