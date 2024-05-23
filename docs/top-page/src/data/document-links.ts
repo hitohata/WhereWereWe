@@ -37,7 +37,7 @@ export const backendDocs: DocumentCategory = {
             title: 'Core Where Were We Travel',
             description: 'Travel Application'
         },{
-            url: '/core-where-were-we/service/index.html',
+            url: '/core-where-were-we/services/index.html',
             title: 'Core Where Were We Service',
             description: "This Application's service"
         },
