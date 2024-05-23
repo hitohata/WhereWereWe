@@ -1158,7 +1158,7 @@
 
         <span class="comment">// Assert
         </span><span class="macro">assert!</span>(result.is_ok());
-        <span class="macro">assert_eq!</span>(result.expect(<span class="string">"result unwrap error"</span>).len(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(result.expect(<span class="string">"result unwrap errors"</span>).len(), <span class="number">2</span>);
 
         test_db.delete_table().<span class="kw">await</span>;
     }
@@ -1252,7 +1252,7 @@
         </span><span class="kw">let </span>result = todo_repo.list_todo_list_group(<span class="kw-2">&amp;</span>travel_id).<span class="kw">await</span>;
 
         <span class="macro">assert!</span>(result.is_ok());
-        <span class="macro">assert_eq!</span>(result.expect(<span class="string">"list todo list group error"</span>).len(), <span class="number">2</span>);
+        <span class="macro">assert_eq!</span>(result.expect(<span class="string">"list todo list group errors"</span>).len(), <span class="number">2</span>);
 
         test_db.delete_table().<span class="kw">await</span>;
     }
@@ -1275,7 +1275,7 @@
         </span><span class="kw">let </span>result = todo_repo.list_todo_list_group(<span class="kw-2">&amp;</span>travel_id).<span class="kw">await</span>;
         
         <span class="macro">assert!</span>(result.is_ok());
-        <span class="macro">assert_eq!</span>(result.expect(<span class="string">"list todo list group error"</span>).len(), <span class="number">0</span>);
+        <span class="macro">assert_eq!</span>(result.expect(<span class="string">"list todo list group errors"</span>).len(), <span class="number">0</span>);
         
         test_db.delete_table().<span class="kw">await</span>;
     }

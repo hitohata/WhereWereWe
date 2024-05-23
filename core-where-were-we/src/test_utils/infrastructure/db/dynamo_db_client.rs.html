@@ -131,8 +131,37 @@
 <a href="#129" id="129">129</a>
 <a href="#130" id="130">130</a>
 <a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>aws_sdk_dynamodb <span class="kw">as </span>dynamodb;
-<span class="kw">use </span>aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType, LocalSecondaryIndex, Projection, ProjectionType};
+<span class="kw">use </span>aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType, GlobalSecondaryIndex, LocalSecondaryIndex, Projection, ProjectionType};
 <span class="kw">use </span>utils::settings::settings::dynamo_endpoint;
 
 <span class="doccomment">/// The DynamoDB user client for the test.
@@ -190,6 +219,12 @@
             .attribute_type(ScalarAttributeType::S)
             .build()
             .unwrap();
+
+        <span class="kw">let </span>email_attribute = AttributeDefinition::builder()
+            .attribute_name(<span class="string">"EMail"</span>)
+            .attribute_type(ScalarAttributeType::S)
+            .build()
+            .unwrap();
         
         <span class="kw">let </span>partition_key_schema = KeySchemaElement::builder()
             .attribute_name(<span class="string">"PK"</span>)
@@ -203,9 +238,30 @@
             .build()
             .unwrap();
         
+        <span class="kw">let </span>email_hash_key_schema = KeySchemaElement::builder()
+            .attribute_name(<span class="string">"EMail"</span>)
+            .key_type(KeyType::Hash)
+            .build()
+            .unwrap();
+        
+        <span class="kw">let </span>partition_key_range_key_schema = KeySchemaElement::builder()
+            .attribute_name(<span class="string">"PK"</span>)
+            .key_type(KeyType::Range)
+            .build()
+            .unwrap();
+        
         <span class="kw">let </span>throughput = ProvisionedThroughput::builder()
             .read_capacity_units(<span class="number">10</span>)
             .write_capacity_units(<span class="number">5</span>)
+            .build()
+            .unwrap();
+        
+        <span class="kw">let </span>email_user_global_secondary_index = GlobalSecondaryIndex::builder()
+            .index_name(<span class="string">"UserEmail"</span>)
+            .key_schema(email_hash_key_schema)
+            .key_schema(partition_key_range_key_schema)
+            .projection(Projection::builder().projection_type(ProjectionType::KeysOnly).build())
+            .provisioned_throughput(ProvisionedThroughput::builder().read_capacity_units(<span class="number">1</span>).write_capacity_units(<span class="number">1</span>).build().unwrap())
             .build()
             .unwrap();
         
@@ -224,9 +280,11 @@
             .set_attribute_definitions(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[
                 pk_attribute,
                 sk_attribute,
-                start_date_attribute
+                start_date_attribute,
+                email_attribute
             ]))
             .set_key_schema(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[partition_key_schema, sort_key_schema]))
+            .set_global_secondary_indexes(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[email_user_global_secondary_index]))
             .set_local_secondary_indexes(<span class="prelude-val">Some</span>(<span class="macro">vec!</span>[travel_date_secondary_index]))
             .provisioned_throughput(throughput)
             .send()
