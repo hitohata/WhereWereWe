@@ -14,6 +14,8 @@ jobs:
       run:
         working-directory: ./backend/core-where-were-we
     steps:
+      - name: time line
+        uses: Kesin11/actions-timeline@v2
       - name: Checkout
         uses: actions/checkout@v3
       - name: Add permission

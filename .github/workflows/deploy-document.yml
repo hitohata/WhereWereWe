@@ -111,3 +111,13 @@ jobs:
         with:
           folder: /build
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  actions-timeline:
+    needs:
+      - build-project-document
+      - build-top-page-document
+      - build-core-were-were-we-doc
+      - deploy-document
+    runs-on: ubuntu-latest
+    steps:
+    - uses: Kesin11/actions-timeline@v2

@@ -45,3 +45,9 @@ jobs:
       - name: ls
         run: echo $(ls)
         working-directory: /build/top-page
+
+  actions-timeline:
+    needs: [test-project-document, test-top-page-document]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: Kesin11/actions-timeline@v2
