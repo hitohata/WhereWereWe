@@ -198,8 +198,8 @@ pub mod travel_interface {
             }
         }
         
-        pub async fn toggle_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &str, todo_id: &str) -> Result<OkHttpResponse<ToDoDto>, ErrHttpResponse> {
-            let result = self.todo_use_case.toggle_todo(
+        pub async fn toggle_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, todo_id: &u32) -> Result<OkHttpResponse<ToDoDto>, ErrHttpResponse> {
+            let result = self.todo_use_case.toggle_todo_done(
                 user_id,
                 travel_id,
                 todo_list_group_id,
