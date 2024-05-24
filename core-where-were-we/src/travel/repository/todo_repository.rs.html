@@ -656,13 +656,13 @@
 <span class="kw">use </span><span class="kw">crate</span>::models::travel::id::travel_id::TravelId;
 
 <span class="attr">#[derive(Debug, Clone)]
-</span><span class="kw">struct </span>TodoRepositoryConcrete {
+</span><span class="kw">pub struct </span>TodoRepositoryConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String
 }
 
 <span class="kw">impl </span>TodoRepositoryConcrete {
-    <span class="kw">async fn </span>default() -&gt; <span class="self">Self </span>{
+    <span class="kw">pub async fn </span>default() -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>table_name = table_name().to_string();
         <span class="self">Self </span>{
             client: dynamodb_client().<span class="kw">await</span>,

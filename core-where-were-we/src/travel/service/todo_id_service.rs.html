@@ -252,7 +252,7 @@
 }
 
 <span class="kw">impl </span>TodoIdServiceConcrete {
-    <span class="kw">async fn </span>default() -&gt; <span class="self">Self </span>{
+    <span class="kw">pub async fn </span>default() -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>table_name = table_name().to_string();
         <span class="self">Self </span>{
             client: dynamodb_client().<span class="kw">await</span>,
