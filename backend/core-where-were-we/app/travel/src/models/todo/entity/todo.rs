@@ -68,11 +68,15 @@ impl Todo {
     }
 
     /// update the summary and the description
-    pub fn update(mut self, summary: &str, description: Option<&str>) -> Result<Self, TravelError> {
+    pub fn update(mut self, summary: &str, description: Option<&str>, due_date: Option<i64>) -> Result<Self, TravelError> {
 
         self.summary = summary.to_string();
         self.description = match description {
             Some(d) => Some(d.to_string()),
+            None => None
+        };
+        self.due_date = match due_date {
+            Some(d) => Some(d),
             None => None
         };
 

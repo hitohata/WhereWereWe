@@ -21,7 +21,7 @@ pub trait ToDoUseCases {
     /// The empty to-do is also created
     async fn create_new_todo_list_group(&self, user_id: &str, travel_id: &str, name: &str, tz: Option<i64>) -> Result<ToDoListGroupDto, TravelError>;
     /// create a new to-do
-    async fn crate_new_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError>;
+    async fn create_new_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError>;
     /// update a to-do list group
     async fn update_todo_list_group(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, name: &str, tz: Option<i32>) -> Result<ToDoListGroupDto, TravelError>;
     /// update a to-do
@@ -137,7 +137,7 @@ impl<R, RP, S> ToDoUseCases for TodoUseCaseInstractor<R, RP, S>
         Ok(ToDoListGroupDto::from(&todo_list_group))
     }
 
-    async fn crate_new_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError> {
+    async fn create_new_todo(&self, user_id: &str, travel_id: &str, todo_list_group_id: &u32, summary: &str, description: Option<&str>, due_date: Option<&str>) -> Result<ToDoDto, TravelError> {
         // check authentication
         self.check_authentication(user_id, travel_id).await?;
 
@@ -199,7 +199,18 @@ impl<R, RP, S> ToDoUseCases for TodoUseCaseInstractor<R, RP, S>
             None => return Err(TravelError::NotFound("The requested todo is not found".to_string()))
         };
         
-        let updated_todo = todo.update(summary, description)?;
+        let due_date = match due_date {
+            Some(d) => {
+                let due = match chrono::DateTime::parse_from_rfc3339(d) {
+                    Ok(due) => due,
+                    Err(_) => return Err(TravelError::UseCaseError("Invalid Datetime is provided".to_string()))
+                };
+                Some(due.timestamp())
+            },
+            None => None
+        };
+        
+        let updated_todo = todo.update(summary, description, due_date)?;
         
         self.todo_repository.save_todo(&travel_id, &todo_list_group_id, &updated_todo).await?;
         

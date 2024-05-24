@@ -27,7 +27,7 @@ pub struct TodoIdServiceConcrete {
 }
 
 impl TodoIdServiceConcrete {
-    async fn default() -> Self {
+    pub async fn default() -> Self {
         let table_name = table_name().to_string();
         Self {
             client: dynamodb_client().await,

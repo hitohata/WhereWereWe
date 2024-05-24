@@ -14,13 +14,13 @@ use crate::models::todo::id::todo_list_group_id::TodoListGroupId;
 use crate::models::travel::id::travel_id::TravelId;
 
 #[derive(Debug, Clone)]
-struct TodoRepositoryConcrete {
+pub struct TodoRepositoryConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String
 }
 
 impl TodoRepositoryConcrete {
-    async fn default() -> Self {
+    pub async fn default() -> Self {
         let table_name = table_name().to_string();
         Self {
             client: dynamodb_client().await,
