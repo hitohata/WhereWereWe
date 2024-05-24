@@ -68,11 +68,15 @@ impl Todo {
     }
 
     /// update the summary and the description
-    pub fn update(mut self, summary: &str, description: Option<&str>) -> Result<Self, TravelError> {
+    pub fn update(mut self, summary: &str, description: Option<&str>, due_date: Option<i64>) -> Result<Self, TravelError> {
 
         self.summary = summary.to_string();
         self.description = match description {
             Some(d) => Some(d.to_string()),
+            None => None
+        };
+        self.due_date = match due_date {
+            Some(d) => Some(d),
             None => None
         };
 
@@ -136,7 +140,7 @@ mod test {
         let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
-        let updated = todo.update("updated", Some("updated description"));
+        let updated = todo.update("updated", Some("updated description"), Some(1212121));
 
         // Assert
         assert!(updated.is_ok());
@@ -152,7 +156,7 @@ mod test {
         let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
-        let updated = todo.update("", None);
+        let updated = todo.update("", None, None);
 
         // Assert
         assert!(updated.is_err());
@@ -165,7 +169,7 @@ mod test {
         let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
-        let updated = todo.update(&String::from_utf8(vec![b'X'; 201]).unwrap(), None);
+        let updated = todo.update(&String::from_utf8(vec![b'X'; 201]).unwrap(), None, None);
 
         // Assert
         assert!(updated.is_err());
@@ -178,7 +182,7 @@ mod test {
         let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
-        let updated = todo.update("summary", Some(""));
+        let updated = todo.update("summary", Some(""), None);
 
         // Assert
         assert!(updated.is_err());
@@ -191,7 +195,7 @@ mod test {
         let todo = Todo::new(&todo_id, "summary", None, None, None).unwrap();
 
         // Act
-        let updated = todo.update("summary", Some(&String::from_utf8(vec![b'X'; 501]).unwrap()));
+        let updated = todo.update("summary", Some(&String::from_utf8(vec![b'X'; 501]).unwrap()), None);
 
         // Assert
         assert!(updated.is_err());

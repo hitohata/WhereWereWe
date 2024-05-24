@@ -12,13 +12,13 @@ use crate::models::travel::id::travel_id::TravelId;
 use crate::models::travel::id::user_id::UserId;
 
 #[derive(Debug, Clone)]
-struct TravelRepositoryConcrete {
+pub struct TravelRepositoryConcrete {
     client: aws_sdk_dynamodb::Client,
     table_name: String
 }
 
 impl TravelRepositoryConcrete {
-    async fn default() -> Self {
+    pub async fn default() -> Self {
         let table_name = table_name().to_string();
         Self {
             client: dynamodb_client().await,
