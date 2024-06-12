@@ -18,9 +18,24 @@ jobs:
         uses: Kesin11/actions-timeline@v2
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Add permission
-        run: sudo chmod 777 -R ./
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
       - name: Run test
         run: docker compose up app --exit-code-from app
+
+  check-front-end-format:
+    timeout-minutes: 3
+    name: check front format
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install package
+        uses: bun install
+      - name: check format
+        run: bun run format:check
