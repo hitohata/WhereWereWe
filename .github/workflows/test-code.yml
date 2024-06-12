@@ -34,7 +34,7 @@ jobs:
       - name: setup Bun
         uses: oven-sh/setup-bun@v1
       - name: Install package
-        uses: bun install
+        run: bun install
       - name: check format
         run: bun run format:check
 
