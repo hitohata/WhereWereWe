@@ -1,0 +1,1 @@
+searchState.loadedDescShard("test_utils", 0, "The table struct for the test.\nremove a table\nThe DynamoDB user client for the test.\nReturns the argument unchanged.\nThis function is used for the test.\nCalls <code>U::from(self)</code>.")

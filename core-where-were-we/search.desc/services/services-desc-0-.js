@@ -1,0 +1,1 @@
+searchState.loadedDescShard("services", 0, "Returns the argument unchanged.\nCalls <code>U::from(self)</code>.\nretrieve the user ID by the email address\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.\nretrieve the user id by an email")
